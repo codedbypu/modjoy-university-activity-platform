@@ -1,36 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modjoy-login</title>
+    <title>MODJOY - Login</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inria+Sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 </head>
 
 <body>
-    <header>
+    <header class="login-header">
         <img src="Resource\img\logo.png" alt="MODJOY">
         <p>“หาคนที่ใช่ ทำสิ่งที่ชอบ ในรั้ว มจธ”</p>
     </header>
-    <main>
+    <main class="login-main">
         <h2>เข้าสู่ระบบ</h2>
-        <form action="">
-            <div class="TextBox" id="EmailBox">
+        <form action="/login-process" method="POST" class="login-form">
+
+            <div class="form-group">
                 <label for="email">อีเมล</label>
-                <input type="email" name="" id="">
+                <input type="email" name="email" id="email" required>
             </div>
-            <div class="TextBox" id="PasswordBox">
+            <div class="form-group">
                 <label for="password">รหัสผ่าน</label>
-                <input type="password" name="" id="">
+                <input type="password" name="password" id="password" required>
+                <a href="/forgot-password" class="forgot-password-link">ลืมรหัสผ่าน?</a>
             </div>
-            <input class="Button" type="submit" value="เข้าสู่ระบบ"><br>
-            <button class="Button ButtonWhite" type="button">ลงทะเบียน</button>
+
+            <input class="btn" type="submit" value="เข้าสู่ระบบ">
+            <button class="btn btn--white" type="button" onclick="'/register'">ลงทะเบียน</button>
         </form>
     </main>
     <footer></footer>
