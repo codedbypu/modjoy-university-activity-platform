@@ -1,0 +1,38 @@
+/* Button */
+.btn {
+    width: 80%;
+    max-width: 400px;
+    height: 41px;
+    align-items: center;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+    background-color: var(--primary-color-light);
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.btn--white {
+    background-color: var(--text-light);
+    color: var(--primary-color);
+    border: var(--border-color) solid 2px;
+}
+
+.btn--white:hover {
+    background-color: var(--primary-color-light);
+    color: var(--text-light);
+    border-color: var(--primary-color-light);
+}

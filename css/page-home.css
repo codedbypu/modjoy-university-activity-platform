@@ -1,0 +1,76 @@
+:root {
+    --primary-color: #FA5A16;
+    --primary-color-dark: #FA4616;
+    --primary-color-light: #fb8332;
+    --primary-gradient-start: #FA8816;
+    --text-light: #ffffff;
+    --text-dark: #000;
+    --text-secondary: #AEAEAE;
+    --border-color: #AEAEAE;
+    --font-main: "Kanit", "Inria Sans", sans-serif;
+}
+
+* {
+    font-family: var(--font-main);
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+}
+
+/* header */
+.login-header {
+    width: 100%;
+    /* padding: 80px 20px 10px 20px; */
+    padding-top: calc(30px + env(safe-area-inset-top));
+    padding-left: calc(20px + env(safe-area-inset-left));
+    padding-right: calc(20px + env(safe-area-inset-right));
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+
+    background: var(--primary-gradient-start);
+    background: linear-gradient(0deg, var(--primary-gradient-start) 0%, var(--primary-color-dark) 100%);
+    background-size: cover;
+
+    font-weight: 500;
+    font-size: 15px;
+    color: white;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.login-header img {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* main */
+.login-main {
+    text-align: center;
+    font-size: 24px;
+    padding: 20px 0;
+}
+
+.login-main h2 {
+    color: var(--primary-color);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 23px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
