@@ -265,11 +265,6 @@ body {
     font-weight: 600;
 }
 
-.add-room-main {
-    align-items: center;
-    padding: 20px;
-}
-
 .add-room-container {
     width: 100%;
     max-width: 340px;
@@ -315,73 +310,97 @@ body {
 
 .form-group {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-size: 14px;
     color: var(--text-dark);
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
     font-weight: 600;
 }
 
+.add-room-form input[type="time"],
+.add-room-form input[type="date"],
 .add-room-form input[type="text"],
 .add-room-form textarea {
     width: 100%;
+    height: 36px; 
     border: 1px solid var(--border-color);
     border-radius: 10px;
     background-color: #ffffff;
-    padding: 6px 10px;
+    padding: 0px 10px;
     font-size: 14px;
     outline: none;
+    text-align: left;
+    box-sizing: border-box;
 }
 
 .inline-separator {
-    font-size: 14px;
+    display: inline-block;
+    margin: 0 6px;
+    font-size: 16px;
     color: var(--text-secondary);
-    font-weight: 600;
-}
-
-/* กล่องเวลา */
-.time-input {
-    width: 100px;
-    height: 32px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: #ffffff;
-    padding: 4px 8px;
-    text-align: center;
-}
-
-/* กล่องวัน/เดือน/ปี */
-.date-input {
-    
-}
-
-.date-year {
-    width: 90px;
-}
-
-.inline-search {
-    font-size: 22px;
-    margin-left: 4px;
-    color: #333333;
-}
-
-.form-row-inline label {
-    margin-bottom: 5px;
     font-weight: 600;
 }
 
 .detail-textarea {
     min-height: 110px;
-    resize: none;
+    padding: 8px 10px;
+    height: auto;
+}
+
+.form-group input.time-input {
+    width: 40%;
+    display: inline-block;
 }
 
 .btn-box {
     display: flex;
-    border: none;
     justify-content: center;
     margin-top: 25px;
+}
+/* footer */
+.login-footer {
+    width: 100%;
+    padding: 30px 20px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    /* สีเทาอ่อน */
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+    /* สีส้ม */
+    text-decoration: underline;
+}
+
+.footer-links span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.copyright-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
 }

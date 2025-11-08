@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
     <title>MODJOY - หน้าแรก</title>
-
     <link rel="stylesheet" href="./css/page-home.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +24,7 @@
 
     <main class="add-home-main">
         <section class="add-room-container">
-            <div class="add-cover-uplode">
+            <div class="add-cover-upload">
                 <div class="add-cover-box">
                     <span class="add-cover-plus">+</span>
                 </div>
@@ -40,7 +38,7 @@
                 </div>
 
                  <div class="form-group">
-                    <label for="place-name">ชื่อสถานที่ :</label>
+                    <label for="place-name">ชื่อสถานที่</label>
                     <input type="text" id="place-name" name="place-name" />
                 </div>
 
@@ -51,28 +49,26 @@
 
                 <div class="form-group">
                     <label for="time">เวลา</label>
-                    <div class="inline-group">
                         <input type="time" class="time-input" placeholder="เริ่ม">
                         <span class="inline-separator">-</span>
                         <input type="time" class="time-input" placeholder="สิ้นสุด" />
-                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>วันเดือนปี :</label>
-                    <div class="inline-group">
+                    <label>วัน / เดือน / ปี</label>
                         <input type="date" class="date-input" placeholder="วัน">
-                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="detail">รายละเอียด</label>
                     <textarea id="detail" name="detail" class="detail-textarea"></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="tag">Tag :</label>
                     <input type="text" id="tag" name="tag" />
                 </div>
+
                 <div class="btn-box">
                     <button type="submit" class="btn">สร้าง</button>
                 </div>
@@ -80,6 +76,16 @@
             </form>
         </section>
     </main>
+    <footer class="login-footer">
+        <div class="footer-links">
+            <a href="/terms">ข้อตกลงการใช้งาน</a>
+            <span>|</span>
+            <a href="/privacy">นโยบายความเป็นส่วนตัว</a>
+        </div>
+        <p class="copyright-text">
+            &copy; 2025 MODJOY. All rights reserved.
+        </p>
+    </footer>
 </body>
 
 </html>
