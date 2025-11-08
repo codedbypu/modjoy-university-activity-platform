@@ -207,9 +207,19 @@ body {
     width: 100%;
     height: 35px;
     background-image: linear-gradient(180deg, var(--primary-color-dark) -1.34%, var(--primary-gradient-start) 119.5%);
+    background-color: var(--primary-color-light);
     color: white;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-room-item:hover {
+    background-image: none;
+    background-color: var(--primary-color-light);
+}
+.btn-room-item:active {
+    background-color: var(--primary-color);
 }
 
 /* add-home-header */
