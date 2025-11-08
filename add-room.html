@@ -13,17 +13,71 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
+
+<body>
     <header class="add-home-header">
         <span class="material-symbols-outlined">
             arrow_back_ios
         </span>
         <h2>สร้างกิจกรรมของคุณ</h2>
     </header>
-    <main class="home-main">
-        
 
+    <main class="add-home-main">
+        <section class="add-room-container">
+            <div class="add-cover-uplode">
+                <div class="add-cover-box">
+                    <span class="add-cover-plus">+</span>
+                </div>
+                <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
+            </div>
+
+            <form action="/add-room.html" class="add-room-form">
+                <div class="form-group">
+                    <label for="room-name">ชื่อห้อง</label>
+                    <input type="text" name="room-name" id="room-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="place-name">วันที่จัดกิจกรรม</label>
+                    <input type="text" name="place-name" id="place-name" required>
+                </div>
+
+                <div class="form-group-inline">
+                    <label for="time">เวลา</label>
+                    <div class="inline-group">
+                        <input type="time" class="time-input" placeholder="เริ่ม">
+                        <span class="inline-separator">-</span>
+                        <input type="time" class="time-input" placeholder="สิ้นสุด" />
+                    </div>
+                </div>
+
+                <div class="form-group-inline">
+                    <label>วันเดือนปี :</label>
+                    <div class="inline-group">
+                        in
+                        <input type="date" class="date-input" placeholder="วัน">
+                        <span class="inline-separator">/</span>
+                        <input type="month" class="date-input" placeholder="เดือน" />
+                        <span class="inline-separator">/</span>
+                        <input type="" class="date-input" placeholder="ปี" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="detail">รายละเอียด</label>
+                    <textarea id="detail" name="detail" class="detail-textarea"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tag">Tag :</label>
+                    <input type="text" id="tag" name="tag" />
+                </div>
+                <button type="submit" class="btn-create">สร้าง</button>
+
+            </form>
+        </section>
     </main>
-    </body>
+</body>
 
 </html>
