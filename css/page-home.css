@@ -22,6 +22,16 @@ body {
     min-height: 100vh;
 }
 
+.material-symbols-outlined {
+    text-decoration: none;
+    border: none;
+    background: none;
+}
+
+.material-symbols-outlined:hover {
+    cursor: pointer;
+}
+
 /* header */
 .home-header {
     width: 100%;
@@ -40,35 +50,107 @@ body {
     color: var(--text-light);
 }
 
+.home-header .material-symbols-outlined {
+    color: white;
+    font-size: 28px;
+    font-weight: 700;
+}
+
 .home-main {
     width: 100%;
     padding: 20px;
     height: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
-.home-header h2 {
-    color: white;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 23px;
-}
-.search-bar {
+
+/* search-bar */
+.top-bar-search {
     width: 100%;
-    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 5px;
+    padding-bottom: 20px;
 }
+
+.top-bar-search .material-symbols-outlined {
+    color: #333333;
+    font-size: 28px;
+    font-weight: 100;
+}
+
+.search-bar {
+    width: 100%;
+    height: 30px;
+    position: relative;
+}
+
+.search-bar .material-symbols-outlined {
+    font-size: 24px;
+    position: absolute;
+    right: 5px;
+    top: 3px;
+}
+
 #search-input {
-    width: 80%;
+    width: 100%;
     height: 100%;
     border: 1px solid var(--border-color);
     border-radius: 13px;
-    padding: 0 10px;
+    padding: 0 27px 0 12px;
     font-size: 14px;
-
 }
+
+/* room-item */
+.rooms-List {
+    width: 100%;
+}
+
+.room-item {
+    width: 100%;
+    height: 250px;
+    background: #F3F3F3;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+/* header-item */
+.room-item .header-item {
+    position: relative;
+    background-image: url(/Resource/img/img1.jpg);
+    background-size: cover;
+    background-position: center;
+    background-clip: border-box;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 40%;
+}
+
+.header-item #date-activity {
+    height: 70px;
+    width: 40px;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    background-image: url(/Resource/img/bookmark.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: white;
+    font-size: large;
+    line-height: 20px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+/* body-item */
+.room-item .body-item {
+    padding: 10px;
+}
+
 /* add-home-header */
 .add-home-header {
     width: 100%;
