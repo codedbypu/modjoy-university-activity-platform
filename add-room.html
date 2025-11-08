@@ -39,12 +39,17 @@
                     <input type="text" name="room-name" id="room-name" required>
                 </div>
 
+                 <div class="form-group">
+                    <label for="place-name">ชื่อสถานที่ :</label>
+                    <input type="text" id="place-name" name="place-name" />
+                </div>
+
                 <div class="form-group">
                     <label for="place-name">วันที่จัดกิจกรรม</label>
                     <input type="text" name="place-name" id="place-name" required>
                 </div>
 
-                <div class="form-group-inline">
+                <div class="form-group">
                     <label for="time">เวลา</label>
                     <div class="inline-group">
                         <input type="time" class="time-input" placeholder="เริ่ม">
@@ -53,15 +58,19 @@
                     </div>
                 </div>
 
-                <div class="form-group-inline">
+                <div class="form-group">
                     <label>วันเดือนปี :</label>
                     <div class="inline-group">
+<<<<<<< HEAD
                         <!-- <input type="number" class="date-input" placeholder="วัน">
                         <span class="inline-separator">/</span>
                         <input type="number" class="date-input" placeholder="เดือน" />
                         <span class="inline-separator">/</span>
                         <input type="number" class="date-input" placeholder="ปี" /> -->
                         <input type="date" class="time-input" style="width: 100%;"/>
+=======
+                        <input type="date" class="date-input" placeholder="วัน">
+>>>>>>> 5e3f61225c4d2f7759694a8a18e4e160f0a523dc
                     </div>
                 </div>
 
@@ -73,7 +82,9 @@
                     <label for="tag">Tag :</label>
                     <input type="text" id="tag" name="tag" />
                 </div>
-                <button type="submit" class="btn-create">สร้าง</button>
+                <div class="btn-box">
+                    <button type="submit" class="btn">สร้าง</button>
+                </div>
 
             </form>
         </section>

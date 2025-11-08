@@ -337,17 +337,6 @@ body {
     outline: none;
 }
 
-
-
-/* เวลา + วันเดือนปี  */
-.form-group-inline .inline-group {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
-    flex-wrap: nowrap;
-}
-
 .inline-separator {
     font-size: 14px;
     color: var(--text-secondary);
@@ -358,9 +347,9 @@ body {
 .time-input {
     width: 100px;
     height: 32px;
-    border: none;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    background-color: #EFEFEF;
+    background-color: #ffffff;
     padding: 4px 8px;
     text-align: center;
 }
@@ -390,4 +379,9 @@ body {
     resize: none;
 }
 
-
+.btn-box {
+    display: flex;
+    border: none;
+    justify-content: center;
+    margin-top: 25px;
+}
