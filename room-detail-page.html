@@ -25,44 +25,94 @@
         <section class="add-room-container">
             <div class="add-cover-upload">
                 <div class="add-cover-box">
-                    <span class="add-cover-plus">+</span>
+                    <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
                 </div>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
             </div>
 
             <form action="/add-room.html" class="add-room-form">
+
+                <div class="form-group">
+                    <label for="room-id">ไอดี</label>
+                    66080658656
+                </div>
+
                 <div class="form-group">
                     <label for="room-name">ชื่อห้อง</label>
-                    <input type="text" name="room-name" id="room-name" required>
+                    อ่านแคลกันครับพวกลิง
                 </div>
 
                  <div class="form-group">
                     <label for="place-name">ชื่อสถานที่</label>
-                    <input type="text" id="place-name" name="place-name" />
+                    <div id="tag-list-item">
+                            <span>N10</span>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="time">เวลา</label>
-                        <input type="time" class="time-input" placeholder="เริ่ม">
+                        20:00
                         <span class="inline-separator">-</span>
-                        <input type="time" class="time-input" placeholder="สิ้นสุด" />
+                        21:00
                 </div>
 
                 <div class="form-group">
                     <label>วัน / เดือน / ปี</label>
-                        <input type="date" class="date-input" placeholder="วัน">
+                        8 / 11 / 2025
                 </div>
 
                 <div class="form-group">
                     <label for="detail">รายละเอียด</label>
-                    <textarea id="detail" name="detail" class="detail-textarea"></textarea>
+                    <textarea id="detail" name="detail" class="detail-textarea">ผมอยากรู้ว่าคุณรู้สึกอย่างไร ผมมีแค่เท่านี้ ผมให้ได้แค่นี้ TT</textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="tag">Tag :</label>
-                    <input type="text" id="tag" name="tag" />
+                    <div id="tag-list-item">
+                            <span>อ่านหนังสือ</span><span>calculus</span>
+                    </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="owner">ผู้สร้าง : </label>
+                    <div class="member-room-box">
+                        <div class="profile-member">
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
+                            สมศรี ใจดี
+                        </div>
+                        <div class="creditperson">
+                            100
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="member">ผู้เข้าร่วม : </label>
+                    <div class="member-room-box">
+                        <div class="profile-member">
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
+                            สมศรี ใจดี
+                        </div>
+                        <div class="creditperson">
+                            100
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
+                        </div>
+                    </div>
+                    <div class="member-room-box">
+                        <div class="profile-member">
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\profile.jpg" alt="profile-image">
+                            สมศรี ใจดี
+                        </div>
+                        <div class="creditperson">
+                            100
+                            <img src="C:\Term2\Modjoy\ProjectWeb\Resource\img\credit.png" alt="credit-image">
+                        </div>
+                    </div>
+                </div>
+
+                
+                
                 <div class="btn-box">
                     <button type="submit" class="btn">เข้าร่วม</button>
                 </div>
