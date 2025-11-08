@@ -21,49 +21,58 @@
         <img src="Resource/img/small-logo.png" alt="MODJOY Logo">
         <a class="material-symbols-outlined" href="/add-room-page.html">add</a>
     </header>
+
     <main class="home-main">
         <div class="top-bar-search">
             <div class="search-bar">
                 <input type="text" placeholder="ค้นหากิจกรรมที่คุณชื่นชอบ..." id="search-input">
-                <button class="material-symbols-outlined" href="">search</button>
+                <button class="material-symbols-outlined" aria-label="ค้นหา">search</button>
             </div>
-            <button class="material-symbols-outlined" href="">filter_alt</button>
+            <button class="material-symbols-outlined" aria-label="ตัวกรอง">filter_alt</button>
         </div>
 
-        <section class="rooms-List">
-            <div class="room-item">
-
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span id="date-activity">30</span>
-                        <span id="month-activity">ต.ค.</span>
-                    </div>
-                </div>
-                <span class="separator-line"></span>
-                <div class="body-item">
-                    <div class="frist-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2><span><span class="material-symbols-outlined">person</span>3/10</span>
-                    </div>
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <div id="tag-list-item">
-                            <span>อ่านหนังสือ</span><span>Calculus</span><span>Calculus</span>
+        <ul class="rooms-List">
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
                         </div>
                     </div>
-                    <div class="third-row-item-body">
-                        <div>
-                            <span>สถานที่: <span id="address-activity">หอสมุด N10</span></span>
-                        </div>
-                        <span id="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </span>
-                    </div>
-                </div>
 
-                <button class="btn-room-item">ดูรายละเอียด</button>
-            </div>
-        </section>
+                    <hr class="separator-line">
+                    </hr>
+                    <div class="body-item">
+
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
+
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
+
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+        </ul>
     </main>
 
 </body>
