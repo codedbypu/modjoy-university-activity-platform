@@ -105,15 +105,17 @@ body {
 
 /* room-item */
 .rooms-List {
+
     width: 100%;
 }
 
 .room-item {
     width: 100%;
-    height: 250px;
+    /* height: 250px; */
     background: #F3F3F3;
     border-radius: 7px;
     overflow: hidden;
+    text-align: center;
 }
 
 /* header-item */
@@ -125,10 +127,11 @@ body {
     background-clip: border-box;
     background-repeat: no-repeat;
     width: 100%;
-    height: 40%;
+    height: 100px;
+    /* height: 40%; */
 }
 
-.header-item #date-activity {
+.group-date-month {
     height: 70px;
     width: 40px;
     display: inline-block;
@@ -139,17 +142,55 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     text-align: center;
+    line-height: 18px;
+    padding-top: 8px;
     color: white;
     font-size: large;
-    line-height: 20px;
-    text-align: center;
-    padding-top: 5px;
+}
+
+#date-activity {
+    font-size: 20px;
+}
+
+/* separator-line */
+.separator-line {
+    width: 95%;
+    border: #AEAEAE solid 2px;
+    border-radius: 25px;
+    margin: 5px auto;
 }
 
 /* body-item */
 .room-item .body-item {
     padding: 10px;
+    padding-top: 0px;
 }
+
+.room-item span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.body-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.frist-row-item-body,
+.third-row-item-body {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.second-row-item-body span {
+    justify-content: start;
+    flex-wrap: wrap;
+    gap: 0px;
+}
+
 
 /* add-home-header */
 .add-home-header {
