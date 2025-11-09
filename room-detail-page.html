@@ -27,32 +27,32 @@
         </div>
 
         <form action="/join-room" class="detail-room-form">
-            <input type="hidden" name="room_id" value="66080658656">
+            <input type="hidden" name="room-id" value="66080658656">
             <div class="form-group">
                 <strong>ไอดี</strong>
-                66080658656
+                <span id="room-id">66080658656</span>
             </div>
 
             <div class="form-group">
                 <strong>ชื่อห้อง</strong>
-                อ่านแคลกันครับพวกลิง
+                <span id="room-name">อ่านแคลกันครับพวกลิง</span>
             </div>
 
             <div class="form-group">
                 <strong>ชื่อสถานที่</strong>
-                <span id="address-activity">ห้องสมุด N10</span>
+                <span id="address-activity" class="address-activity">ห้องสมุด N10</span>
             </div>
 
             <div class="form-group">
                 <strong>เวลา</strong>
-                20:00
+                <span id="start-time">20:00</span>
                 <span class="inline-separator">-</span>
-                21:00
+                <span id="end_time">21:00</span>
             </div>
 
             <div class="form-group">
                 <strong>วัน / เดือน / ปี</strong>
-                8 / 11 / 2025
+                <span id="date-input">8 / 11 / 2025</span>
             </div>
 
             <div class="form-group">
@@ -63,9 +63,10 @@
 
             <div class="form-group">
                 <strong>Tag :</strong>
-                <div id="tag-list-item">
-                    <span>อ่านหนังสือ</span><span>calculus</span>
-                </div>
+                <ul class="tag-list-item">
+                    <li>อ่านหนังสือ</li>
+                    <li>calculus</li>
+                </ul>
             </div>
 
             <div class="form-group">
@@ -74,10 +75,10 @@
                 <div class="member-room-box">
                     <div class="profile-member">
                         <img src="\Resource\img\profile.jpg" alt="profile-image">
-                        สมศรี ใจดี
+                        <span>สมศรี ใจดี</span>
                     </div>
                     <div class="creditperson">
-                        100
+                        <span>100</span>
                         <img src="\Resource\img\credit.png" alt="credit-image">
                     </div>
                 </div>
@@ -85,26 +86,28 @@
 
             <div class="form-group">
                 <strong>ผู้เข้าร่วม : </strong>
-                <div class="member-room-box">
-                    <div class="profile-member">
-                        <img src="\Resource\img\profile.jpg" alt="profile-image">
-                        สมศรี ใจดี
-                    </div>
-                    <div class="creditperson">
-                        100
-                        <img src="\Resource\img\credit.png" alt="credit-image">
-                    </div>
-                </div>
-                <div class="member-room-box">
-                    <div class="profile-member">
-                        <img src="\Resource\img\profile.jpg" alt="profile-image">
-                        สมศรี ใจดี
-                    </div>
-                    <div class="creditperson">
-                        100
-                        <img src="\Resource\img\credit.png" alt="credit-image">
-                    </div>
-                </div>
+                <ul class="member-list">
+                    <li class="member-room-box">
+                        <div class="profile-member">
+                            <img src="\Resource\img\profile.jpg" alt="profile-image">
+                            <span>สมศรี ใจดี</span>
+                        </div>
+                        <div class="creditperson">
+                            <span>100</span>
+                            <img src="\Resource\img\credit.png" alt="credit-image">
+                        </div>
+                    </li>
+                    <li class="member-room-box">
+                        <div class="profile-member">
+                            <img src="\Resource\img\profile.jpg" alt="profile-image">
+                            <span>สมศรี ใจดี</span>
+                        </div>
+                        <div class="creditperson">
+                            <span>100</span>
+                            <img src="\Resource\img\credit.png" alt="credit-image">
+                        </div>
+                    </li>
+                </ul>
             </div>
 
             <div class="btn-box">

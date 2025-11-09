@@ -163,12 +163,14 @@ body {
     margin-top: 25px;
 }
 
-.tag-group{
+.tag-group {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 8px;
 }
-.tag-group .btn{
+
+.tag-group .btn {
     width: 40px;
     height: 36px;
     font-size: 24px;
@@ -176,7 +178,8 @@ body {
     font-weight: 500;
     border-radius: 0px 10px 10px 0px;
 }
-.tag-group input[type="text"]{
+
+.tag-group input[type="text"] {
     border-radius: 10px 0px 0px 10px;
 }
 
@@ -228,26 +231,12 @@ body {
     display: none;
 }
 
-/* (เผื่อไว้) ทำให้ label คลิกได้ทั้งก้อน */
 .add-cover-label {
     cursor: pointer;
 }
 
 /* more add room */
-#tag-list-item {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#tag-list-item span {
-    color: #FA5A16;
-    border: #FA5A16 solid 1px;
-    border-radius: 3.5px;
-    padding: 0px 10px;
-    margin: 2px 5px;
-}
-
-#address-activity {
+.address-activity {
     color: #FA5A16;
     border: #FA5A16 solid 1px;
     border-radius: 3.5px;
@@ -314,4 +303,27 @@ strong {
     font-weight: 600;
     font-size: 18px;
     margin-bottom: 2px;
+}
+
+.tag-list-item li {
+    color: #FA5A16;
+    border: #FA5A16 solid 1px;
+    border-radius: 3.5px;
+    padding: 0px 10px;
+    margin: 2px 5px;
+    display: flex;
+    gap: 1px;
+}
+
+.tag-list-item {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tag-list-item li>button {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    color: #FA4616;
 }
