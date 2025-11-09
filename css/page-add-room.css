@@ -114,7 +114,7 @@ body {
 }
 
 
-.add-room-form {
+.add-room-form,.detail-room-form {
     width: 100%;
     margin-top: 10px;
 }
@@ -135,7 +135,8 @@ body {
 .add-room-form input[type="time"],
 .add-room-form input[type="date"],
 .add-room-form input[type="text"],
-.add-room-form textarea {
+.add-room-form textarea,
+.detail-room-form textarea{
     width: 100%;
     height: 36px;
     border: 1px solid var(--border-color);
@@ -273,7 +274,12 @@ body {
     object-fit: contain;
 }
 
-.add-room-form .detail-textarea {
+.add-room-form textarea{
+    padding: 10px;
+    min-height: 150px;
+}
+
+.detail-room-form .detail-textarea {
     min-height: 150px;
     background-color: #F3F3F3;
     overflow: auto;
