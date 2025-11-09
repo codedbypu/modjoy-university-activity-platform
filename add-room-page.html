@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MODJOY - หน้าแรก</title>
+    <title>MODJOY - สร้างกิจกรรมใหม่</title>
     <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,14 +23,19 @@
     </header>
 
     <main class="add-home-main">
-        <div class="add-cover-upload">
-            <div class="add-cover-box">
-                <span class="add-cover-plus">+</span>
-            </div>
-            <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-        </div>
-
         <form action="/add-room.html" class="add-room-form">
+
+            <div class="form-group">
+                <label for="cover-image-input" class="add-cover-label">
+                    <div class="add-cover-box">
+                        <span class="add-cover-plus">+</span>
+                    </div>
+                </label>
+                <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
+
+                <input type="file" id="cover-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
+            </div>
+
             <div class="form-group">
                 <label for="room-name">ชื่อห้อง</label>
                 <input type="text" name="room-name" id="room-name" required>
@@ -41,7 +46,7 @@
                 <input type="text" id="place-name" name="place-name" />
             </div>
 
-            <div class="form-group">
+            <div class="form-group time-input-group">
                 <label for="time">เวลา</label>
                 <input type="time" class="time-input" placeholder="เริ่ม">
                 <span class="inline-separator">-</span>
@@ -60,7 +65,10 @@
 
             <div class="form-group">
                 <label for="tag">Tag :</label>
-                <input type="text" id="tag" name="tag" />
+                <div class="tag-group">
+                    <input type="text" id="tag" name="tag" />
+                    <button class="btn">+</button>
+                </div>
             </div>
 
             <div class="btn-box">
@@ -68,6 +76,7 @@
             </div>
 
         </form>
+
     </main>
     <footer class="login-footer">
         <div class="footer-links">
