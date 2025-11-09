@@ -34,11 +34,16 @@ body {
 }
 
 .add-home-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
     width: 100%;
     padding-top: calc(30px + env(safe-area-inset-top));
     padding-left: calc(20px + env(safe-area-inset-left));
     padding-right: calc(20px + env(safe-area-inset-right));
     padding-bottom: 18px;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -163,12 +168,14 @@ body {
     margin-top: 25px;
 }
 
-.tag-group{
+.tag-group {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 8px;
 }
-.tag-group .btn{
+
+.tag-group .btn {
     width: 40px;
     height: 36px;
     font-size: 24px;
@@ -176,78 +183,13 @@ body {
     font-weight: 500;
     border-radius: 0px 10px 10px 0px;
 }
-.tag-group input[type="text"]{
+
+.tag-group input[type="text"] {
     border-radius: 10px 0px 0px 10px;
 }
 
-/* footer */
-.login-footer {
-    width: 100%;
-    padding: 30px 20px;
-    padding-bottom: calc(30px + env(safe-area-inset-bottom));
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.footer-links {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.footer-links a {
-    color: var(--text-secondary);
-    /* สีเทาอ่อน */
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-}
-
-.footer-links a:hover {
-    color: var(--primary-color);
-    /* สีส้ม */
-    text-decoration: underline;
-}
-
-.footer-links span {
-    color: var(--text-secondary);
-    font-size: 13px;
-}
-
-.copyright-text {
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 400;
-    text-align: center;
-}
-
-.hidden-file-input {
-    display: none;
-}
-
-/* (เผื่อไว้) ทำให้ label คลิกได้ทั้งก้อน */
-.add-cover-label {
-    cursor: pointer;
-}
-
 /* more add room */
-#tag-list-item {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-#tag-list-item span {
-    color: #FA5A16;
-    border: #FA5A16 solid 1px;
-    border-radius: 3.5px;
-    padding: 0px 10px;
-    margin: 2px 5px;
-}
-
-#address-activity {
+.address-activity {
     color: #FA5A16;
     border: #FA5A16 solid 1px;
     border-radius: 3.5px;
@@ -316,3 +258,77 @@ strong {
     margin-bottom: 2px;
 }
 
+.tag-list-item li {
+    color: #FA5A16;
+    border: #FA5A16 solid 1px;
+    border-radius: 3.5px;
+    padding: 0px 10px;
+    margin: 2px 5px;
+    display: flex;
+    gap: 1px;
+}
+
+.tag-list-item {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tag-list-item li>button {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    color: #FA4616;
+}
+
+/* footer */
+.login-footer {
+    width: 100%;
+    padding: 30px 20px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    /* สีเทาอ่อน */
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+    /* สีส้ม */
+    text-decoration: underline;
+}
+
+.footer-links span {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.copyright-text {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.add-cover-label {
+    cursor: pointer;
+}
