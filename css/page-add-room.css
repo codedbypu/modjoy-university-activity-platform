@@ -232,10 +232,14 @@ body {
     color: var(--text-dark);
 }
 
-.credit-person img {
+.creditperson img {
     width: 18px;
     height: 18px;
     object-fit: contain;
+}
+
+.creditperson #not-checked-in {
+    visibility: hidden;
 }
 
 .add-room-form textarea {
@@ -331,4 +335,46 @@ strong {
 
 .add-cover-label {
     cursor: pointer;
+}
+
+
+
+.qr-container {
+    margin: 0 auto; 
+    width: 70%;
+    height: 70%;
+    border-radius: 20px;
+    border: 1px solid #d0d0d0;
+    background-color: #F3F3F3;
+    display: flex;
+    align-items:baseline;
+    justify-content: center;
+}
+
+.qr-imagebox img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    
+}
+
+.qr-imagebox {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    justify-items: center;
+    background-color: black;
+    color: white;
+    overflow: hidden;
+    border-radius: 20px;
+   
+}
+
+.qr-expiry-text {
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--text-dark);
+    width: 100%;
+    text-align: center; 
 }
