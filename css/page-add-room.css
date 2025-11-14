@@ -238,7 +238,7 @@ body {
     object-fit: contain;
 }
 
-.creditperson #not-checked-in {
+.creditperson .not-checked-in-icon {
     visibility: hidden;
 }
 
@@ -357,11 +357,13 @@ strong {
     margin: 5px auto 2px;
     aspect-ratio: 1 / 1;
 }
+
 .qr-imagebox strong {
     background-color: #000;
     margin: 0px;
     font-size: 22px;
 }
+
 .qr-expiry-text {
     display: inline-block;
     margin-top: 8px;
@@ -370,4 +372,11 @@ strong {
     color: var(--text-dark);
     width: 100%;
     text-align: center;
+}
+
+.info-group {
+    width: 100%;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--text-dark);
 }

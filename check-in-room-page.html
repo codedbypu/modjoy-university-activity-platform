@@ -16,36 +16,33 @@
 
 <body>
     <header class="add-home-header">
-        <a href="/home-page.html" class="material-symbols-outlined">
-            arrow_back_ios
-        </a>
+        <a href="/home-page.html" class="material-symbols-outlined">arrow_back_ios</a>
         <h2>จัดการการเช็คชื่อกิจกรรม</h2>
     </header>
     <main class="add-home-main">
-        <form action="check-in-form" class="check-in-form">
-            <div class="form-group">
-                <strong>ไอดี</strong>
-                <span id="room-id">66080658656</span>
+
+        <section class="check-in-details">
+            <div class="info-group">
+                <strong>ไอดี</strong><span id="room-id">66080658656</span>
             </div>
 
-            <div class="form-group">
-                <strong>ชื่อกิจกรรม</strong>
-                <span id="room-name">อ่านแคลกันครับพวกลิง</span>
+            <div class="info-group">
+                <strong>ชื่อกิจกรรม</strong><span id="room-name">อ่านแคลกันครับพวกลิง</span>
             </div>
 
-            <div class="form-group">
+            <div class="info-group">
                 <div class="qr-container">
                     <div class="qr-imagebox">
                         <img src="./Resource/img/qr-example.png" alt="QR Code Image" class="qr-code-image" id="room-qr-code">
-                        <strong>JB12345</strong>
+                        <strong id="room-qr-text">JB12345</strong>
                     </div>
                 </div>
                 <span class="qr-expiry-text" id = "room-qr-expiry">เวลาหมดอายุ : 14:00</span>
             </div>
 
-            <div class="form-group">
-                <strong id="checked-in-num">เช็คชื่อแล้ว ( 2 ) : </strong>
-                <ul class="member-list">
+            <div class="info-group">
+                <strong id="checked-in-count">เช็คชื่อแล้ว ( 2 ) : </strong>
+                <ul class="member-list" id="checked-in-list">
                     <li class="member-room-box">
                         <div class="profile-member">
                             <img src="\Resource\img\profile.jpg" alt="profile-image">
@@ -54,7 +51,7 @@
                         <div class="creditperson">
                             <span>100</span>
                             <img src="\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined">
+                            <span class="material-symbols-outlined checked-in-icon">
                                 check_circle
                             </span>
                         </div>
@@ -67,15 +64,15 @@
                         <div class="creditperson">
                             <span>100</span>
                             <img src="\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined">check_circle</span>
+                            <span class="material-symbols-outlined checked-in-icon">check_circle</span>
                         </div>
                     </li>
                 </ul>
             </div>
 
-            <div class="form-group">
-                <strong>ยังไม่ได้เช็คชื่อ ( 2 ) : </strong>
-                <ul class="member-list" id="check-in-num">
+            <div class="info-group">
+                <strong id="not-checked-in-count">ยังไม่ได้เช็คชื่อ ( 2 ) : </strong>
+                <ul class="member-list" id="not-checked-in-list">
                     <li class="member-room-box">
                         <div class="profile-member">
                             <img src="\Resource\img\profile.jpg" alt="profile-image">
@@ -84,7 +81,7 @@
                         <div class="creditperson">
                             <span>100</span>
                             <img src="\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined" id="not-checked-in">check_circle</span>
+                            <span class="material-symbols-outlined not-checked-in-icon">check_circle</span>
                         </div>
                     </li>
                     <li class="member-room-box">
@@ -95,12 +92,12 @@
                         <div class="creditperson">
                             <span>100</span>
                             <img src="\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined" id="not-checked-in">check_circle</span>
+                            <span class="material-symbols-outlined not-checked-in-icon">check_circle</span>
                         </div>
                     </li>
                 </ul>
             </div>
-        </form>
+        </section>
     </main>
 
 
