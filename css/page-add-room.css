@@ -259,11 +259,7 @@ input[type="time"].time-input{
     resize: none;
 }
 
-<<<<<<< HEAD
-.add-home-main strong {
-=======
 .form-group label ,strong{
->>>>>>> 5273795ce80c91e8ee35bd800fec59ba24161e7d
     display: block;
     font-weight: 600;
     font-size: 18px;

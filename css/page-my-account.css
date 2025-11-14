@@ -140,12 +140,15 @@ body {
     outline: none;
 }
 
-.account-tabs {
+.account-activity {
     display: flex;
     flex-direction: column;
-    gap: 16px;
     margin-top: 4px;
     margin-bottom: 16px;
+}
+
+.rooms-List {
+    padding: 20px 20px 0 20px;
 }
 
 .account-tab-header {
@@ -157,11 +160,6 @@ body {
     font-size: 18px;
     font-weight: 600;
     box-shadow: -1px 3px 5px 0px rgba(0, 0, 0, 0.28);
-}
-
-.account-activities {
-    height: 100%;
-    width: 100%;
 }
 
 .account-item-activity {
