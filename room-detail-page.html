@@ -40,14 +40,14 @@
 
             <div class="form-group">
                 <strong>ชื่อสถานที่</strong>
-                <span id="address-activity" class="address-activity">ห้องสมุด N10</span>
+                <span id="address-input-display" class="address-activity">ห้องสมุด N10</span>
             </div>
 
             <div class="form-group">
                 <strong>เวลา</strong>
                 <span id="start-time">20:00</span>
                 <span class="inline-separator">-</span>
-                <span id="end_time">21:00</span>
+                <span id="end-time">21:00</span>
             </div>
 
             <div class="form-group">
@@ -57,7 +57,7 @@
 
             <div class="form-group">
                 <strong>รายละเอียด</strong>
-                <textarea readonly id="detail" name="detail"
+                <textarea readonly id="room-detail" name="room-detail"
                     class="detail-textarea">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ullam, quia. Labore aliquid provident ut eaque commodi minus, quaerat sequi fuga sapiente magnam ex possimus quod error totam saepe et vitae accusamus non laboriosam obcaecati perspiciatis est? Accusantium fuga blanditiis eveniet provident quidem? Quod, at! Aspernatur iusto enim voluptatibus assumenda accusantium!</textarea>
             </div>
 
@@ -85,8 +85,8 @@
             </div>
 
             <div class="form-group">
-                <strong>ผู้เข้าร่วม : </strong>
-                <ul class="member-list">
+                <strong id="room-member-count">ผู้เข้าร่วม ( 2 ) : </strong>
+                <ul class="member-list" id="room-member-list">
                     <li class="member-room-box">
                         <div class="profile-member">
                             <img src=".\Resource\img\profile.jpg" alt="profile-image">

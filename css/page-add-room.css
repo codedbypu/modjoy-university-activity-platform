@@ -247,6 +247,7 @@ input[type="time"].time-input{
 }
 
 .detail-room-form .detail-textarea {
+    padding: 7px 10px;
     min-height: 150px;
     background-color: #F3F3F3;
     overflow: auto;
