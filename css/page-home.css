@@ -50,9 +50,10 @@ body {
     justify-content: space-between;
 
     background: var(--primary-gradient-start);
-    background-image: linear-gradient(187deg, var(--primary-gradient-start) -1.34%, var(--primary-color-dark) 119.5%);
+    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
     background-size: cover;
     color: var(--text-light);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
 }
 
 .home-header .material-symbols-outlined {
@@ -288,6 +289,8 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    position: absolute;
+    bottom: 0;
 }
 
 .footer-links {
