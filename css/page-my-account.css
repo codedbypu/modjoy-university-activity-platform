@@ -20,6 +20,10 @@
 
 body {
     min-height: 100vh;
+    display: flex;
+    /* 1. ใช้ Flexbox */
+    flex-direction: column;
+    /* 2. เรียงบน-ล่าง */
 }
 
 .material-symbols-outlined {
@@ -82,6 +86,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex-grow: 1;
 }
 
 .account-profile {
@@ -226,8 +231,9 @@ strong {
     margin-top: 8px;
 }
 
-.profile-button button {
-    width: 60%;
+.profile-button a {
+    text-align: center;
+    padding: 10px 15px;
     max-width: 150px;
     height: 41px;
     align-items: center;
@@ -243,12 +249,12 @@ strong {
     transition: all 0.2s;
 }
 
-.profile-button button:hover {
+.profile-button a:hover {
     box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
     background-color: var(--primary-color-light);
 }
 
-.profile-button button:active {
+.profile-button a:active {
     transform: scale(0.95);
 }
 
@@ -262,9 +268,6 @@ strong {
     flex-direction: column;
     align-items: center;
     gap: 12px;
-
-    position: relative;
-    bottom: 0px;
 }
 
 .footer-links {

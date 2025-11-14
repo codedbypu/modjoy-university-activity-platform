@@ -31,21 +31,19 @@
                 </div>
 
                 <div class="profile-info">
-                    <p class="name">มดตะนอย กัดเจ็บ</p>
-                    <p class="email">Modtanoy.gadj@kmutt.ac.th</p>
-                    <p class="profile-education">คณะวิทยาศาสตร์ ระดับชั้นปีที่ 2</p>
+                    <p class="name" id="user-name">มดตะนอย กัดเจ็บ</p>
+                    <p class="email" id="user-email">Modtanoy.gadj@kmutt.ac.th</p>
+                    <p class="profile-education" id="user-education">คณะวิทยาศาสตร์ ระดับชั้นปีที่ 2</p>
                     <div class="creditperson">
-                        <span>100</span>
+                        <span id="user-credit">100</span>
                         <img src=".\Resource\img\credit.png" alt="credit-image">
                     </div>
                 </div>
             </div>
 
-            </div>
-
             <div class="form-group">
                 <strong>Tag ที่สนใจ :</strong>
-                <ul class="tag-list-item">
+                <ul class="tag-list-item" id="user-tags-list">
                     <li>อ่านหนังสือ</li>
                     <li>calculus</li>
                 </ul>
@@ -61,15 +59,15 @@
 
             <div class="form-group">
                 <div class="profile-button">
-                    <button class="account-mainbtn-edit">แก้ไขโปรไฟล์</button>
-                    <button class="btn-history">ประวัติการเข้าร่วม</button>
+                    <a href="/edit-account-page.html" class="account-mainbtn-edit">แก้ไขโปรไฟล์</a>
+                    <a href="" class="btn-history">ประวัติการเข้าร่วม</a>
                 </div>
             </div>
         </section>
 
         <section class="account-activity">
             <strong class="account-tab-header">กิจกรรมที่เข้าร่วม</strong>
-            <ul class="rooms-List">
+            <ul class="rooms-List" id="user-activity-list">
                 <li class="room-item">
                     <article>
                         <div class="header-item">
@@ -80,7 +78,6 @@
                         </div>
 
                         <hr class="separator-line">
-                        </hr>
                         <div class="body-item">
 
                             <div class="first-row-item-body">
@@ -119,16 +116,15 @@
                                 <span class="month-activity">ต.ค.</span>
                             </div>
                         </div>
-                
+
                         <hr class="separator-line">
-                        </hr>
                         <div class="body-item">
-                
                             <div class="first-row-item-body">
                                 <h2>อ่านแคลกันครับพวกลิง</h2>
-                                <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
+                                <span class="people-activity"><span
+                                        class="material-symbols-outlined">person</span>3/10</span>
                             </div>
-                
+
                             <div class="second-row-item-body">
                                 <p>Tag:</p>
                                 <ul class="tag-list-item">
@@ -137,7 +133,7 @@
                                     <li>Calculus</li>
                                 </ul>
                             </div>
-                
+
                             <div class="third-row-item-body">
                                 <p>สถานที่: <span class="address-activity">N10</span></p>
                                 <p class="time-activity">
@@ -145,9 +141,9 @@
                                     <span>13:00 - 14:00</span>
                                 </p>
                             </div>
-                
+
                         </div>
-                
+
                         <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
                     </article>
                 </li>
