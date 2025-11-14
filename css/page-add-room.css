@@ -338,43 +338,36 @@ strong {
 }
 
 
-
-.qr-container {
-    margin: 0 auto; 
-    width: 70%;
-    height: 70%;
-    border-radius: 20px;
-    border: 1px solid #d0d0d0;
-    background-color: #F3F3F3;
+/* check-in-page */
+.qr-imagebox {
+    max-width: 300px;
     display: flex;
-    align-items:baseline;
-    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    margin: auto;
+    overflow: hidden;
+    color: white;
+    border-radius: 22px;
+    border: 1px solid #d0d0d0;
+    background: linear-gradient(178deg, #FA5A16 5.18%, #FFB52C 122.98%);
 }
 
 .qr-imagebox img {
-    width: 100%;
-    height: 100%;
+    max-width: 280px;
+    margin: 5px auto 2px;
     aspect-ratio: 1 / 1;
-    object-fit: fill;
 }
-
-.qr-imagebox {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    justify-items: center;
-    background-color: black;
-    color: white;
-    overflow: hidden;
-    border-radius: 20px;
-   
+.qr-imagebox strong {
+    background-color: #000;
+    margin: 0px;
+    font-size: 22px;
 }
-
 .qr-expiry-text {
+    display: inline-block;
     margin-top: 8px;
     margin-bottom: 12px;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--text-dark);
     width: 100%;
-    text-align: center; 
+    text-align: center;
 }

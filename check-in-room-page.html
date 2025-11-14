@@ -19,7 +19,7 @@
         <a href="/home-page.html" class="material-symbols-outlined">
             arrow_back_ios
         </a>
-        <h2>จัดการการเช็คชื่อของห้อง</h2>
+        <h2>จัดการการเช็คชื่อกิจกรรม</h2>
     </header>
     <main class="add-home-main">
         <form action="check-in-form" class="check-in-form">
@@ -29,22 +29,22 @@
             </div>
 
             <div class="form-group">
-                <strong>ชื่อห้อง</strong>
+                <strong>ชื่อกิจกรรม</strong>
                 <span id="room-name">อ่านแคลกันครับพวกลิง</span>
             </div>
 
             <div class="form-group">
                 <div class="qr-container">
                     <div class="qr-imagebox">
-                        <img src=".\Resource\img\bangmod.png" alt="QR Code Image" class="qr-code-image">
+                        <img src="./Resource/img/qr-example.png" alt="QR Code Image" class="qr-code-image" id="room-qr-code">
                         <strong>JB12345</strong>
                     </div>
                 </div>
-                <div class="qr-expiry-text">เวลาหมดอายุ : 14:00</div>
+                <span class="qr-expiry-text" id = "room-qr-expiry">เวลาหมดอายุ : 14:00</span>
             </div>
 
             <div class="form-group">
-                <strong>เช็คชื่อแล้ว ( 2 ) : </strong>
+                <strong id="checked-in-num">เช็คชื่อแล้ว ( 2 ) : </strong>
                 <ul class="member-list">
                     <li class="member-room-box">
                         <div class="profile-member">
@@ -75,7 +75,7 @@
 
             <div class="form-group">
                 <strong>ยังไม่ได้เช็คชื่อ ( 2 ) : </strong>
-                <ul class="member-list">
+                <ul class="member-list" id="check-in-num">
                     <li class="member-room-box">
                         <div class="profile-member">
                             <img src="\Resource\img\profile.jpg" alt="profile-image">
