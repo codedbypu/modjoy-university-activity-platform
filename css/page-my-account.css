@@ -61,16 +61,19 @@ body {
 }
 
 /* กล่องเปล่าฝั่งขวา */
-.account-header::after {
+/* .account-header::after {
     content: "";
     width: 24px;
-}
+} */
 
 /* ไอคอนลูกศรซ้าย */
 .account-header .material-symbols-outlined {
     color: #ffffff;
     font-size: 28px;
     font-weight: 700;
+}
+.account-header .right-account-header{
+    font-weight: 400;
 }
 
 .account-header h2 {
