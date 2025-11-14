@@ -7,6 +7,7 @@
     <title>MODJOY - สร้างกิจกรรมใหม่</title>
     <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="stylesheet" href="./css/base.css">
+    <script src="/JavaScript/add-room-page.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -33,7 +34,6 @@
                     </div>
                 </label>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-
                 <input type="file" id="cover-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
             </div>
 
@@ -43,8 +43,18 @@
             </div>
 
             <div class="form-group">
-                <label for="address-activity">ชื่อสถานที่</label>
-                <input type="text" id="address-activity" name="address-activity" class="address-activity-input">
+                <label for="address-input-display">ชื่อสถานที่</label>
+                <div class="custom-select-container">
+                    <input type="text" id="address-input-display" class="custom-select-input"
+                        placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ...">
+                    <div class="custom-options-list">
+                        <div class="custom-option" data-value="N7 ตึกวิทยาศาสตร์">N7 ตึกวิทยาศาสตร์</div>
+                        <div class="custom-option" data-value="N10 ห้องสมุด">N10 ห้องสมุด</div>
+                        <div class="custom-option" data-value="S2">S2</div>
+                        <div class="custom-option" data-value="S3">S3</div>
+                    </div>
+                    <input type="hidden" name="address-activity" id="address-input-hidden">
+                </div>
             </div>
 
             <div class="form-group time-input-group">
@@ -70,10 +80,11 @@
                     <input type="text" id="room-tag" name="room-tag">
                     <button type="button" class="btn">+</button>
                 </div>
-                <ul class="tag-list-item">
+                <ul class="tag-list-item" id="tag-list-display">
                     <li>อ่านหนังสือ <button type="button" class="material-symbols-outlined">close</button></li>
                     <li>calculus <button type="button" class="material-symbols-outlined">close</button></li>
                 </ul>
+                <input type="hidden" name="tags_list" id="tags-list-hidden" value="อ่านหนังสือ,calculus">
             </div>
 
             <div class="btn-box">

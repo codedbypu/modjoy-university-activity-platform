@@ -126,15 +126,10 @@ body {
     color: var(--text-dark);
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
 .add-room-form input[type="time"],
 .add-room-form input[type="date"],
 .add-room-form input[type="text"],
+.add-room-form select,
 .add-room-form textarea,
 .detail-room-form textarea {
     width: 100%;
@@ -147,6 +142,10 @@ body {
     outline: none;
     text-align: left;
     box-sizing: border-box;
+}
+
+input[type="time"].time-input{
+    padding: 0px 0px 0px 10px;
 }
 
 .inline-separator {
@@ -256,6 +255,13 @@ body {
 }
 
 strong {
+    display: block;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.form-group label {
     display: block;
     font-weight: 600;
     font-size: 18px;

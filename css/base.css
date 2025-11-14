@@ -42,3 +42,56 @@
     justify-content: center;
     text-decoration: none;
 }
+
+/* --- สไตล์สำหรับ Combobox สวยๆ --- */
+
+/* 1. กล่องครอบ (ต้องเป็น relative) */
+.custom-select-container {
+    position: relative;
+}
+
+/* 2. ตัว Input สวยงาม (ใช้สไตล์เดียวกับ input อื่นๆ) */
+.custom-select-input {
+    width: 100%;
+    height: 36px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 0px 10px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+/* 3. กล่อง Dropdown (ซ่อนไว้ก่อน) */
+.custom-options-list {
+    display: none; /* ซ่อนไว้เป็นค่าเริ่มต้น */
+    position: absolute;
+    top: 100%; /* ให้มันอยู่ใต้ input พอดี */
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 10px 10px;
+    max-height: 200px; /* จำกัดความสูง */
+    overflow-y: auto;
+    z-index: 100; /* ให้อยู่ทับทุกอย่าง */
+    margin-top: -2px; /* ขยับให้ขอบต่อกันสวยๆ */
+}
+
+/* 4. เมื่อกล่อง Dropdown ถูกเปิด (ด้วย JS) */
+.custom-options-list.show {
+    display: block;
+}
+
+/* 5. ตัวเลือกแต่ละอัน */
+.custom-option {
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* 6. เมื่อเมาส์ชี้ */
+.custom-option:hover {
+    background-color: #f3f3f3;
+}
