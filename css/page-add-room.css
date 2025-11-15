@@ -57,10 +57,10 @@ body {
 }
 
 /* กล่องเปล่าฝั่งขวา */
-.add-home-header::after {
+/* .add-home-header::after {
     content: "";
     width: 24px;
-}
+} */
 
 /* ไอคอนลูกศรซ้าย */
 .add-home-header .material-symbols-outlined {
@@ -92,7 +92,6 @@ body {
 .add-room-form,
 .detail-room-form {
     width: 100%;
-    margin-top: 10px;
 }
 
 .form-group {
@@ -165,7 +164,7 @@ input[type="time"].time-input {
 }
 
 /* more add room */
-#room-id {
+input#room-id {
     background-color: #f4f4f4;
 }
 
@@ -360,7 +359,6 @@ strong {
 
 /* --- Uploader --- */
 .add-cover-box {
-    aspect-ratio: 16 / 9;
     border-radius: 12px;
     border: 1px solid #d0d0d0;
     background-color: #F3F3F3;
@@ -371,6 +369,7 @@ strong {
 }
 
 .add-cover-box img {
+    aspect-ratio: 16 / 9;
     width: 100%;
     height: 100%;
     object-fit: cover;

@@ -20,22 +20,26 @@
     <header class="add-home-header">
         <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
         <h2>รายละเอียดกิจกรรม</h2>
+        <a href="/edit-room-page.html" class="material-symbols-outlined">edit_square</a>
     </header>
 
     <main class="add-home-main">
-        <div class="add-cover-box">
-            <img src="\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
-        </div>
-
         <form action="/join-room" class="detail-room-form">
             <input type="hidden" name="room-id" value="66080658656">
+
+            <div class="form-group">
+                <div class="add-cover-box">
+                    <img src="\Resource\img\bangmod.png" alt="background image" class="cover-image-display">
+                </div>
+            </div>
+
             <div class="form-group">
                 <strong>ไอดี</strong>
                 <span id="room-id">66080658656</span>
             </div>
 
             <div class="form-group">
-                <strong>ชื่อห้อง</strong>
+                <strong>ชื่อกิจกรรม</strong>
                 <span id="room-name">อ่านแคลกันครับพวกลิง</span>
             </div>
 
@@ -120,8 +124,8 @@
         <section class="check-in-container" id="check-in-container">
             <form class="check-in-box" id="check-in-form">
                 <span class="material-symbols-outlined btn check-in-icon">qr_code_scanner</span>
-
-                <input type="text" class="check-in-input" name="check_in_code" placeholder="กรอกรหัสเช็คชื่อของห้อง" required>
+                <input type="text" class="check-in-input" name="check_in_code" placeholder="กรอกรหัสเช็คชื่อของห้อง"
+                    required>
                 <button type="submit" class="btn check-in-btn">ยืนยัน</button>
             </form>
 
