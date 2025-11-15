@@ -83,10 +83,14 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .add-cover-box {
-    aspect-ratio: 1/1;
+    aspect-ratio: 16 / 9;
     border-radius: 12px;
     border: 1px solid #d0d0d0;
     background-color: #F3F3F3;

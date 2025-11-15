@@ -66,7 +66,8 @@ body {
     font-size: 28px;
     font-weight: 700;
 }
-.account-header .right-account-header{
+
+.account-header .right-account-header {
     font-weight: 400;
 }
 
@@ -100,6 +101,10 @@ body {
     gap: 10px;
     flex-grow: 1;
     padding: 20px;
+
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .account-profile {
@@ -501,27 +506,104 @@ strong {
     cursor: pointer;
 }
 
-.add-cover-box {
+/* --- Uploader แบบวงกลม (สำหรับ Edit Profile) --- */
+.add-cover-label.profile-uploader {
+    margin: 0 auto 15px;
+    width: 60%;
+    max-width: 300px;
+    border-radius: 100%;
+    display: block;
+}
+
+.add-cover-box.profile-image-circle {
     aspect-ratio: 1/1;
-    border: 1px solid #d0d0d0;
-    background-color: #F3F3F3;
+    border: 5px solid #d0d0d0;
+    background-color: #d8d8d8;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 100%;
+    overflow: hidden;
+    /* (ซ่อนขอบรูปที่เกิน) */
+    position: relative;
 }
 
-.add-cover-box img {
+.edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
+    border-radius: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* ม่านสีดำโปร่งแสง */
+    color: white;
+
+    /* จัดไอคอนและข้อความให้อยู่กลาง */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* ซ่อนไว้ก่อน (สำคัญ) */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.add-cover-plus {
+.edit-overlay .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.edit-overlay span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.profile-image-circle .profile-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 100%;
+    transition: filter 0.3s ease;
+}
+
+.add-cover-plus{
     font-size: 42px;
     line-height: 1;
     color: #AEAEAE;
+}
+
+/* สถานะที่ 1: "ไม่มีรูป" (Default) */
+.profile-image-circle .profile-preview {
+    display: none; /* 1. ซ่อนรูป */
+}
+.profile-image-circle .add-cover-plus {
+    display: flex; /* 2. แสดงปุ่ม + */
+}
+.profile-image-circle .edit-overlay {
+    display: none; /* 3. ซ่อนปุ่มแก้ไข (Hover) */
+}
+
+/* สถานะที่ 2: "มีรูป" */
+.profile-image-circle.has-image .profile-preview {
+    display: block; /* 1. แสดงรูป */
+}
+.profile-image-circle.has-image .add-cover-plus {
+    display: none;  /* 2. ซ่อนปุ่ม */
+}
+.profile-image-circle.has-image .edit-overlay {
+    display: flex;  /* 3. แสดงปุ่มแก้ไข (ที่ซ่อนด้วย opacity 0) */
+}
+
+/* HOVER EFFECT */
+/* เมื่อเอาเมาส์ชี้ที่ <label> (ที่เป็นปุ่ม) */
+.add-cover-label.profile-uploader:hover .edit-overlay {
+    opacity: 1;
+}
+
+/* (Optional) ทำให้รูปด้านหลังมืดลงเล็กน้อย */
+.add-cover-label.profile-uploader:hover .profile-preview {
+    filter: brightness(0.7);
 }
 
 /* Button */
