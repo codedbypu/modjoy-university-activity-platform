@@ -89,40 +89,6 @@ body {
     margin-right: auto;
 }
 
-.add-cover-box {
-    aspect-ratio: 16 / 9;
-    border-radius: 12px;
-    border: 1px solid #d0d0d0;
-    background-color: #F3F3F3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.add-cover-strong {
-    justify-items: center;
-}
-
-.add-cover-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-.add-cover-plus {
-    font-size: 42px;
-    line-height: 1;
-    color: #AEAEAE;
-}
-
-.add-cover-hint {
-    margin-top: 4px;
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-
 .add-room-form,
 .detail-room-form {
     width: 100%;
@@ -199,6 +165,10 @@ input[type="time"].time-input {
 }
 
 /* more add room */
+#room-id {
+    background-color: #f4f4f4;
+}
+
 .address-activity {
     color: #FA5A16;
     border: #FA5A16 solid 1px;
@@ -275,14 +245,6 @@ strong {
     margin-bottom: 2px;
 }
 
-.hidden-file-input {
-    display: none;
-}
-
-.add-cover-label {
-    cursor: pointer;
-}
-
 .tag-list-item li {
     color: #FA5A16;
     border: #FA5A16 solid 1px;
@@ -314,18 +276,23 @@ strong {
 
 /* 2. กล่องแสดงตัวเลือก (ซ่อนไว้ก่อน) */
 .tag-suggestions {
-    display: none; /* ซ่อนไว้เป็นค่าเริ่มต้น */
+    display: none;
+    /* ซ่อนไว้เป็นค่าเริ่มต้น */
     position: absolute;
-    top: 100%; /* ให้ลอยอยู่ใต้ input */
+    top: 100%;
+    /* ให้ลอยอยู่ใต้ input */
     left: 0;
-    width: 100%; /* กว้างเท่า input */
+    width: 100%;
+    /* กว้างเท่า input */
     background-color: #ffffff;
     border: 1px solid var(--border-color);
-    border-top: none; /* ลบขอบบน (ให้ติดกับ input) */
+    border-top: none;
+    /* ลบขอบบน (ให้ติดกับ input) */
     border-radius: 0 0 10px 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     z-index: 100;
-    max-height: 150px; /* จำกัดความสูง (ถ้ามีตัวเลือกเยอะ) */
+    max-height: 150px;
+    /* จำกัดความสูง (ถ้ามีตัวเลือกเยอะ) */
     overflow-y: auto;
 }
 
@@ -342,7 +309,8 @@ strong {
 
 .tag-helper-text {
     font-size: 13px;
-    color: var(--text-secondary); /* (ใช้สีเทาจาก :root) */
+    color: var(--text-secondary);
+    /* (ใช้สีเทาจาก :root) */
     margin-top: 8px;
     padding-left: 2px;
 }
@@ -389,6 +357,121 @@ strong {
     font-size: 16px;
     color: var(--text-dark);
 }
+
+/* --- Uploader --- */
+.add-cover-box {
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    border: 1px solid #d0d0d0;
+    background-color: #F3F3F3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.add-cover-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.add-cover-plus {
+    font-size: 42px;
+    line-height: 1;
+    color: #AEAEAE;
+}
+
+.add-cover-hint {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.add-cover-label {
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.edit-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* ม่านสีดำโปร่งแสง */
+    color: white;
+
+    /* จัดไอคอนและข้อความให้อยู่กลาง */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* ซ่อนไว้ก่อน (สำคัญ) */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.edit-overlay .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.edit-overlay span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* สถานะที่ 1: "ไม่มีรูป" (Default) */
+.add-cover-box .profile-preview {
+    display: none;
+    /* 1. ซ่อนรูป */
+}
+
+.add-cover-box .add-cover-plus {
+    display: flex;
+    /* 2. แสดงปุ่ม + */
+}
+
+.add-cover-box .edit-overlay {
+    display: none;
+    /* 3. ซ่อนปุ่มแก้ไข (Hover) */
+}
+
+/* สถานะที่ 2: "มีรูป" */
+.add-cover-box.has-image .profile-preview {
+    display: block;
+    /* 1. แสดงรูป */
+}
+
+.add-cover-box.has-image .add-cover-plus {
+    display: none;
+    /* 2. ซ่อนปุ่ม */
+}
+
+.add-cover-box.has-image .edit-overlay {
+    display: flex;
+    /* 3. แสดงปุ่มแก้ไข (ที่ซ่อนด้วย opacity 0) */
+}
+
+/* HOVER EFFECT */
+/* เมื่อเอาเมาส์ชี้ที่ <label> (ที่เป็นปุ่ม) */
+.add-cover-label.profile-uploader:hover .edit-overlay {
+    opacity: 1;
+}
+
+/* (Optional) ทำให้รูปด้านหลังมืดลงเล็กน้อย */
+.add-cover-label.profile-uploader:hover .profile-preview {
+    filter: brightness(0.7);
+}
+
 
 /* footer */
 .login-footer {
