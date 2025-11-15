@@ -16,6 +16,7 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
 <body>
     <header class="add-home-header">
         <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
@@ -63,7 +64,8 @@
 
             <div class="form-group time-input-group">
                 <label for="start-time">เวลา</label>
-                <input type="time" id="start-time" class="time-input" name="start_time" placeholder="เริ่ม" value="20:00">
+                <input type="time" id="start-time" class="time-input" name="start_time" placeholder="เริ่ม"
+                    value="20:00">
                 <span class="inline-separator">-</span>
                 <input type="time" id="end-time" class="time-input" name="end-time" placeholder="สิ้นสุด" value="21:00">
             </div>
@@ -82,15 +84,19 @@
 
             <div class="form-group">
                 <label for="room-tag">Tag :</label>
-                <div class="tag-group">
-                    <input type="text" id="room-tag" name="room-tag">
-                    <button type="button" class="btn">+</button>
+                <div class="tag-input-container">
+                    <div class="tag-group">
+                        <input type="text" id="room-tag-input" name="room-tag" placeholder="พิมพ์เพื่อค้นหาแท็ก...">
+                        <button type="button" class="btn" id="add-tag-btn">+</button>
+                    </div>
+
+                    <div class="tag-suggestions" id="tag-suggestions">
+                    </div>
                 </div>
                 <ul class="tag-list-item" id="tag-list-display">
-                    <li>อ่านหนังสือ <button type="button" class="material-symbols-outlined">close</button></li>
-                    <li>calculus <button type="button" class="material-symbols-outlined">close</button></li>
                 </ul>
-                <input type="hidden" name="tags_list" id="tags-list-hidden" value="อ่านหนังสือ,calculus">
+                <input type="hidden" name="tags_list" id="tags-list-hidden" value="">
+                <p class="tag-helper-text">เลือกจากแท็กที่มีให้ หรือพิมพ์แท็กใหม่ (สูงสุด 5 อัน)</p>
             </div>
 
             <div class="btn-box">

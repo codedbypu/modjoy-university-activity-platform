@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadInitialData() {
         // (ตัวอย่างข้อมูลสมมติ)
         // ถ้าผู้ใช้มีรูปอยู่แล้ว ให้ใส่ URL
-        const userProfileUrl = ""; 
+        const userProfileUrl = "/Resource/img/profile.jpg"; 
 
         updateImagePreview(userProfileUrl);
     }
@@ -53,4 +53,163 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    // (Database) ใช้สำหรับ "แนะนำ" (Suggest) เท่านั้น
+    const availableTags = [
+        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม", 
+        "ดูหนัง", "ฟังเพลง", "Physics", "Art", "Coding"
+    ];
+    const MAX_TAGS = 3;
+    let currentTags = [];
+
+    // --- 2. หาองค์ประกอบ HTML (เหมือนเดิม) ---
+    const tagInput = document.getElementById('user-tag-input');
+    const addTagBtn = document.getElementById('add-tag-btn');
+    const tagListContainer = document.getElementById('tag-list-display');
+    const hiddenInput = document.getElementById('tags-list-hidden');
+    const suggestionsContainer = document.getElementById('tag-suggestions');
+
+    // --- 3. ฟังก์ชันหลัก (Core Functions) ---
+
+    // (ฟังก์ชัน renderTags และ removeTag เหมือนเดิม 100%)
+    function renderTags() {
+        tagListContainer.innerHTML = '';
+        currentTags.forEach(tagText => {
+            const li = document.createElement('li');
+            li.textContent = tagText;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = "button";
+            deleteBtn.className = "material-symbols-outlined";
+            deleteBtn.textContent = 'close';
+            deleteBtn.addEventListener('click', () => removeTag(tagText));
+            li.appendChild(deleteBtn);
+            tagListContainer.appendChild(li);
+        });
+        hiddenInput.value = currentTags.join(',');
+
+        if (currentTags.length >= MAX_TAGS) {
+            tagInput.disabled = true;
+            addTagBtn.disabled = true;
+            tagInput.placeholder = "เพิ่มแท็กได้สูงสุด " + MAX_TAGS + " อัน";
+        } else {
+            tagInput.disabled = false;
+            addTagBtn.disabled = false;
+            tagInput.placeholder = "พิมพ์เพื่อค้นหา หรือเพิ่มแท็กใหม่...";
+        }
+    }
+    
+    function removeTag(tagText) {
+        currentTags = currentTags.filter(tag => tag !== tagText);
+        renderTags();
+    }
+
+    function addTag(tagText) {
+        const cleanTag = tagText.trim();
+        
+        // 1. (Validation) เช็คว่าว่างเปล่าหรือไม่
+        if (cleanTag === "") {
+            return; // ไม่ทำอะไรเลย
+        }
+        
+        // 2. (Validation) เช็คว่าซ้ำหรือไม่
+        // (เราเปลี่ยนเป็น .toLowerCase() เพื่อกัน "Cal" กับ "cal")
+        const lowerCaseTag = cleanTag.toLowerCase();
+        const existingTagsLower = currentTags.map(t => t.toLowerCase());
+        
+        if (existingTagsLower.includes(lowerCaseTag)) {
+            alert("คุณเพิ่มแท็กนี้ไปแล้ว");
+            tagInput.value = '';
+            hideSuggestions();
+            return;
+        }
+
+        /* 3. (Validation ที่ถูก "ลบ") 
+           เราไม่เช็ค !availableTags.includes(cleanTag) อีกต่อไป
+           เพื่อให้ผู้ใช้ "เพิ่มแท็กใหม่" ได้
+        */
+        
+        // 4. (Validation) เช็คลิมิต 3 แท็ก (เหมือนเดิม)
+        if (currentTags.length < MAX_TAGS) {
+            currentTags.push(cleanTag); // (เพิ่มแท็กใหม่เข้าไปเลย)
+            renderTags(); // อัปเดตหน้าจอ
+        }
+        
+        // 5. (เหมือนเดิม) เคลียร์ช่องพิมพ์
+        tagInput.value = '';
+        hideSuggestions();
+    }
+    // ===============================================
+
+
+    // (ฟังก์ชัน showSuggestions และ hideSuggestions เหมือนเดิม 100%)
+    function showSuggestions(filteredList) {
+        suggestionsContainer.innerHTML = '';
+        if (filteredList.length === 0) {
+            hideSuggestions();
+            return;
+        }
+
+        filteredList.forEach(tagText => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+            item.textContent = tagText;
+            
+            // (ตรรกะ "คลิก = เติมข้อความ" เหมือนเดิม)
+            item.addEventListener('click', function() {
+                tagInput.value = tagText;
+                hideSuggestions();
+                tagInput.focus();
+            });
+            
+            suggestionsContainer.appendChild(item);
+        });
+        
+        suggestionsContainer.style.display = 'block';
+    }
+
+    function hideSuggestions() {
+        suggestionsContainer.style.display = 'none';
+    }
+
+
+    // --- 4. เชื่อมต่อ Events (เหมือนเดิม) ---
+
+    // (Event) เมื่อ "พิมพ์"
+    tagInput.addEventListener('keyup', function() {
+        const query = tagInput.value.toLowerCase();
+        if (query.length === 0) {
+            hideSuggestions();
+            return;
+        }
+        const filtered = availableTags.filter(tag => 
+            tag.toLowerCase().includes(query) && 
+            !currentTags.map(t => t.toLowerCase()).includes(tag.toLowerCase())
+        );
+        showSuggestions(filtered);
+    });
+
+    // (Event) เมื่อ "คลิก" ปุ่ม +
+    addTagBtn.addEventListener('click', function() {
+        addTag(tagInput.value);
+    });
+
+    // (Event) เมื่อกด "Enter"
+    tagInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); 
+            addTag(tagInput.value);
+        }
+    });
+
+    // (Event) คลิกที่อื่น (เหมือนเดิม)
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.tag-input-container')) {
+            hideSuggestions();
+        }
+    });
+    
+    // --- 5. สั่งให้ทำงานครั้งแรก ---
+    renderTags();
 });

@@ -275,6 +275,14 @@ strong {
     margin-bottom: 2px;
 }
 
+.hidden-file-input {
+    display: none;
+}
+
+.add-cover-label {
+    cursor: pointer;
+}
+
 .tag-list-item li {
     color: #FA5A16;
     border: #FA5A16 solid 1px;
@@ -296,6 +304,90 @@ strong {
     background-color: transparent;
     font-size: 20px;
     color: #FA4616;
+}
+
+/* --- สไตล์สำหรับระบบ Tag Autocomplete --- */
+/* 1. กล่องครอบ (เพื่อให้ .tag-suggestions ลอยได้) */
+.tag-input-container {
+    position: relative;
+}
+
+/* 2. กล่องแสดงตัวเลือก (ซ่อนไว้ก่อน) */
+.tag-suggestions {
+    display: none; /* ซ่อนไว้เป็นค่าเริ่มต้น */
+    position: absolute;
+    top: 100%; /* ให้ลอยอยู่ใต้ input */
+    left: 0;
+    width: 100%; /* กว้างเท่า input */
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-top: none; /* ลบขอบบน (ให้ติดกับ input) */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    z-index: 100;
+    max-height: 150px; /* จำกัดความสูง (ถ้ามีตัวเลือกเยอะ) */
+    overflow-y: auto;
+}
+
+/* 3. ตัวเลือกแต่ละอัน */
+.suggestion-item {
+    padding: 10px 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f3f3f3;
+}
+
+.tag-helper-text {
+    font-size: 13px;
+    color: var(--text-secondary); /* (ใช้สีเทาจาก :root) */
+    margin-top: 8px;
+    padding-left: 2px;
+}
+
+/* check-in-page */
+.qr-imagebox {
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: auto;
+    overflow: hidden;
+    color: white;
+    border-radius: 22px;
+    border: 1px solid #d0d0d0;
+    background: linear-gradient(178deg, #FA5A16 5.18%, #FFB52C 122.98%);
+}
+
+.qr-imagebox img {
+    max-width: 280px;
+    margin: 5px auto 2px;
+    aspect-ratio: 1 / 1;
+}
+
+.qr-imagebox strong {
+    background-color: #000;
+    margin: 0px;
+    font-size: 22px;
+}
+
+.qr-expiry-text {
+    display: inline-block;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: var(--text-dark);
+    width: 100%;
+    text-align: center;
+}
+
+.info-group {
+    width: 100%;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: var(--text-dark);
 }
 
 /* footer */
@@ -340,56 +432,4 @@ strong {
     font-size: 12px;
     font-weight: 400;
     text-align: center;
-}
-
-.hidden-file-input {
-    display: none;
-}
-
-.add-cover-label {
-    cursor: pointer;
-}
-
-
-/* check-in-page */
-.qr-imagebox {
-    max-width: 300px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    margin: auto;
-    overflow: hidden;
-    color: white;
-    border-radius: 22px;
-    border: 1px solid #d0d0d0;
-    background: linear-gradient(178deg, #FA5A16 5.18%, #FFB52C 122.98%);
-}
-
-.qr-imagebox img {
-    max-width: 280px;
-    margin: 5px auto 2px;
-    aspect-ratio: 1 / 1;
-}
-
-.qr-imagebox strong {
-    background-color: #000;
-    margin: 0px;
-    font-size: 22px;
-}
-
-.qr-expiry-text {
-    display: inline-block;
-    margin-top: 8px;
-    margin-bottom: 12px;
-    font-size: 18px;
-    color: var(--text-dark);
-    width: 100%;
-    text-align: center;
-}
-
-.info-group {
-    width: 100%;
-    margin-bottom: 12px;
-    font-size: 16px;
-    color: var(--text-dark);
 }
