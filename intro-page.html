@@ -1,21 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>>MODJOY - แนะนำตัว</title>
+    <title>MODJOY - แนะนำตัว</title>
+    <link rel="stylesheet" href="css/page-intro.css">
 </head>
+
 <body>
-    <header>
-        
-    </header>
     <main class="intro-page">
         <section class="slide-page">
-
+            <h1 class="caption">หาคนที่ใช่ ทำสิ่งที่ชอบ ในรั้วมจธ</h1>
+            <div class="content">
+                <div class="slides">
+                    <div class="slide_content active">
+                        <h1 class="show">This is the first contest to Slide-show</h1>
+                    </div>
+                    <div class="slide_content">
+                        <h1 class="show">This is the second contest to Slide-show</h1>
+                    </div>
+                    <div class="slide_content">
+                        <h1 class="show">This is the third contest to Slide-show</h1>
+                    </div>
+                    <div class="slide_content">
+                        <h1 class="show">This is the fourth contest to Slide-show</h1>
+                    </div>
+                </div>
+            </div>
         </section>
-        <section class="example-page">
 
+        <section class="example-page">
+            <!-- เนื้อหาหน้าถัดไป -->
         </section>
     </main>
+
+    <script>
+        const slides = document.querySelectorAll('.slide_content');
+        let current = 0;
+
+        // ฟังก์ชันตั้ง class prev / active / next
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('prev', 'active', 'next');
+
+                if (index === current) {
+                    slide.classList.add('active');   // อยู่กลาง ใหญ่
+                } else if (index === (current - 1 + slides.length) % slides.length) {
+                    slide.classList.add('prev');     // รูปเก่า เลื่อนไปซ้าย หดลง
+                } else {
+                    slide.classList.add('next');     // อันอื่น ๆ อยู่ขวา เล็ก
+                }
+            });
+        }
+
+        // เริ่มต้นเซ็ตสไลด์รอบแรก
+        updateSlides();
+
+        // เปลี่ยนรูปทุก 3 วินาที
+        setInterval(() => {
+            current = (current + 1) % slides.length;
+            updateSlides();
+        }, 3000);
+    </script>
 </body>
+
 </html>
