@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/page-home.css">
     <link rel="stylesheet" href="./css/page-auth.css">
-    <script src="/JavaScript/edit-room-page.js"></script>
+    <script src="./JavaScript/edit-room-page.js"></script>
+    <script src="./JavaScript/filter.js" defer></script>
+    <script src="./JavaScript/sidebar.js" defer></script>
+    <script src="./JavaScript/home-page.js">defer</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -21,209 +24,288 @@
 </head>
 
 <body>
+    <nav class="side-bar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="material-symbols-outlined sidebar-close-btn" id="sidebar-close-btn"
+                aria-label="ปิดเมนู">close</button>
+            <div class="sidebar-profile-img">
+                <a href="./my-account-page.html"><img src="./Resource/img/profile.jpg" alt="Profile Picture"></a>
+            </div>
+
+            <div class="sidebar-name-group">
+                <h3 id="sidebar-user-name">นิกก้า ถ้ำดำ</h3>
+                <div class="creditperson">
+                    <span id="sidebar-user-credit">100</span>
+                    <img src="./Resource/img/credit.png" alt="credit icon">
+                </div>
+            </div>
+
+            <p id="sidebar-user-email">niagger911@gmail.com</p>
+        </div>
+
+        <ul class="sidebar-links">
+            <li><a href="./home-page.html"><span class="material-symbols-outlined">home</span><span>หน้าแรก</span></a>
+            </li>
+            <li><a href="./my-account-page.html"><span
+                        class="material-symbols-outlined">person</span><span>บัญชีของฉัน</span></a></li>
+            <li class="active-page"><a href="./created-room.html"><span
+                        class="material-symbols-outlined">check_box</span><span>กิจกรรมที่สร้าง</span></a></li>
+            <li><a href="./history-page.html"><span
+                        class="material-symbols-outlined">history</span><span>ประวัติการเข้าร่วม</span></a></li>
+            <li><a href="./settings-page.html"><span
+                        class="material-symbols-outlined">settings</span><span>การตั้งค่า</span></a></li>
+            <li><a href="./login-page.html"><span
+                        class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span></a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="overlay" id="overlay"></div>
+
     <header class="add-home-header">
-        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
+        <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
         <h2>กิจกรรมที่สร้าง</h2>
         <span class="header-blank"></span>
     </header>
-<main class="home-main">
-    <ul class="rooms-List">
-        <li class="room-item">
-            <article>
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span class="date-activity">30</span>
-                        <span class="month-activity">ต.ค.</span>
-                    </div>
-                </div>
 
-                <hr class="separator-line">
-                <div class="body-item">
+    <header class="home-header-desktop">
+        <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
+        <div class="desktop-right-group">
+            <nav class="desktop-nav">
+                <a href="./home-page.html">หน้าหลัก</a>
+                <a href="./created-room.html">กิจกรรมที่สร้าง</a>
+                <a href="./history-page.html">ประวัติการเข้าร่วม</a>
+                <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+                <div class="profile-menu-container">
 
-                    <div class="first-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2>
-                        <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
+                    <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
+                        <img src="./Resource/img/profile.jpg" alt="profile-image">
                     </div>
 
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <ul class="tag-list-item">
-                            <li>อ่านหนังสือ</li>
-                            <li>Calculus</li>
-                            <li>Calculus</li>
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-img-large">
+                                <img src="./Resource/img/profile.jpg" alt="profile-large">
+                            </div>
+                            <p class="user-name">มดตะนอย กัดเจ็บ</p>
+                            <p class="user-email">niggadamdam911@gmail.com</p>
+                        </div>
+
+                        <ul class="dropdown-links">
+                            <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
+                            <li><a href="./settings-page.html">การตั้งค่า</a></li>
+                            <li><a href="./login-page.html" class="logout-item">ออกจากระบบ</a></li>
                         </ul>
                     </div>
-
-                    <div class="third-row-item-body">
-                        <p>สถานที่: <span class="address-activity">N10</span></p>
-                        <p class="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </p>
-                    </div>
-
                 </div>
+            </nav>
 
-                <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
-            </article>
-        </li>
-        <li class="room-item">
-            <article>
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span class="date-activity">30</span>
-                        <span class="month-activity">ต.ค.</span>
-                    </div>
-                </div>
+        </div>
+    </header>
 
-                <hr class="separator-line">
-                <div class="body-item">
-
-                    <div class="first-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2>
-                        <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
+    <main class="home-main">
+        <ul class="rooms-List">
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
+                        </div>
                     </div>
 
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <ul class="tag-list-item">
-                            <li>อ่านหนังสือ</li>
-                            <li>Calculus</li>
-                            <li>Calculus</li>
-                        </ul>
+                    <hr class="separator-line">
+                    <div class="body-item">
+
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span
+                                    class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
+
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
+
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
+
                     </div>
 
-                    <div class="third-row-item-body">
-                        <p>สถานที่: <span class="address-activity">N10</span></p>
-                        <p class="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </p>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
+                        </div>
                     </div>
 
-                </div>
+                    <hr class="separator-line">
+                    <div class="body-item">
 
-                <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
-            </article>
-        </li>
-        <li class="room-item">
-            <article>
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span class="date-activity">30</span>
-                        <span class="month-activity">ต.ค.</span>
-                    </div>
-                </div>
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span
+                                    class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
 
-                <hr class="separator-line">
-                <div class="body-item">
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
 
-                    <div class="first-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2>
-                        <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
-                    </div>
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
 
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <ul class="tag-list-item">
-                            <li>อ่านหนังสือ</li>
-                            <li>Calculus</li>
-                            <li>Calculus</li>
-                        </ul>
                     </div>
 
-                    <div class="third-row-item-body">
-                        <p>สถานที่: <span class="address-activity">N10</span></p>
-                        <p class="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </p>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
+                        </div>
                     </div>
 
-                </div>
+                    <hr class="separator-line">
+                    <div class="body-item">
 
-                <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
-            </article>
-        </li>
-        <li class="room-item">
-            <article>
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span class="date-activity">30</span>
-                        <span class="month-activity">ต.ค.</span>
-                    </div>
-                </div>
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span
+                                    class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
 
-                <hr class="separator-line">
-                <div class="body-item">
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
 
-                    <div class="first-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2>
-                        <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
-                    </div>
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
 
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <ul class="tag-list-item">
-                            <li>อ่านหนังสือ</li>
-                            <li>Calculus</li>
-                            <li>Calculus</li>
-                        </ul>
                     </div>
 
-                    <div class="third-row-item-body">
-                        <p>สถานที่: <span class="address-activity">N10</span></p>
-                        <p class="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </p>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
+                        </div>
                     </div>
 
-                </div>
+                    <hr class="separator-line">
+                    <div class="body-item">
 
-                <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
-            </article>
-        </li>
-        <li class="room-item">
-            <article>
-                <div class="header-item">
-                    <div class="group-date-month">
-                        <span class="date-activity">30</span>
-                        <span class="month-activity">ต.ค.</span>
-                    </div>
-                </div>
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span
+                                    class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
 
-                <hr class="separator-line">
-                <div class="body-item">
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
 
-                    <div class="first-row-item-body">
-                        <h2>อ่านแคลกันครับพวกลิง</h2>
-                        <span class="people-activity"><span class="material-symbols-outlined">person</span>3/10</span>
-                    </div>
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
 
-                    <div class="second-row-item-body">
-                        <p>Tag:</p>
-                        <ul class="tag-list-item">
-                            <li>อ่านหนังสือ</li>
-                            <li>Calculus</li>
-                            <li>Calculus</li>
-                        </ul>
                     </div>
 
-                    <div class="third-row-item-body">
-                        <p>สถานที่: <span class="address-activity">N10</span></p>
-                        <p class="time-activity">
-                            <span class="material-symbols-outlined">pace</span>
-                            <span>13:00 - 14:00</span>
-                        </p>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+            <li class="room-item">
+                <article>
+                    <div class="header-item">
+                        <div class="group-date-month">
+                            <span class="date-activity">30</span>
+                            <span class="month-activity">ต.ค.</span>
+                        </div>
                     </div>
 
-                </div>
+                    <hr class="separator-line">
+                    <div class="body-item">
 
-                <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
-            </article>
-        </li>
-    </ul>
+                        <div class="first-row-item-body">
+                            <h2>อ่านแคลกันครับพวกลิง</h2>
+                            <span class="people-activity"><span
+                                    class="material-symbols-outlined">person</span>3/10</span>
+                        </div>
+
+                        <div class="second-row-item-body">
+                            <p>Tag:</p>
+                            <ul class="tag-list-item">
+                                <li>อ่านหนังสือ</li>
+                                <li>Calculus</li>
+                                <li>Calculus</li>
+                            </ul>
+                        </div>
+
+                        <div class="third-row-item-body">
+                            <p>สถานที่: <span class="address-activity">N10</span></p>
+                            <p class="time-activity">
+                                <span class="material-symbols-outlined">pace</span>
+                                <span>13:00 - 14:00</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
+                </article>
+            </li>
+        </ul>
     </main>
 
     <footer class="login-footer">

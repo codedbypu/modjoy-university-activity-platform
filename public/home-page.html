@@ -7,8 +7,9 @@
     <title>MODJOY - หน้าแรก</title>
     <link rel="stylesheet" href="./css/page-home.css">
     <link rel="stylesheet" href="./css/base.css">
-    <script src="/JavaScript/filter.js" defer></script>
-    <script src="/JavaScript/sidebar.js" defer></script>
+    <script src="./JavaScript/filter.js" defer></script>
+    <script src="./JavaScript/sidebar.js" defer></script>
+    <script src="./JavaScript/home-page.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet"
@@ -63,14 +64,37 @@
         <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
     </header>
     <header class="home-header-desktop">
-        <a href="/home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
-        <div class="desktop-right-group"> 
+        <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
+        <div class="desktop-right-group">
             <nav class="desktop-nav">
-                <a href="./home-page.html">หน้าหลัก</a> 
+                <a href="./home-page.html">หน้าหลัก</a>
                 <a href="./created-room.html">กิจกรรมที่สร้าง</a>
                 <a href="./history-page.html">ประวัติการเข้าร่วม</a>
+                <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
+                <div class="profile-menu-container">
+
+                    <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
+                        <img src="./Resource/img/profile.jpg" alt="profile-image">
+                    </div>
+
+                    <div class="profile-dropdown" id="profile-dropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-img-large">
+                                <img src="./Resource/img/profile.jpg" alt="profile-large">
+                            </div>
+                            <p class="user-name">มดตะนอย กัดเจ็บ</p>
+                            <p class="user-email">niggadamdam911@gmail.com</p>
+                        </div>
+
+                        <ul class="dropdown-links">
+                            <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
+                            <li><a href="./settings-page.html">การตั้งค่า</a></li>
+                            <li><a href="./login-page.html" class="logout-item">ออกจากระบบ</a></li>
+                        </ul>
+                    </div>
+                </div>
             </nav>
-            <a href="./my-account-page.html" class="desktop-profile"><img src="./Resource/img/profile.jpg"alt="profile-image"></a>
+
         </div>
     </header>
 
@@ -121,7 +145,7 @@
 
                     </div>
 
-                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
                 </article>
             </li>
             <li class="room-item">
@@ -161,7 +185,7 @@
 
                     </div>
 
-                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
                 </article>
             </li>
             <li class="room-item">
@@ -201,7 +225,7 @@
 
                     </div>
 
-                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
                 </article>
             </li>
             <li class="room-item">
@@ -241,7 +265,7 @@
 
                     </div>
 
-                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
                 </article>
             </li>
             <li class="room-item">
@@ -281,7 +305,7 @@
 
                     </div>
 
-                    <a class="btn-room-item a-btn" href="/room-detail-page.html">ดูรายละเอียด</a>
+                    <a class="btn-room-item a-btn" href="./room-detail-page.html">ดูรายละเอียด</a>
                 </article>
             </li>
         </ul>

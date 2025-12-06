@@ -78,6 +78,206 @@ body {
     line-height: 38px;
 }
 
+.home-header-desktop {
+    display: none;
+}
+
+@media screen and (min-width: 1024px) {
+    .add-home-header {
+        display: none;
+    }
+
+    .home-header-desktop {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 80px;
+        padding: 0 50px;
+        /* พื้นหลังสีส้มไล่เฉด (ตามธีมเดิม) */
+        background: linear-gradient(180deg, #FA5A16 0%, #FA8816 100%);
+        color: var(--text-light);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+
+    }
+
+    /* ขนาดโลโก้ */
+
+    .desktop-logo img {
+        display: block;
+        height: 45px;
+        ;
+    }
+
+
+
+    /* กลุ่มทางขวา */
+    .desktop-right-group {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    /* เมนูลิงก์ */
+    .desktop-nav {
+        display: flex;
+        gap: 25px;
+    }
+
+    .desktop-nav .material-symbols-outlined {
+        font-size: 30px;
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    .desktop-nav a {
+        text-decoration: none;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 500;
+        transition: opacity 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .desktop-nav a:hover {
+        opacity: 0.8;
+    }
+
+    /* รูปโปรไฟล์ */
+    .desktop-profile {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: #ffffff;
+        overflow: hidden;
+        border: 2px solid #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .desktop-profile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* --- CSS สำหรับ Profile Dropdown --- */
+
+    /* 1. คอนเทนเนอร์สำหรับจัดตำแหน่ง */
+    .profile-menu-container {
+        position: relative;
+        /* สำคัญ! เพื่อให้เมนูรู้ว่าต้องลอยอยู่ตรงไหน */
+    }
+
+    /* 2. กล่องเมนู (สีขาวขอบส้ม) */
+    .profile-dropdown {
+        display: none;
+        /* ซ่อนไว้ก่อน */
+
+        position: absolute;
+        top: 60px;
+        /* ระยะห่างจากปุ่มโปรไฟล์ลงมา */
+        right: 0;
+        /* ชิดขวา */
+        width: 260px;
+
+        background-color: white;
+        border: 3px solid #FA5A16;
+        /* ขอบสีส้มตามรูป */
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1100;
+    }
+
+    /* คลาสสำหรับสั่งให้แสดงเมนู */
+    .profile-dropdown.active {
+        display: flex;
+    }
+
+    /* 3. ส่วนหัว (รูปใหญ่ + ชื่อ) */
+    .dropdown-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .dropdown-img-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #333;
+        /* พื้นหลังดำตามรูป */
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .dropdown-img-large img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .user-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+    .user-email {
+        font-size: 13px;
+        color: #888;
+    }
+
+    /* 4. รายการเมนู */
+    .dropdown-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+    }
+
+    .dropdown-links li {
+        width: 100%;
+    }
+
+    .dropdown-links a {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s, color 0.2s;
+        font-family: var(--font-main);
+        /* บังคับฟอนต์ */
+    }
+
+    /* Hover แล้วเปลี่ยนสี */
+    .dropdown-links a:hover {
+        background-color: #fff3e0;
+        /* สีส้มอ่อนๆ */
+        color: #FA5A16;
+    }
+
+    /* ปุ่มออกจากระบบ (ตัวสุดท้าย) ไม่ต้องมีเส้นขีดล่าง */
+    .dropdown-links li:last-child a {
+        border-bottom: none;
+    }
+}
+
 /* Main */
 .settings-main {
     flex-grow: 1; /* 1. ทำให้ <main> ยืดเต็มพื้นที่ */
