@@ -74,7 +74,7 @@
             <nav class="desktop-nav">
                 <a href="./home-page.html">หน้าหลัก</a>
                 <a href="./created-room.html">กิจกรรมที่สร้าง</a>
-                <a href="./history-page.html">ประวัติการเข้าร่วม</a>
+                <a class="active" href="./history-page.html">ประวัติการเข้าร่วม</a>
                 <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
                 <div class="profile-menu-container">
 
@@ -103,6 +103,13 @@
     </header>
 
     <main class="home-main">
+        <div class="top-bar-search">
+            <div class="search-bar">
+                <input type="text" placeholder="ค้นหากิจกรรมที่คุณชื่นชอบ..." class="search-input" id="search-input">
+                <button class="material-symbols-outlined" aria-label="ค้นหา">search</button>
+            </div>
+            <button class="material-symbols-outlined" aria-label="ตัวกรอง" id="filter-open-btn">filter_alt</button>
+        </div>
         <ul class="rooms-List">
             <li class="room-item">
                 <article>
