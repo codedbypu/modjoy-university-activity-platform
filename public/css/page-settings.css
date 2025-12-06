@@ -40,12 +40,12 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-
+    height: 80px;
     width: 100%;
-    padding-top: calc(30px + env(safe-area-inset-top));
+    padding-top: calc(10px + env(safe-area-inset-top));
     padding-left: calc(20px + env(safe-area-inset-left));
     padding-right: calc(20px + env(safe-area-inset-right));
-    padding-bottom: 10px;
+    padding-bottom: 0px;
     display: flex;
     flex-direction: row;
     align-items: center;

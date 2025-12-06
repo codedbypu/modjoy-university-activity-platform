@@ -41,7 +41,7 @@ body {
     z-index: 1000;
     height: 80px;
     width: 100%;
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(10px + env(safe-area-inset-top));
     padding-left: calc(20px + env(safe-area-inset-left));
     padding-right: calc(20px + env(safe-area-inset-right));
     padding-bottom: 0px;
@@ -54,6 +54,8 @@ body {
     background-size: cover;
     color: var(--text-light);
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
+
+
 }
 
 .addhome-header {
@@ -62,7 +64,7 @@ body {
     z-index: 1000;
     height: 80px;
     width: 100%;
-    padding-top: env(safe-area-inset-top);
+    padding-top: calc(10px + env(safe-area-inset-top));
     padding-left: calc(20px + env(safe-area-inset-left));
     padding-right: calc(20px + env(safe-area-inset-right));
     padding-bottom: 0px;
@@ -86,13 +88,13 @@ body {
 /* ไอคอนลูกศรซ้าย */
 .add-home-header .material-symbols-outlined {
     color: #ffffff;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
 }
 
 .addhome-header .material-symbols-outlined {
     color: #ffffff;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
 }
 
@@ -146,17 +148,18 @@ body {
         position: sticky;
         top: 0;
         z-index: 1000;
-        
+
     }
 
     /* ขนาดโลโก้ */
-    
+
     .desktop-logo img {
         display: block;
-        height: 45px;;
+        height: 45px;
+        ;
     }
 
-    
+
 
     /* กลุ่มทางขวา */
     .desktop-right-group {
@@ -176,6 +179,7 @@ body {
         color: #ffffff;
         font-weight: 700;
     }
+
     .desktop-nav a {
         text-decoration: none;
         color: #ffffff;
@@ -265,7 +269,7 @@ input[type="time"].time-input {
     margin-top: 25px;
 }
 
-#manage-check-in-btn{
+#manage-check-in-btn {
     display: none;
 }
 
@@ -603,7 +607,7 @@ strong {
 .check-in-container {
     margin: auto;
     width: 94%;
-    
+
     display: none;
     margin-top: 13px;
     height: 41px;
