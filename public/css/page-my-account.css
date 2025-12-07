@@ -90,6 +90,14 @@ body {
 }
 
 @media screen and (min-width: 1024px) {
+
+    body,
+    html {
+        overflow-x: hidden;
+        /* ห้ามเลื่อนซ้ายขวา */
+        width: 100%;
+    }
+
     .account-header {
         display: none;
     }
@@ -287,8 +295,10 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    background-color: #f4f4f4;
-    justify-content: center;
+    justify-content: flex-start;
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.06),
+        0 10px 30px rgba(0, 0, 0, 0.10);
 }
 
 .account-form {
@@ -312,7 +322,7 @@ body {
 .account-profile {
     width: 100%;
     background: #fff;
-    padding: 30px 40px 10px;
+    padding: 30px 20px 10px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -323,14 +333,17 @@ body {
     flex-direction: row;
     align-items: flex-start;
     gap: 25px;
+    align-content: center;
+    display: flex;
 }
 
 .account-profile-image {
-    width: 160px;
-    height: 160px;
-    min-width: 160px;
+    width: 200px;
+    height: 200px;
+    min-width: 200px;
     border-radius: 50%;
     overflow: hidden;
+    margin-top: 20px;
 }
 
 .account-profile-image img {
@@ -346,9 +359,10 @@ body {
 }
 
 .email {
-    font-size: 16px;
+    font-size: 18px;
     color: #555;
 }
+
 .profile-education {
     font-size: 16px;
     color: #555;
@@ -364,13 +378,13 @@ body {
     align-items: flex-start;
     gap: 6px;
     margin-top: 10px;
+    width: 100%;
 }
 
 .account-activity {
     display: flex;
     flex-direction: column;
-    margin-top: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
 }
 
 .account-tab-header {
@@ -403,7 +417,8 @@ body {
     display: flex;
     gap: 1px;
 }
-.profile-about{
+
+.profile-about {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -411,10 +426,20 @@ body {
     width: 100%;
 }
 
+body {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.7)),
+        url(/public/Resource/img/background4.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+
 .account-main .about-detail-textarea {
     flex: 1;
     max-width: 100%;
-    min-height: 90px;
+    min-height: 80px;
     border-radius: 10px;
     background: #F3F3F3;
     border: none;
@@ -428,34 +453,46 @@ body {
     list-style-type: none;
     display: flex;
     flex-wrap: wrap;
+    padding: 5px;
+}
+
+.profile-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
 }
 
 .creditperson {
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: 16px;
+    font-size: 30px;
     font-weight: 600;
     gap: 4px;
-    color: var(--text-dark);
+    color: #FA8816;
 }
 
 .creditperson img {
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 30px;
     object-fit: contain;
+}
+
+.creditperson-mobile {
+    display: none;
 }
 
 .profile-button {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 100px;
     margin-top: 8px;
 }
 
 .profile-button a {
     text-align: center;
-    width: 60%;
+    width: 30%;
     line-height: 41px;
     align-items: center;
     background-color: #7B7B7B;
@@ -479,13 +516,17 @@ body {
     transform: scale(0.95);
 }
 
+
 /* room-item */
-.rooms-List {
+.rooms-Lists {
+    height: 100%;
     width: 100%;
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     padding: 20px 20px 20px 20px;
+    background: white;
+    margin-bottom: 0;
 }
 
 .room-item {
@@ -915,7 +956,7 @@ body {
     width: 100%;
     padding: 30px 20px;
     padding-bottom: calc(30px + env(safe-area-inset-bottom));
-
+    background: #ededed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -952,4 +993,107 @@ body {
     font-size: 12px;
     font-weight: 400;
     text-align: center;
+}
+
+@media screen and (max-width: 1024px) {
+
+    .account-main {
+        width: 100% !important;
+        /* บังคับให้กว้างพอดีจอ */
+        max-width: 100%;
+        overflow-x: hidden;
+        /* ซ่อนส่วนเกินแนวนอน */
+        padding: 0;
+        /* ลบระยะห่างที่ไม่จำเป็น */
+    }
+
+    /* 1. คอนเทนเนอร์หลัก: เปลี่ยนจากเรียงแนวนอน เป็นแนวตั้ง (รูปอยู่บน ข้อมูลอยู่ล่าง) */
+    .account-container {
+        flex-direction: column;
+        align-items: center;
+        /* จัดให้รูปภาพอยู่ตรงกลาง */
+        text-align: center;
+        /* จัดข้อความให้อยู่ตรงกลาง */
+        gap: 0px;
+    }
+
+    .account-profile {
+        padding: 0px 15px 20px 15px;
+    }
+
+    /* 2. ปรับระยะห่างของรูปภาพ */
+    .account-profile-image {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    /* 3. กล่องข้อมูล: ให้ขยายกว้างเต็มพื้นที่ */
+    .profile-info {
+        width: 100%;
+        align-items: center;
+    }
+
+    /* 4. ส่วน "เกี่ยวกับฉัน": เปลี่ยนให้ Label อยู่บรรทัดบน และ Textarea อยู่บรรทัดล่าง */
+    .profile-about {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    /* 5. ปรับ Textarea ให้กว้างเต็มจอในโหมดนี้ */
+    .account-main .about-detail-textarea {
+        width: 100%;
+        min-height: 80px;
+        
+    }
+
+    .profile-button {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .creditperson {
+        display: none;
+    }
+
+    .creditperson-mobile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 24px;
+        font-weight: 600;
+
+    }
+
+    .creditperson-mobile img {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+    }
+
+    .name {
+        font-size: 28px;
+    }
+
+    .profile-button {
+        display: flex;
+        flex-direction: row;      /* ← ยังเป็นแนวนอน */
+        justify-content: center;
+        gap: 20px;                /* ← ลดช่องว่างให้เหมาะกับมือถือ */
+        width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .profile-button a {
+        width: 45%;               /* ← ปุ่มกว้าง 45% ของพื้นที่ (2 ปุ่มกำลังดี) */
+        min-width: 120px;         /* ← กันไม่ให้ปุ่มเล็กเกินไป */
+        line-height: 45px;
+        font-size: 16px;
+        border-radius: 12px;
+    }
 }
