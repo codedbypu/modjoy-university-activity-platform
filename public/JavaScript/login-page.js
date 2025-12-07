@@ -1,28 +1,45 @@
+const notifiText = document.querySelector('#notifi-text');
 document.querySelector('.login-form').addEventListener('submit', async function (e) {
-    e.preventDefault(); // หยุดการเปลี่ยนหน้าอัตโนมัติ
+    e.preventDefault();
 
-    // ดึงข้อมูลจากฟอร์ม
+    notifiText.classList.remove('show');
+    notifiText.textContent = '';
+
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
+    // --- Validation Zone (ตรวจสอบข้อมูล) ---
+    // ตรวจสอบ Email KMUTT
+    const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
+    if (!kmuttEmailRegex.test(data.email)) {
+        showError('กรุณาใช้อีเมลสถาบัน kmutt.ac.th หรือ mail.kmutt.ac.th');
+        return;
+    }
+
     try {
-        // ส่งไป Backend
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
-        const result = await response.json(); // รอรับผลลัพธ์จาก Backend <success หรือไม่, ข้อความอะไร>
+        const result = await response.json();
 
         if (result.success) {
-            alert('เข้าสู่ระบบสำเร็จ!');
-            window.location.href = '/home-page.html'; // เด้งไปหน้า home
+            window.location.href = '/home-page.html';
         } else {
-            alert('Error: ' + result.message);
+            showError(result.message);
         }
     } catch (error) {
         console.error('Error:', error);
         alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
 });
+
+function showError(message) {
+    notifiText.classList.remove('shake');
+    void notifiText.offsetWidth;
+    notifiText.classList.add('shake');
+    notifiText.classList.add('show');
+    notifiText.textContent = message;
+}

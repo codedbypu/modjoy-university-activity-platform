@@ -111,10 +111,19 @@ body {
     padding: 15px;
 }
 
+.options-group {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 400px;
+}
 
-
-.forgot-password-container {
-    width: 100%;
+.remember-me-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
 .forgot-password-link {
@@ -124,7 +133,6 @@ body {
     font-weight: 400;
     color: var(--text-secondary);
     text-decoration: none;
-    margin-left: auto;
 }
 
 .forgot-password-link:hover {
@@ -302,7 +310,7 @@ body {
     padding: 15px;
 }
 
-.usenamebox,
+.usernamebox,
 .lastnamebox {
     text-align: left;
     width: 48%;
