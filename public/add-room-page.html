@@ -21,7 +21,7 @@
     <header class="desktop-header-wrapper">
         <div class="mobile-header">
             <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
-            <h2>สร้างกิจกรรมของคุณ</h2>
+            <h1>สร้างกิจกรรมของคุณ</h1>
             <span class="header-blank"></span>
         </div>
     </header>
@@ -55,12 +55,13 @@
                 <label for="address-input-display">ชื่อสถานที่</label>
                 <div class="custom-select-container">
                     <input type="text" id="address-input-display" class="custom-select-input"
-                        placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ...">
-                    <div class="custom-options-list">
-                        <div class="custom-option" data-value="N7 ตึกวิทยาศาสตร์">N7 ตึกวิทยาศาสตร์</div>
-                        <div class="custom-option" data-value="N10 ห้องสมุด">N10 ห้องสมุด</div>
-                        <div class="custom-option" data-value="S2">S2</div>
-                        <div class="custom-option" data-value="S3">S3</div>
+                        placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
+                        aria-expanded="false" aria-haspopup="listbox" aria-controls="places-listbox">>
+                    <div class="custom-options-list" id="places-listbox" role="listbox">
+                        <div class="custom-option" role="option" aria-selected="false" data-value="N7 ตึกวิทยาศาสตร์">N7 ตึกวิทยาศาสตร์</div>
+                        <div class="custom-option" role="option" aria-selected="false" data-value="N10 ห้องสมุด">N10 ห้องสมุด</div>
+                        <div class="custom-option" role="option" aria-selected="false" data-value="S2">S2</div>
+                        <div class="custom-option" role="option" aria-selected="false" data-value="S3">S3</div>
                     </div>
                     <input type="hidden" name="address-activity" id="address-input-hidden">
                 </div>

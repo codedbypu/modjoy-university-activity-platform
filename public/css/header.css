@@ -64,10 +64,10 @@
 }
 
 
-.mobile-header h2 {
+.mobile-header h1 {
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     line-height: 38px;
 }
@@ -108,10 +108,10 @@
 }
 
 
-.mobilechange-header h2 {
+.mobilechange-header h1 {
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     line-height: 38px;
 }
@@ -165,10 +165,10 @@
     font-weight: 400;
 }
 
-.mobile-setting-header h2 {
+.mobile-setting-header h1 {
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     line-height: 38px;
 }
@@ -214,10 +214,10 @@
     font-weight: 400;
 }
 
-.mobile-setting-header h2 {
+.mobile-setting-header h1 {
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     line-height: 38px;
 }

@@ -55,13 +55,13 @@ body {
 /* main */
 .login-main {
     text-align: center;
-    font-size: 24px;
+    font-size: 22px;
     padding: 20px 0;
 }
 
 .login-main h2 {
     color: var(--primary-color);
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     margin-bottom: 23px;
 }
