@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./css/page-add-room.css">
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/header.css">
-    <script src="./JavaScript/edit-room-page.js"></script>
+    <script src="./JavaScript/edit-room-page.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -20,18 +20,18 @@
 
 <body>
     <header class="desktop-header-wrapper">
-    <div class="mobile-header">
-        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
-        <h2>แก้ไขกิจกรรมของคุณ</h2>
-        <span class="header-blank"></span>
-    </div>
-</header>
+        <div class="mobile-header">
+            <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
+            <h2>แก้ไขกิจกรรมของคุณ</h2>
+            <span class="header-blank"></span>
+        </div>
+    </header>
     <main class="add-home-main">
         <form action="" class="add-room-form">
             <div class="form-group">
-                <label for="cover-image-input" class="add-cover-label profile-uploader">
+                <label for="room-image-input" class="add-cover-label profile-uploader">
                     <div class="add-cover-box" id="room-image-container">
-                        <img title="Bangmod" src="/Resource/img/bangmod.png" class="profile-preview"
+                        <img title="Bangmod" src="./Resource/img/bangmod.png" class="profile-preview"
                             id="room-image-preview">
                         <span class="add-cover-plus" id="add-cover-icon">+</span>
                         <div class="edit-overlay">
@@ -41,9 +41,9 @@
                     </div>
                 </label>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-                <input title="InputImageRoom" type="file" id="room-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
+                <input title="InputImageRoom" type="file" id="room-image-input" name="cover_image"
+                    class="hidden-file-input" accept="image/*">
             </div>
-
 
             <div class="form-group">
                 <label for="room-id">ไอดี</label>

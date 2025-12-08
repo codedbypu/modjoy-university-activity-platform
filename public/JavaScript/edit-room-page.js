@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
     function loadInitialData() {
         // สมมุติว่าเราได้ URL ของรูปห้องจากฐานข้อมูล
-        const roomImageUrl = "/Resource/img/bangmod.png";
+        const roomImageUrl = "./Resource/img/bangmod.png";
         updateImagePreview(roomImageUrl);
     }
     // สั่งให้โหลดข้อมูล 1 ครั้งตอนเปิดหน้า
@@ -286,6 +286,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     // #endregion
-    // #endregion ======== Profile Image Uploader ==========
+    // #endregion ======== Image Uploader ==========
 
 });

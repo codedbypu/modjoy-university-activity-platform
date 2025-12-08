@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // #region ======== Image Uploader ==========
+    // #region ======== Profile Image Uploader ==========
     // #region init ตัวแปร หาองค์ประกอบ 
     const imageContainer = document.getElementById('profile-image-container');
     const imagePreview = document.getElementById('profile-image-preview');
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
     function loadInitialData() {
         // สมมุติว่าเราได้ URL ของรูปโปรไฟล์จากฐานข้อมูล
-        const userProfileUrl = "/Resource/img/profile.jpg";
+        const userProfileUrl = "./Resource/img/profile.jpg";
         updateImagePreview(userProfileUrl);
     }
     // สั่งให้โหลดข้อมูล 1 ครั้งตอนเปิดหน้า
