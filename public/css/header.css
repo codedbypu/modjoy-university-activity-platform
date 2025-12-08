@@ -18,6 +18,7 @@
     box-sizing: border-box;
 }
 
+/* #region css โมบาย */
 /* โมบายปกติ
 <header class="addhome-header">
         <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
@@ -60,52 +61,7 @@
     font-weight: 700;
 }
 
-
 .mobile-header h1 {
-    flex: 1;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 38px;
-}
-
-/* โหมดสามารถสลับได้ */
-.mobilechange-header {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    height: 80px;
-    width: 100%;
-    padding-top: calc(10px + env(safe-area-inset-top));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
-    padding-bottom: 0px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
-    background-size: cover;
-    color: var(--text-light);
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-}
-
-/* กล่องเปล่าฝั่งขวา */
-.headerchange-blank {
-    content: "";
-    width: 24px;
-}
-
-/* ไอคอนลูกศรซ้าย */
-.mobilechange-header .material-symbols-outlined {
-    color: #ffffff;
-    font-size: 28px;
-    font-weight: 700;
-}
-
-
-.mobilechange-header h1 {
     flex: 1;
     text-align: center;
     font-size: 22px;
@@ -122,102 +78,10 @@
         <a class="material-symbols-outlined right-account-header" href="./settings-page.html">settings</a>
     </header>
 */
-.mobile-setting-header {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    height: 80px;
-    width: 100%;
-    padding-top: calc(10px + env(safe-area-inset-left));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
-    padding-bottom: 0px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    background: var(--primary-gradient-start);
-    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
-    background-size: cover;
-    color: var(--text-light);
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-}
-
-/* กล่องเปล่าฝั่งขวา */
-.header-blank {
-    content: "";
-    width: 24px;
-}
-
-/* ไอคอนลูกศรซ้าย */
-.mobile-setting-header .material-symbols-outlined {
-    color: #ffffff;
-    font-size: 28px;
-    font-weight: 700;
-}
-
-.mobile-setting-header .right-account-header {
+.mobile-header .right-account-header {
     font-weight: 400;
 }
-
-.mobile-setting-header h1 {
-    flex: 1;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 38px;
-}
-
-/* โหมดสามารถสลับได้ */
-.mobilechange-setting-header {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    height: 80px;
-    width: 100%;
-    padding-top: calc(10px + env(safe-area-inset-left));
-    padding-left: calc(20px + env(safe-area-inset-left));
-    padding-right: calc(20px + env(safe-area-inset-right));
-    padding-bottom: 0px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-
-    background: var(--primary-gradient-start);
-    background: linear-gradient(0deg, #FA8816 0.36%, #E85A34 99.64%);
-    background-size: cover;
-    color: var(--text-light);
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-}
-
-/* กล่องเปล่าฝั่งขวา */
-.header-blank {
-    content: "";
-    width: 24px;
-}
-
-/* ไอคอนลูกศรซ้าย */
-.mobile-setting-header .material-symbols-outlined {
-    color: #ffffff;
-    font-size: 28px;
-    font-weight: 700;
-}
-
-.mobile-setting-header .right-account-header {
-    font-weight: 400;
-}
-
-.mobile-setting-header h1 {
-    flex: 1;
-    text-align: center;
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 38px;
-}
+/* #endregion */
 
 /* #region css คอม */
 /*
@@ -258,7 +122,7 @@
     </header>
 */
 .home-header-desktop {
-    /* display: none; */
+    display: none;
 }
 
 .header-wrapper {
@@ -277,6 +141,7 @@
     height: 80px;
     z-index: 1000;
 }
+
 .home-header-desktop.active-bar {
     display: flex;
 }
