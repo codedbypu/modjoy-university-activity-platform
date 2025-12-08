@@ -18,14 +18,6 @@
     box-sizing: border-box;
 }
 
-/* #region css โมบาย */
-/* โมบายปกติ
-<header class="addhome-header">
-        <button type="button" class="material-symbols-outlined" onclick="history.back()">arrow_back_ios</button>
-        <h2>ชื่อหน้าของคุณ</h2>
-        <span class="header-blank"></span>
-</header> 
-*/
 .header-wrapper {
     display: block;
     width: 100%;
@@ -119,57 +111,6 @@
     text-decoration: none;
     font-weight: 500;
 }
-
-/*
-โมบายมีปุ่มขวา
-
-<header class="account-header">
-        <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
-        <h2>บัญชีของฉัน</h2>
-        <a class="material-symbols-outlined right-account-header" href="./settings-page.html">settings</a>
-    </header>
-*/
-
-/* #endregion */
-
-/* #region css คอม */
-/*
-คอม @media screen and (min-width: 1024px) 
-<header class="desktop-header">
-        <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
-        <div class="desktop-right-group">
-            <nav class="desktop-nav">
-                <a class="active" href="./home-page.html">หน้าหลัก</a>
-                <a href="./created-room.html">กิจกรรมที่สร้าง</a>
-                <a href="./history-page.html">ประวัติการเข้าร่วม</a>
-                <a class="material-symbols-outlined" href="./add-room-page.html">add</a>
-                <div class="profile-menu-container">
-
-                    <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
-                        <img src="./Resource/img/profile.jpg" alt="profile-image">
-                    </div>
-
-                    <div class="profile-dropdown" id="profile-dropdown">
-                        <div class="dropdown-header">
-                            <div class="dropdown-img-large">
-                                <img src="./Resource/img/profile.jpg" alt="profile-large">
-                            </div>
-                            <p class="user-name" id="user-name">Guest</p>
-                            <p class="user-email" id="user-email">guest@example.com</p>
-                        </div>
-                        
-                        <ul class="dropdown-links">
-                        <li><a href="./my-account-page.html">แก้ไขโปรไฟล์</a></li>
-                        <li><a href="./settings-page.html">การตั้งค่า</a></li>
-                        <li><a href="" class="logout-item" id="logout-btn">ออกจากระบบ</a></li>
-                        </ul>
-                        </div>
-                        </div>
-                        </nav>
-                        
-                        </div>
-                        </header>
-                        */
 
 .desktop-header {
     display: none;
@@ -325,6 +266,7 @@
         padding: 20px;
         border-bottom: 1px solid #eee;
     }
+
     .dropdown-img-large {
         width: 80px;
         height: 80px;
@@ -389,5 +331,22 @@
 
     .dropdown-links li:last-child a {
         border-bottom: none;
+    }
+
+    .desktop-nav a.active {
+        position: relative;
+        font-weight: bold;
+        opacity: 1;
+    }
+
+    .desktop-nav a.active::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background-color: #ffffff;
+        border-radius: 5px;
     }
 }

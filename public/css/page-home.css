@@ -141,7 +141,7 @@ body {
 /* room-item */
 .rooms-List {
     margin: auto;
-width: auto;
+    width: auto;
     display: grid;
     gap: 20px;
     padding: 20px;
@@ -156,6 +156,7 @@ width: auto;
     border-radius: 7px;
     overflow: hidden;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* header-item */
@@ -541,9 +542,9 @@ width: auto;
 
 @media screen and (min-width: 1024px) {
 
-    .rooms-List{
+    .rooms-List {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important;
-         
+
     }
-    
+
 }
