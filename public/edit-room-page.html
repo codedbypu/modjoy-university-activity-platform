@@ -27,11 +27,12 @@
     </div>
 </header>
     <main class="add-home-main">
-        <form action="./update-room.html" class="add-room-form">
+        <form action="" class="add-room-form">
             <div class="form-group">
                 <label for="cover-image-input" class="add-cover-label profile-uploader">
-                    <div class="add-cover-box" id="profile-image-container">
-                        <img title="Bangmod" src="/Resource/img/bangmod.png" class="profile-preview" id="profile-image-preview">
+                    <div class="add-cover-box" id="room-image-container">
+                        <img title="Bangmod" src="/Resource/img/bangmod.png" class="profile-preview"
+                            id="room-image-preview">
                         <span class="add-cover-plus" id="add-cover-icon">+</span>
                         <div class="edit-overlay">
                             <span class="material-symbols-outlined">photo_camera</span>
@@ -40,7 +41,7 @@
                     </div>
                 </label>
                 <p class="add-cover-hint">*เพิ่มรูปภาพกิจกรรมหรือสถานที่</p>
-                <input type="file" id="cover-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
+                <input title="InputImageRoom" type="file" id="room-image-input" name="cover_image" class="hidden-file-input" accept="image/*">
             </div>
 
 
@@ -59,12 +60,7 @@
                 <div class="custom-select-container">
                     <input type="text" id="address-input-display" class="custom-select-input"
                         placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ...">
-                    <div class="custom-options-list">
-                        <div class="custom-option" data-value="N7 ตึกวิทยาศาสตร์">N7 ตึกวิทยาศาสตร์</div>
-                        <div class="custom-option" data-value="N10 ห้องสมุด">N10 ห้องสมุด</div>
-                        <div class="custom-option" data-value="S2">S2</div>
-                        <div class="custom-option" data-value="S3">S3</div>
-                    </div>
+                    <div class="custom-options-list" id="address-options-list"></div>
                     <input type="hidden" name="address-activity" id="address-input-hidden">
                 </div>
             </div>

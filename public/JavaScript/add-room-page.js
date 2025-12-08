@@ -1,82 +1,112 @@
-// รอให้หน้าเว็บโหลดเสร็จก่อน
+ // #region (DOMContentLoaded)
 document.addEventListener("DOMContentLoaded", function () {
+    // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
+    // #region init ตัวแปร หาองค์ประกอบ 
+    const addressDisplayInput = document.getElementById("address-input-display");
+    const addressHiddenInput = document.getElementById("address-input-hidden");
+    const addressOptionsList = document.querySelector("#address-options-list");
+    const availableAddresses = ["N7", "N10", "S2", "S3"];
 
-    // 1. หาองค์ประกอบทั้งหมดที่เราต้องใช้
-    const container = document.querySelector(".custom-select-container");
-    const displayInput = document.getElementById("address-input-display");
-    const hiddenInput = document.getElementById("address-input-hidden");
-    const optionsList = document.querySelector(".custom-options-list");
-    const allOptions = optionsList.querySelectorAll(".custom-option");
+    // ป้องกันการกด Enter เพื่อ submit form
+    document.querySelector('.add-room-form').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            return false;
+        }
+    });
+    // #endregion
 
-    // 2. เมื่อ "พิมพ์" ในช่องค้นหา (Keyup) -> ให้ "กรอง" (Filter)
-    displayInput.addEventListener("keyup", function () {
-        const filterValue = displayInput.value.toLowerCase();
-        optionsList.classList.add("show"); // เปิด list ตอนพิมพ์
+    // #region renderAddressesOption 
+    function renderAddressesOption() {
+        addressOptionsList.innerHTML = '';
+        availableAddresses.forEach(addressText => {
+            const option = document.createElement('div');
+            option.className = 'custom-option';
+            option.setAttribute('data-value', addressText);
+            option.textContent = addressText;
+            addressOptionsList.appendChild(option);
+        });
+    }
+    renderAddressesOption();
+    const allOptions = addressOptionsList.querySelectorAll('.custom-option');
+    // #endregion
+
+    // #region เมื่อ "พิมพ์" ในช่องค้นหา ให้กรอง 
+    addressDisplayInput.addEventListener("keyup", function () {
+        const filterValue = addressDisplayInput.value.toLowerCase();
+        addressOptionsList.classList.add("show");
 
         allOptions.forEach(option => {
             const text = option.textContent.toLowerCase();
             if (text.includes(filterValue)) {
-                option.style.display = "block"; // ถ้าตรง ให้แสดง
+                option.style.display = "block";
             } else {
-                option.style.display = "none"; // ถ้าไม่ตรง ให้ซ่อน
+                option.style.display = "none";
             }
         });
     });
+    // #endregion
 
-    // 3. เมื่อ "คลิก" ที่ช่องค้นหา -> ให้ "เปิด/ปิด" list
-    displayInput.addEventListener("click", function (e) {
-        e.stopPropagation(); // หยุดไม่ให้ event ลามไปถึง document
-        optionsList.classList.toggle("show");
+    // #region เมื่อคลิกที่ช่องค้นหาให้ "เปิด/ปิด" list 
+    addressDisplayInput.addEventListener("click", function (e) {
+        e.stopPropagation();
+        addressOptionsList.classList.toggle("show");
         // เมื่อคลิกเปิด ให้แสดงตัวเลือกทั้งหมด
         allOptions.forEach(option => {
             option.style.display = "block";
         });
     });
+    // #endregion
 
-    // 4. เมื่อ "คลิก" เลือกตัวเลือก (Option)
+    // #region เมื่อคลิก เลือกตัวเลือก (Option) 
     allOptions.forEach(option => {
         option.addEventListener("click", function () {
             const value = this.getAttribute("data-value");
             const text = this.textContent;
 
-            // 4.1. อัปเดตค่าในช่องแสดงผล (ให้ผู้ใช้เห็น)
-            displayInput.value = text;
+            addressDisplayInput.value = text;
+            addressHiddenInput.value = value;
 
-            // 4.2. อัปเดตค่าใน input ที่ซ่อนไว้ (สำหรับส่ง Form)
-            hiddenInput.value = value;
-
-            // 4.3. ปิด List
-            optionsList.classList.remove("show");
+            addressOptionsList.classList.remove("show");
         });
     });
+    // #endregion
 
-    // 5. เมื่อ "คลิก" ที่อื่นบนหน้าจอ -> ให้ "ปิด" list
+    // #region เมื่อคลิก ที่อื่นบนหน้าจอให้ "ปิด" list 
     document.addEventListener("click", function () {
-        if (optionsList.classList.contains("show")) {
-            optionsList.classList.remove("show");
+        if (addressOptionsList.classList.contains("show")) {
+            addressOptionsList.classList.remove("show");
         }
     });
-});
+    // #endregion
+    // #endregion ========== Custom Select สำหรับที่อยู่ (Address) ==========
 
-document.addEventListener("DOMContentLoaded", function() {
-    // (Database) ใช้สำหรับ "แนะนำ" (Suggest) เท่านั้น
+    // #region ======== Tag Input สำหรับแท็กห้อง (Room Tags) ========== 
+    // #region init ตัวแปร หาองค์ประกอบ
     const availableTags = [
-        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม", 
+        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม",
         "ดูหนัง", "ฟังเพลง", "Physics", "Art", "Coding"
     ];
     const MAX_TAGS = 5;
     let currentTags = [];
-
-    // --- 2. หาองค์ประกอบ HTML (เหมือนเดิม) ---
+    // #endregion
+    
+    // #region หาองค์ประกอบทั้งหมดที่ต้องใช้
     const tagInput = document.getElementById('room-tag-input');
     const addTagBtn = document.getElementById('add-tag-btn');
     const tagListContainer = document.getElementById('tag-list-display');
     const hiddenInput = document.getElementById('tags-list-hidden');
     const suggestionsContainer = document.getElementById('tag-suggestions');
+    // #endregion
 
-    // --- 3. ฟังก์ชันหลัก (Core Functions) ---
+    // #region ----- ฟังก์ชันหลัก (Core Functions) ----- 
+    // #region ฟังก์ชัน hideSuggestions 
+    function hideSuggestions() {
+        suggestionsContainer.style.display = 'none';
+    }
+    // #endregion
 
-    // (ฟังก์ชัน renderTags และ removeTag เหมือนเดิม 100%)
+    // #region ฟังก์ชัน renderTags 
     function renderTags() {
         tagListContainer.innerHTML = '';
         currentTags.forEach(tagText => {
@@ -102,25 +132,23 @@ document.addEventListener("DOMContentLoaded", function() {
             tagInput.placeholder = "พิมพ์เพื่อค้นหา หรือเพิ่มแท็กใหม่...";
         }
     }
-    
+    // #endregion
+
+    // #region ฟังก์ชัน removeTag 
     function removeTag(tagText) {
         currentTags = currentTags.filter(tag => tag !== tagText);
         renderTags();
     }
+    // #endregion
 
+    // #region ฟังก์ชัน addTag 
     function addTag(tagText) {
         const cleanTag = tagText.trim();
-        
-        // 1. (Validation) เช็คว่าว่างเปล่าหรือไม่
-        if (cleanTag === "") {
-            return; // ไม่ทำอะไรเลย
-        }
-        
-        // 2. (Validation) เช็คว่าซ้ำหรือไม่
-        // (เราเปลี่ยนเป็น .toLowerCase() เพื่อกัน "Cal" กับ "cal")
+        if (cleanTag === "") return;
+
+        // เช็คว่าซ้ำหรือไม่
         const lowerCaseTag = cleanTag.toLowerCase();
         const existingTagsLower = currentTags.map(t => t.toLowerCase());
-        
         if (existingTagsLower.includes(lowerCaseTag)) {
             alert("คุณเพิ่มแท็กนี้ไปแล้ว");
             tagInput.value = '';
@@ -128,25 +156,18 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        /* 3. (Validation ที่ถูก "ลบ") 
-           เราไม่เช็ค !availableTags.includes(cleanTag) อีกต่อไป
-           เพื่อให้ผู้ใช้ "เพิ่มแท็กใหม่" ได้
-        */
-        
-        // 4. (Validation) เช็คลิมิต 3 แท็ก (เหมือนเดิม)
+        // เช็คลิมิตของแท็ก
         if (currentTags.length < MAX_TAGS) {
-            currentTags.push(cleanTag); // (เพิ่มแท็กใหม่เข้าไปเลย)
-            renderTags(); // อัปเดตหน้าจอ
+            currentTags.push(cleanTag);
+            renderTags();
         }
-        
-        // 5. (เหมือนเดิม) เคลียร์ช่องพิมพ์
+
         tagInput.value = '';
         hideSuggestions();
     }
-    // ===============================================
+    // #endregion
 
-
-    // (ฟังก์ชัน showSuggestions และ hideSuggestions เหมือนเดิม 100%)
+    // #region ฟังก์ชัน showSuggestions 
     function showSuggestions(filteredList) {
         suggestionsContainer.innerHTML = '';
         if (filteredList.length === 0) {
@@ -158,122 +179,119 @@ document.addEventListener("DOMContentLoaded", function() {
             const item = document.createElement('div');
             item.className = 'suggestion-item';
             item.textContent = tagText;
-            
-            // (ตรรกะ "คลิก = เติมข้อความ" เหมือนเดิม)
-            item.addEventListener('click', function() {
+
+            item.addEventListener('click', function () {
                 tagInput.value = tagText;
                 hideSuggestions();
                 tagInput.focus();
             });
-            
+
             suggestionsContainer.appendChild(item);
         });
-        
+
         suggestionsContainer.style.display = 'block';
     }
+    // #endregion
 
-    function hideSuggestions() {
-        suggestionsContainer.style.display = 'none';
-    }
+    // #endregion ----- ฟังก์ชันหลัก (Core Functions) -----
 
-
-    // --- 4. เชื่อมต่อ Events (เหมือนเดิม) ---
-
-    // (Event) เมื่อ "พิมพ์"
-    tagInput.addEventListener('keyup', function() {
+    // #region ----- EventListeners  ----- 
+    // #region เมื่อพิมพ์ช่องเพิ่ม Tags 
+    tagInput.addEventListener('keyup', function () {
         const query = tagInput.value.toLowerCase();
         if (query.length === 0) {
             hideSuggestions();
             return;
         }
-        const filtered = availableTags.filter(tag => 
-            tag.toLowerCase().includes(query) && 
+        const filtered = availableTags.filter(tag =>
+            tag.toLowerCase().includes(query) &&
             !currentTags.map(t => t.toLowerCase()).includes(tag.toLowerCase())
         );
         showSuggestions(filtered);
     });
+    // #endregion
 
-    // (Event) เมื่อ "คลิก" ปุ่ม +
-    addTagBtn.addEventListener('click', function() {
+    // #region เมื่อคลิก ปุ่ม + 
+    addTagBtn.addEventListener('click', function () {
         addTag(tagInput.value);
     });
+    // #endregion
 
-    // (Event) เมื่อกด "Enter"
-    tagInput.addEventListener('keydown', function(event) {
+    // #region เมื่อกด "Enter"
+    tagInput.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            event.preventDefault(); 
+            event.preventDefault();
             addTag(tagInput.value);
         }
     });
+    // #endregion
 
-    // (Event) คลิกที่อื่น (เหมือนเดิม)
-    document.addEventListener('click', function(event) {
+    // #region คลิกที่อื่น
+    document.addEventListener('click', function (event) {
         if (!event.target.closest('.tag-input-container')) {
             hideSuggestions();
         }
     });
-    
-    // --- 5. สั่งให้ทำงานครั้งแรก ---
+    // #endregion
+    // #endregion ----- EventListeners -----
+
+    // --- สั่งให้ทำงานครั้งแรก ---
     renderTags();
-});
+    // #endregion ----- จบ Tag Input สำหรับแท็กห้อง (Room Tags) -----
 
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    // --- 1. หาองค์ประกอบทั้งหมดที่ต้องใช้ ---
+    // #region ======== Profile Image Uploader ==========
+    // #region init ตัวแปร หาองค์ประกอบ 
     const imageContainer = document.getElementById('profile-image-container');
     const imagePreview = document.getElementById('profile-image-preview');
     const fileInput = document.getElementById('cover-image-input');
-    
-    // --- 2. ฟังก์ชันสำหรับอัปเดต UI (หัวใจหลัก) ---
+    // #endregion
+
+    // #region updateImagePreview ฟังก์ชันสำหรับอัปเดต UI --- 
     function updateImagePreview(imageUrl) {
         if (imageUrl && imageUrl !== "") {
-            // ถ้ามี URL รูปภาพ
             imagePreview.src = imageUrl;
             imageContainer.classList.add('has-image');
         } else {
-            // ถ้าไม่มี URL รูปภาพ (เป็นค่าว่าง)
             imagePreview.src = "";
             imageContainer.classList.remove('has-image');
         }
     }
+    // #endregion
 
-
-    // --- 3. (สำหรับหน้า Edit) โหลดข้อมูลผู้ใช้ครั้งแรก ---
     // (นี่คือส่วนที่คุณต้องไปดึงข้อมูลจาก Database จริง)
+    // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
     function loadInitialData() {
-        // (ตัวอย่างข้อมูลสมมติ)
-        // ถ้าผู้ใช้มีรูปอยู่แล้ว ให้ใส่ URL
-        const userProfileUrl = "/Resource/img/bangmod.png"; 
-
+        // สมมุติว่าเราได้ URL ของรูปโปรไฟล์จากฐานข้อมูล
+        const userProfileUrl = "/Resource/img/bangmod.png";
         updateImagePreview(userProfileUrl);
     }
-    
     // สั่งให้โหลดข้อมูล 1 ครั้งตอนเปิดหน้า
     loadInitialData();
+    // #endregion
 
-
-    // --- 4. เมื่อผู้ใช้ "เลือกไฟล์ใหม่" ---
-    fileInput.addEventListener('change', function(event) {
+    // #region เมื่อผู้ใช้ "เลือกไฟล์ใหม่"
+    fileInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
-        
+
         if (file) {
-            // ถ้าผู้ใช้เลือกไฟล์
             const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                // e.target.result คือ URL (base64) ของรูปที่เพิ่งเลือก
+
+            reader.onload = function (e) {
+                // e.target.result คือ URL ของรูปที่เพิ่งเลือก
                 updateImagePreview(e.target.result);
             };
-            
+
             // อ่านไฟล์ที่ผู้ใช้เลือก
             reader.readAsDataURL(file);
         }
     });
+    // #endregion
+    // #endregion ======== Profile Image Uploader ==========
 
 });
+// #endregion
 
-// --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (add-room-page.html) ---
+// #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (add-room-page.html) ---
 document.querySelector('.add-room-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -297,3 +315,4 @@ document.querySelector('.add-room-form').addEventListener('submit', async functi
         alert('สร้างห้องไม่สำเร็จ');
     }
 });
+// #endregion

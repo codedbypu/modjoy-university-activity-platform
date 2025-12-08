@@ -1,4 +1,4 @@
-// #region ฟังก์ชันสำหรับ Logout
+// #region ฟังก์ชันสำหรับ Logout 
 async function handleLogout(event) {
     event.preventDefault();
 
@@ -19,6 +19,7 @@ async function handleLogout(event) {
 }
 // #endregion
 
+// #region ตรวจสอบสถานะการล็อกอิน เมื่อโหลดหน้า Home Page 
 document.addEventListener('DOMContentLoaded', async () => {
     const logoutButton = document.querySelectorAll('#logout-button');
     logoutButton.forEach(btn => {
@@ -39,15 +40,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (userSection) userSection.style.display = 'block';
             if (guestSection) guestSection.style.display = 'none';
 
-            // อัปเดตข้อมูลผู้ใช้ (ถ้ามี)
+            // เปลี่ยน elements ต่างๆ ตามข้อมูลจริงของผู้ใช้
             if (data.user) {
                 // อัปเดตชื่อและอีเมลใน Dropdown (desktop)
-                const userNameDisplay = document.getElementById('user-name'); // ชื่อใน Dropdown
-                const userEmailDisplay = document.getElementById('user-email'); // อีเมลใน Dropdown
+                const userNameDisplay = document.getElementById('user-name');
+                const userEmailDisplay = document.getElementById('user-email');
                 if (userNameDisplay) userNameDisplay.textContent = data.user.username + ' ' + data.user.lastname;
                 if (userEmailDisplay) userEmailDisplay.textContent = data.user.email;
 
-                // อัปเดต Sidebar ในมือถือด้วยก็ได้
+                // อัปเดต Sidebar (mobile)
                 const sidebarName = document.getElementById('sidebar-user-name');
                 const sidebarEmail = document.getElementById('sidebar-user-email');
                 if (sidebarName) sidebarName.textContent = data.user.username + ' ' + data.user.lastname;
@@ -55,11 +56,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } else {
-            // // --- กรณีเป็น Guest (ยังไม่ล็อกอิน) ---
+            // --- กรณีเป็น Guest (ยังไม่ล็อกอิน) ---
             // if (userSection) userSection.style.display = 'none';  // ซ่อนรูปโปรไฟล์
             // if (guestSection) guestSection.style.display = 'flex'; // โชว์ปุ่ม Login
 
-            // // จัดการ Sidebar (อาจจะซ่อนเมนูที่ต้องล็อกอิน หรือเปลี่ยนปุ่ม Logout เป็น Login)
+            // จัดการ Sidebar (อาจจะซ่อนเมนูที่ต้องล็อกอิน หรือเปลี่ยนปุ่ม Logout เป็น Login)
             // const sidebarLogout = document.querySelector('.sidebar-links li:last-child a');
             // if (sidebarLogout) {
             //     sidebarLogout.href = './login-page.html';
@@ -70,18 +71,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Home Auth Check Error:', error);
         // กรณี Error ให้ถือว่าเป็น Guest ไปก่อน
-        // if (userSection) userSection.style.display = 'none';
-        // if (guestSection) guestSection.style.display = 'flex';
+        if (userSection) userSection.style.display = 'none';
+        if (guestSection) guestSection.style.display = 'flex';
     }
     // #endregion
 });
+// #endregion
 
+// #region ฟังก์ชันเปิด/ปิดเมนูโปรไฟล์ 
 function toggleProfileMenu() {
     const dropdown = document.getElementById('profile-dropdown');
     dropdown.classList.toggle('active');
 }
+// #endregion
 
-// ฟังก์ชันเสริม: คลิกที่อื่นแล้วให้เมนูปิดเอง
+// #region ปิดเมนูโปรไฟล์เมื่อคลิกนอกพื้นที่ 
 document.addEventListener('click', function (event) {
     const container = document.querySelector('.profile-menu-container');
     const dropdown = document.getElementById('profile-dropdown');
@@ -91,3 +95,4 @@ document.addEventListener('click', function (event) {
         dropdown.classList.remove('active');
     }
 });
+// #endregion

@@ -95,10 +95,6 @@
     background-color: #f3f3f3;
 }
 
-body.sidebar-is-open {
-    /* overflow: hidden; */
-}
-
 /* --- CSS สำหรับ Sidebar --- */
 /* ม่าน (Overlay) */
 .overlay {

@@ -9,7 +9,7 @@ document.querySelector('.login-form').addEventListener('submit', async function 
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
-    // #region Validation ตรวจสอบ Email KMUTT
+    // #region Validation ตรวจสอบ Email KMUTT 
     const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
     if (!kmuttEmailRegex.test(data.email)) {
         showError('กรุณาใช้อีเมลสถาบัน kmutt.ac.th หรือ mail.kmutt.ac.th');
@@ -17,7 +17,7 @@ document.querySelector('.login-form').addEventListener('submit', async function 
     }
     // #endregion
 
-    // #region Sending Zone (เริ่มส่ง)
+    // #region Sending Zone (เริ่มส่ง) 
     try {
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -40,7 +40,7 @@ document.querySelector('.login-form').addEventListener('submit', async function 
 });
 // #endregion
 
-// #region ฟังก์ชันแสดงข้อความผิดพลาด
+// #region ฟังก์ชันแสดงข้อความผิดพลาด 
 function showError(message) {
     notifiText.classList.remove('shake');
     void notifiText.offsetWidth; // รีสตาร์ทแอนิเมชัน
