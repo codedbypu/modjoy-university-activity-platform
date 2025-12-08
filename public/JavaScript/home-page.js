@@ -1,6 +1,6 @@
-// ฟังก์ชันสำหรับ Logout
+// #region ฟังก์ชันสำหรับ Logout
 async function handleLogout(event) {
-    event.preventDefault(); // หยุดการเปลี่ยนหน้าแบบปกติ
+    event.preventDefault();
 
     try {
         const response = await fetch('/api/logout', {
@@ -8,43 +8,36 @@ async function handleLogout(event) {
         });
 
         const result = await response.json();
-
         if (result.success) {
-            // ย้ายไปหน้า Login
             window.location.href = '/login-page.html';
         }
     } catch (error) {
         console.error('Logout Error:', error);
-        window.location.href = '/login-page.html'; // ถ้า Error ก็ดีดออกไปเลยเพื่อความชัวร์
+        alert('Logout Error:', error);
+        window.location.href = '/login-page.html';
     }
 }
+// #endregion
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // ---------------- ผูกอีเวนต์ Logout ให้กับลิงก์หรือปุ่มที่เกี่ยวข้อง ----------------
-    const logoutLinks = document.querySelectorAll('a[href="./login-page.html"], a[href="/login-page.html"], #logout-button, .logout-item');
-
-    logoutLinks.forEach(link => {
-        // เช็คว่าเป็นปุ่ม Logout จริงๆ (ดูจาก text หรือ class)
-        if (link.textContent.includes('ออกจากระบบ') || link.id === 'logout-button' || link.classList.contains('logout-item')) {
-            link.addEventListener('click', handleLogout);
-        }
+    const logoutButton = document.querySelectorAll('#logout-button');
+    logoutButton.forEach(btn => {
+        btn.addEventListener('click', handleLogout);
     });
 
-    // --------------- ตรวจสอบสถานะการล็อกอิน --------------------
-    // 1. ดึง Element ที่ต้องใช้
-    const userSection = document.getElementById('user-section'); // ส่วนรูปโปรไฟล์
-    const guestSection = document.getElementById('guest-section'); // ปุ่ม Login
-    const sidebar = document.getElementById('sidebar'); // Sidebar (เผื่อปรับในมือถือ)
+    // #region --------------- ตรวจสอบสถานะการล็อกอิน -------------------- 
+    const userSection = document.getElementById('user-section');
+    const guestSection = document.getElementById('guest-section');
+    const sidebar = document.getElementById('sidebar');
 
     try {
-        // 2. เช็คสถานะจาก Server
         const response = await fetch('/api/me');
         const data = await response.json();
 
         if (data.loggedIn) {
-            // --- กรณีล็อกอินแล้ว ---
-            if (userSection) userSection.style.display = 'block'; // โชว์รูปโปรไฟล์
-            if (guestSection) guestSection.style.display = 'none';  // ซ่อนปุ่ม Login
+            // --- กรณีล็อกอินแล้ว มี Token ---
+            if (userSection) userSection.style.display = 'block';
+            if (guestSection) guestSection.style.display = 'none';
 
             // อัปเดตข้อมูลผู้ใช้ (ถ้ามี)
             if (data.user) {
@@ -80,6 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // if (userSection) userSection.style.display = 'none';
         // if (guestSection) guestSection.style.display = 'flex';
     }
+    // #endregion
 });
 
 function toggleProfileMenu() {

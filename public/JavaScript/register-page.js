@@ -1,44 +1,53 @@
-const notifiText = document.querySelector('#notifi-text');
-const submitBtn = document.querySelector('#submitBtn');
+// #region initialize elements
+const notifiText = document.getElementById('notifi-text');
+const submitBtn = document.getElementById('submitBtn');
 
 const loadingScreen = document.getElementById('loading-screen');
 const loadingSpinnerBox = document.getElementById('loading-spinner-box');
 const successBox = document.getElementById('success-box');
+// #endregion
 
+// ฟังก์ชันหน่วงเวลา
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// #region event listener ฟอร์มลงทะเบียน
 document.querySelector('.register-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     notifiText.classList.remove('show');
     notifiText.textContent = '';
 
+    // ดึงข้อมูลจากฟอร์ม
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
-    // --- Validation Zone (ตรวจสอบข้อมูล) ---
+    // #region Validation เบื้องต้น
+    // ห้ามช่องว่างในชื่อ-นามสกุล
+    const nameRegex = /^\S+\s+\S+/;
+    if (!nameRegex.test(data.fullname)) {
+        showError('กรุณากรอกชื่อและนามสกุลให้ครบถ้วน');
+        return;
+    }
     // ตรวจสอบ Email KMUTT
     const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
     if (!kmuttEmailRegex.test(data.email)) {
         showError('กรุณาใช้อีเมลสถาบัน kmutt.ac.th หรือ mail.kmutt.ac.th');
         return;
     }
-
     // ตรวจสอบรหัสผ่าน
     if (data.password !== data.confirm_password) {
         showError('รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');
         return;
     }
-
     // ตรวจสอบ Checkbox
     data.allow = document.getElementById('allow').checked;
     if (!data.allow) {
         showError('กรุณายินยอมให้เปิดเผยข้อมูล');
         return;
     }
+    // #endregion
 
-    // --- Sending Zone (เริ่มส่ง) ---
-
+    // #region Sending Zone (เริ่มส่ง)
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.value = 'กำลังบันทึก...';
@@ -46,17 +55,15 @@ document.querySelector('.register-form').addEventListener('submit', async functi
     }
 
     try {
-        // 1. แค่เปิด Overlay ขึ้นมาทับ (ไม่ต้องซ่อนฟอร์มข้างหลัง)
         loadingScreen.style.display = 'flex';
-        loadingSpinnerBox.style.display = 'flex'; // โชว์หมุนๆ
-        successBox.style.display = 'none';        // ซ่อนติ๊กถูก
+        loadingSpinnerBox.style.display = 'flex';
+        successBox.style.display = 'none';
 
+        // ลบข้อมูลที่ไม่จำเป็นก่อนส่ง
         delete data.confirm_password;
         delete data.allow;
 
-        // ส่งไป Backend
-        // เราสั่งให้ทำ 2 อย่างพร้อมกัน คือ 1.ส่งข้อมูล 2.จับเวลา 800ms
-        // โค้ดจะรอจนกว่า "ทั้งคู่" จะเสร็จ (อย่างน้อยๆ ผู้ใช้จะเห็นปุ่ม Loading 0.8 วิ)
+        // ส่งไป Backend พร้อมกับหน่วงเวลาอย่างน้อย 800ms
         const [response, _] = await Promise.all([
             fetch('/api/register', {
                 method: 'POST',
@@ -67,20 +74,18 @@ document.querySelector('.register-form').addEventListener('submit', async functi
         ]);
 
         const result = await response.json();
-
         if (result.success) {
-            // 3. ถ้าสำเร็จ: สลับ Content ใน Overlay
-            loadingSpinnerBox.style.display = 'none'; // ซ่อนหมุนๆ
-            successBox.style.display = 'flex';        // โชว์ติ๊กถูก
+            loadingSpinnerBox.style.display = 'none';
+            successBox.style.display = 'flex';
 
-            await delay(1000);
+            await delay(1000); // รอแสดงผลสำเร็จ 1 วินาที
             window.location.href = '/login-page.html';
         } else {
             if (result.message === 'อีเมลนี้ถูกใช้งานไปแล้ว กรุณาใช้อีเมลอื่น') {
                 showError(result.message);
                 return;
             }
-            alert('Error: ' + result.message);
+            alert('Error: ' + result.message); // กรณีอื่นๆ แสดง alert
         }
     } catch (error) {
         console.error('Error:', error);
@@ -93,15 +98,16 @@ document.querySelector('.register-form').addEventListener('submit', async functi
         }
         loadingScreen.style.display = 'none';
     }
+    // #endregion
 });
+// #endregion
 
+// #region ฟังก์ชันแสดงข้อความผิดพลาด
 function showError(message) {
     notifiText.classList.remove('shake');
-
-    void notifiText.offsetWidth;
-
+    void notifiText.offsetWidth; // รีสตาร์ทแอนิเมชัน
     notifiText.classList.add('shake');
     notifiText.classList.add('show');
-
     notifiText.textContent = message;
 }
+// #endregion

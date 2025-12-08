@@ -1,21 +1,23 @@
-const notifiText = document.querySelector('#notifi-text');
+// #region กดปุ่มล็อกอิน
 document.querySelector('.login-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
     notifiText.classList.remove('show');
     notifiText.textContent = '';
 
+    // ดึงข้อมูลจากฟอร์ม
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
-    // --- Validation Zone (ตรวจสอบข้อมูล) ---
-    // ตรวจสอบ Email KMUTT
+    // #region Validation ตรวจสอบ Email KMUTT
     const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
     if (!kmuttEmailRegex.test(data.email)) {
         showError('กรุณาใช้อีเมลสถาบัน kmutt.ac.th หรือ mail.kmutt.ac.th');
         return;
     }
+    // #endregion
 
+    // #region Sending Zone (เริ่มส่ง)
     try {
         const response = await fetch('/api/login', {
             method: 'POST',
@@ -34,12 +36,16 @@ document.querySelector('.login-form').addEventListener('submit', async function 
         console.error('Error:', error);
         alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
     }
+    // #endregion
 });
+// #endregion
 
+// #region ฟังก์ชันแสดงข้อความผิดพลาด
 function showError(message) {
     notifiText.classList.remove('shake');
-    void notifiText.offsetWidth;
+    void notifiText.offsetWidth; // รีสตาร์ทแอนิเมชัน
     notifiText.classList.add('shake');
     notifiText.classList.add('show');
     notifiText.textContent = message;
 }
+// #endregion
