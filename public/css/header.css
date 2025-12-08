@@ -1,4 +1,3 @@
-/* ---------- ADD ROOM ---------- */
 :root {
     --primary-color: #FA5A16;
     --primary-color-dark: #FA4616;
@@ -46,8 +45,6 @@
     background-size: cover;
     color: var(--text-light);
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
-
-
 }
 
 /* กล่องเปล่าฝั่งขวา */
@@ -222,6 +219,7 @@
     line-height: 38px;
 }
 
+/* #region css คอม */
 /*
 คอม @media screen and (min-width: 1024px) 
 <header class="home-header-desktop">
@@ -260,10 +258,10 @@
     </header>
 */
 .home-header-desktop {
-    display: none;
+    /* display: none; */
 }
 
-.desktop-header-wrapper {
+.header-wrapper {
     display: block;
     width: 100%;
     height: 80px;
@@ -278,9 +276,15 @@
     width: 100%;
     height: 80px;
     z-index: 1000;
-    /* ...ค่าอื่นๆ คงเดิม... */
+}
+.home-header-desktop.active-bar {
+    display: flex;
+}
+.home-header-desktop.none-active-bar {
+    display: none;
 }
 
+/* คอมพิวเตอร์ขนาดหน้าจอ 1024px ขึ้นไป */
 @media screen and (min-width: 1024px) {
     .mobilechange-header {
         display: none;
@@ -291,7 +295,7 @@
     }
 
     .home-header-desktop {
-        display: flex;
+        /* display: flex; */
         justify-content: space-between;
         align-items: center;
         position: fixed;
@@ -303,15 +307,12 @@
         color: var(--text-light);
         top: 0;
         z-index: 1000;
-
     }
 
     /* ขนาดโลโก้ */
-
     .desktop-logo img {
         display: block;
         height: 45px;
-        ;
     }
 
     /* กลุ่มทางขวา */
@@ -491,3 +492,5 @@
         border-radius: 5px;
     }
 }
+
+/* #endregion */

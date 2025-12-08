@@ -73,9 +73,9 @@
 
     <div class="overlay" id="overlay"></div>
 
-    <!-- #region home-header-mobile -->
-    <!-- header -->
-    <header class="desktop-header-wrapper">
+    <!-- #region header -->
+    <header class="header-wrapper">
+        <!-- #region home-header-mobile -->
         <div class="mobilechange-header">
             <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
             <a href="./home-page.html"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
@@ -84,7 +84,21 @@
         <!-- #endregion -->
 
         <!-- #region home-header-desktop -->
-        <div class="home-header-desktop">
+        <!-- Gust -->
+        <div class="home-header-desktop active-bar">
+            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
+                    alt="MODJOY Logo"></a>
+
+            <div class="desktop-right-group">
+                <div class="auth-buttons-group">
+                    <a href="./login-page.html" class="btn-auth-login">เข้าสู่ระบบ</a>
+                    <a href="./register-page.html" class="btn-auth-register">ลงทะเบียน</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member -->
+        <div class="home-header-desktop none-active-bar">
             <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
                     alt="MODJOY Logo"></a>
             <div class="desktop-right-group">
@@ -116,9 +130,9 @@
                         </div>
                     </div>
                 </nav>
-
             </div>
         </div>
+        <!-- #endregion -->
     </header>
     <!-- #endregion -->
 
