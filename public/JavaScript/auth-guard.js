@@ -6,7 +6,7 @@
         const result = await response.json();
 
         // ถ้าไม่ได้ล็อกอิน (loggedIn = false)
-        if (!data.loggedIn) {
+        if (!result.loggedIn) {
             alert('กรุณาเข้าสู่ระบบเพื่อใช้งานหน้านี้'); // (ลบออกได้ถ้าไม่อยากให้เด้งเตือน)
             window.location.href = '/home-page.html'; // ดีดกลับหน้า Home
         }
