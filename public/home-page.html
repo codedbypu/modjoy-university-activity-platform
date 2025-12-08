@@ -36,12 +36,12 @@
             <button class="material-symbols-outlined sidebar-close-btn" id="sidebar-close-btn"
                 aria-label="ปิดเมนู">close</button>
             <div class="sidebar-profile-img">
-                <!-- Member --><a href="./my-account-page.html"><img src="./Resource/img/profile.jpg" alt="Profile Picture"></a>
-                <!-- Gust --><img style="display: none;" src="./Resource/img/profile.jpg" alt="Profile Image">
+                <!-- Member --><a href="./my-account-page.html" class="member-only"><img src="./Resource/img/profile.jpg" alt="Profile Picture"></a>
+                <!-- Gust --><img src="./Resource/img/profile.jpg" class="guest-only" alt="Profile Image">
             </div>
             <div class="sidebar-name-group">
                 <h3 id="sidebar-user-name">ยินดีต้อนรับ</h3>
-                <!-- Member --><div class="creditperson">
+                <!-- Member --><div class="creditperson member-only">
                     <span id="sidebar-user-credit">100</span>
                     <img src="./Resource/img/credit.png" alt="credit icon">
                 </div>
@@ -54,19 +54,19 @@
             <!-- Global --><li class="active-page"><a href="./home-page.html"><span
                         class="material-symbols-outlined">home</span><span>หน้าแรก</span></a>
             </li>
-            <!-- Member --><li><a href="./my-account-page.html"><span
+            <!-- Member --><li><a href="./my-account-page.html" class="member-only"><span
                         class="material-symbols-outlined">person</span><span>บัญชีของฉัน</span></a></li>
-            <!-- Member --><li><a href="./created-room.html"><span
+            <!-- Member --><li><a href="./created-room.html" class="member-only"><span
                         class="material-symbols-outlined">check_box</span><span>กิจกรรมที่สร้าง</span></a></li>
-            <!-- Member --><li><a href="./history-page.html"><span
+            <!-- Member --><li><a href="./history-page.html" class="member-only"><span
                         class="material-symbols-outlined">history</span><span>ประวัติการเข้าร่วม</span></a></li>
-            <!-- Member --><li><a href="./settings-page.html"><span
+            <!-- Member --><li><a href="./settings-page.html" class="member-only"><span
                         class="material-symbols-outlined">settings</span><span>การตั้งค่า</span></a></li>
-            <!-- Member --><li><a href="./login-page.html"><span
+            <!-- Member --><li><a href="./login-page.html" class="member-only"><span
                         class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span></a>
             </li>
         </ul>
-        <!-- Gust --><div style="display: none;" class="sidebar-auth-action">
+        <!-- Gust --><div class="sidebar-auth-action guest-only">
             <a href="./login-page.html" class="sidebar-btn-login">เข้าสู่ระบบ</a>
             <a href="./register-page.html" class="sidebar-btn-register">ลงทะเบียน</a>
         </div>
@@ -80,8 +80,8 @@
         <div class="mobile-header active">
             <button class="material-symbols-outlined" id="sidebar-open-btn" aria-label="เปิดเมนู">menu</button>
             <a href="./home-page.html"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
-            <!-- Member --><a class="material-symbols-outlined" href="./add-room-page.html">add</a>
-            <!-- Gust --><a style="display: none;" href="./login-page.html" class="login-btn">เข้าสู่ระบบ</a>
+            <!-- Member --><a class="material-symbols-outlined member-only" href="./add-room-page.html">add</a>
+            <!-- Gust --><a href="./login-page.html" class="login-btn guest-only">เข้าสู่ระบบ</a>
         </div>
         <!-- #endregion -->
 
@@ -90,11 +90,11 @@
             <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
             <div class="desktop-right-group">
                 <nav class="desktop-nav">
-                    <!-- Member --><a href="./home-page.html" class="active">หน้าหลัก</a>
-                    <!-- Member --><a href="./created-room.html">กิจกรรมที่สร้าง</a>
-                    <!-- Member --><a href="./history-page.html">ประวัติการเข้าร่วม</a>
-                    <!-- Member --><a href="./add-room-page.html" class="material-symbols-outlined">add</a>
-                    <!-- Member --><div class="profile-menu-container">
+                    <!-- Member --><a href="./home-page.html" class="active member-only">หน้าหลัก</a>
+                    <!-- Member --><a href="./created-room.html" class="member-only">กิจกรรมที่สร้าง</a>
+                    <!-- Member --><a href="./history-page.html" class="member-only">ประวัติการเข้าร่วม</a>
+                    <!-- Member --><a href="./add-room-page.html" class="material-symbols-outlined member-only">add</a>
+                    <!-- Member --><div class="profile-menu-container member-only">
                         <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
                             <img src="./Resource/img/profile.jpg" alt="profile-image">
                         </div>
@@ -116,9 +116,8 @@
                     </div>
 
                     <!-- Gust -->
-                        <a style="display: none;" href="./login-page.html" class="btn-auth-login">เข้าสู่ระบบ</a>
-                        <a style="display: none;" href="./register-page.html" class="btn-auth-register">ลงทะเบียน</a>
-                    
+                        <a href="./login-page.html" class="btn-auth-login guest-only">เข้าสู่ระบบ</a>
+                        <a href="./register-page.html" class="btn-auth-register guest-only">ลงทะเบียน</a>
                 </nav>
             </div>
         </div>

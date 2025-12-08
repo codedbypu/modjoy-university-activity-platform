@@ -253,3 +253,22 @@
     pointer-events: none; /* ปิดการคลิก */
     cursor: default;      /* เปลี่ยนเมาส์เป็นลูกศรปกติ */
 }
+
+/* โดยปกติ ซ่อนของ Guest ไว้ก่อน (หรือจะซ่อน Member ก็ได้ แล้วแต่ Logic) */
+/* แต่เพื่อให้ง่าย เราจะใช้ JS สั่ง class ที่ body */
+
+/* ถ้า Body มี class="is-logged-in" -> ซ่อนของ Guest, โชว์ของ Member */
+body.is-logged-in .guest-only {
+    display: none;
+}
+body.is-logged-in .member-only {
+    display: flex; /* หรือ block/inline-block ตามความเหมาะสม */
+}
+
+/* ถ้า Body ไม่มี class (เป็น Guest) -> ซ่อนของ Member, โชว์ของ Guest */
+body:not(.is-logged-in) .member-only {
+    display: none;
+}
+body:not(.is-logged-in) .guest-only {
+    display: flex;
+}

@@ -27,18 +27,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // #region --------------- ตรวจสอบสถานะการล็อกอิน -------------------- 
-    const userSection = document.getElementById('user-section');
-    const guestSection = document.getElementById('guest-section');
-    const sidebar = document.getElementById('sidebar');
-
     try {
         const response = await fetch('/api/me');
         const data = await response.json();
 
         if (data.loggedIn) {
             // --- กรณีล็อกอินแล้ว มี Token ---
-            if (userSection) userSection.style.display = 'block';
-            if (guestSection) guestSection.style.display = 'none';
+            document.body.classList.add('is-logged-in');
 
             // เปลี่ยน elements ต่างๆ ตามข้อมูลจริงของผู้ใช้
             if (data.user) {
@@ -56,23 +51,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } else {
-            // --- กรณีเป็น Guest (ยังไม่ล็อกอิน) ---
-            // if (userSection) userSection.style.display = 'none';  // ซ่อนรูปโปรไฟล์
-            // if (guestSection) guestSection.style.display = 'flex'; // โชว์ปุ่ม Login
-
-            // จัดการ Sidebar (อาจจะซ่อนเมนูที่ต้องล็อกอิน หรือเปลี่ยนปุ่ม Logout เป็น Login)
-            // const sidebarLogout = document.querySelector('.sidebar-links li:last-child a');
-            // if (sidebarLogout) {
-            //     sidebarLogout.href = './login-page.html';
-            //     sidebarLogout.innerHTML = '<span class="material-symbols-outlined">login</span><span>เข้าสู่ระบบ</span>';
-            // }
+            // --- กรณีไม่ได้ล็อกอิน ไม่มี Token ---
+            document.body.classList.remove('is-logged-in');
         }
 
     } catch (error) {
         console.error('Home Auth Check Error:', error);
         // กรณี Error ให้ถือว่าเป็น Guest ไปก่อน
-        if (userSection) userSection.style.display = 'none';
-        if (guestSection) guestSection.style.display = 'flex';
+        document.body.classList.remove('is-logged-in');
     }
     // #endregion
 });

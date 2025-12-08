@@ -1,4 +1,5 @@
 // #region กดปุ่มล็อกอิน
+const notifiText = document.getElementById('notifi-text');
 document.querySelector('.login-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 

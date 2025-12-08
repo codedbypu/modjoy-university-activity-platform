@@ -22,12 +22,7 @@ document.querySelector('.register-form').addEventListener('submit', async functi
     const data = Object.fromEntries(formData.entries());
 
     // #region Validation เบื้องต้น
-    // ห้ามช่องว่างในชื่อ-นามสกุล
-    const nameRegex = /^\S+\s+\S+/;
-    if (!nameRegex.test(data.fullname)) {
-        showError('กรุณากรอกชื่อและนามสกุลให้ครบถ้วน');
-        return;
-    }
+
     // ตรวจสอบ Email KMUTT
     const kmuttEmailRegex = /^[a-zA-Z0-9._%+-]+@(mail\.)?kmutt\.ac\.th$/i;
     if (!kmuttEmailRegex.test(data.email)) {
