@@ -1,12 +1,12 @@
-// #region (DOMContentLoaded)
 document.addEventListener("DOMContentLoaded", function () {
-    // ป้องกันการกด Enter เพื่อ submit form
+    // #region ======== ป้องกันการกด Enter เพื่อ submit form ==========
     document.querySelector('.add-room-form').addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             return false;
         }
     });
+    // #endregion ======== ป้องกันการกด Enter เพื่อ submit form ==========
 
     // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
     // #region init ตัวแปร หาองค์ประกอบ 
@@ -21,11 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const res = await fetch('/api/locations');
             const locations = await res.json();
             availableAddresses = locations;
-
-            renderAddressesOption(); // เรียกฟังก์ชันแสดงตัวเลือก
+            renderAddressesOption();
         } catch (error) {
             console.error("Error fetching locations:", error);
-            addressOptionsList.innerHTML = '<div style="padding:10px; color:red;">โหลดข้อมูลไม่สำเร็จ</div>';
         }
     }
     fetchLocations(); // เรียกทำงานทันที
@@ -35,12 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function renderAddressesOption() {
         addressOptionsList.innerHTML = '';
 
-        // เพิ่ม: เช็คว่ามีข้อมูลไหม
-        if (availableAddresses.length === 0) {
-            addressOptionsList.innerHTML = '<div style="padding:10px; color:#999;">ไม่พบข้อมูลสถานที่</div>';
-            return;
-        }
-
         availableAddresses.forEach(loc => {
             const option = document.createElement('div');
             option.className = 'custom-option';
@@ -48,20 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
             option.setAttribute('data-value', loc.LOCATION_ID);
             option.textContent = loc.LOCATION_NAME;
 
-
-            // #region เมื่อคลิก เลือกตัวเลือก (Option) 
+            // #region เมื่อคลิก เลือก Option
             option.addEventListener("click", function () {
-                const value = this.getAttribute("data-value");
-                const text = this.textContent;
-
-                addressDisplayInput.value = text;
-                addressHiddenInput.value = value;
-
+                addressDisplayInput.value = this.textContent;       // โชว์ชื่อ
+                addressHiddenInput.value = this.getAttribute("data-value"); // เก็บ ID
                 addressOptionsList.classList.remove("show");
             });
             addressOptionsList.appendChild(option);
+            // #endregion
         });
-        // #endregion
     }
     // #endregion
 
@@ -86,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
     addressDisplayInput.addEventListener("click", function (e) {
         e.stopPropagation();
         addressOptionsList.classList.toggle("show");
-        
+
         // เมื่อคลิกเปิด ให้แสดงตัวเลือกทั้งหมด
         const currentOptions = addressOptionsList.querySelectorAll('.custom-option');
         allOptions.forEach(option => {
@@ -109,9 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let availableTags = [];
     const MAX_TAGS = 5;
     let currentTags = [];
-    // #endregion
 
-    // #region หาองค์ประกอบทั้งหมดที่ต้องใช้
     const tagInput = document.getElementById('room-tag-input');
     const addTagBtn = document.getElementById('add-tag-btn');
     const tagListContainer = document.getElementById('tag-list-display');
@@ -125,18 +110,12 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const res = await fetch('/api/tags');
             const tags = await res.json();
-            availableTags = tags; // อัปเดตตัวแปร global
+            availableTags = tags;
         } catch (error) {
             console.error("Error fetching tags:", error);
         }
     }
     fetchAllTags(); // เรียกทำงานทันที
-    // #endregion
-
-    // #region ฟังก์ชัน hideSuggestions 
-    function hideSuggestions() {
-        suggestionsContainer.style.display = 'none';
-    }
     // #endregion
 
     // #region ฟังก์ชัน renderTags 
@@ -185,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (existingTagsLower.includes(lowerCaseTag)) {
             alert("คุณเพิ่มแท็กนี้ไปแล้ว");
             tagInput.value = '';
-            hideSuggestions();
+            suggestionsContainer.style.display = 'none';
             return;
         }
 
@@ -196,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         tagInput.value = '';
-        hideSuggestions();
+        suggestionsContainer.style.display = 'none';
     }
     // #endregion
 
@@ -204,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function showSuggestions(filteredList) {
         suggestionsContainer.innerHTML = '';
         if (filteredList.length === 0) {
-            hideSuggestions();
+            suggestionsContainer.style.display = 'none';
             return;
         }
 
@@ -215,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             item.addEventListener('click', function () {
                 tagInput.value = tagText;
-                hideSuggestions();
+                suggestionsContainer.style.display = 'none';
                 tagInput.focus();
             });
 
@@ -233,7 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
     tagInput.addEventListener('keyup', function () {
         const query = tagInput.value.toLowerCase();
         if (query.length === 0) {
-            hideSuggestions();
+            suggestionsContainer.style.display = 'none';
             return;
         }
         const filtered = availableTags.filter(tag =>
@@ -262,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region คลิกที่อื่น
     document.addEventListener('click', function (event) {
         if (!event.target.closest('.tag-input-container')) {
-            hideSuggestions();
+            suggestionsContainer.style.display = 'none';
         }
     });
     // #endregion
@@ -308,58 +287,66 @@ document.addEventListener("DOMContentLoaded", function () {
     // #endregion
     // #endregion ======== Profile Image Uploader ==========
 
-    // #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ---
-    document.querySelector('.add-room-form').addEventListener('submit', async function (e) {
-        e.preventDefault();
+    // #region ======== ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (Submit Form) ==========
+    const createForm = document.querySelector('.add-room-form');
 
-        const submitBtn = document.querySelector('.add-room-form button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'กำลังสร้าง...';
-        }
+    if (createForm) {
+        createForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-        try {
-            // ดึงข้อมูลจากฟอร์ม
-            const formData = new FormData();
-            // ดึงค่าจาก Input ตาม ID (ต้องไปเช็ค HTML ให้ตรงกัน)
-            formData.append('roomTitle', document.getElementById('room-name').value);
-            formData.append('roomEventStartTime', document.getElementById('room-start-time').value);
-            formData.append('roomEventEndTime', document.getElementById('room-end-time').value);
-            formData.append('roomEventDate', document.getElementById('room-event-date').value);
-            formData.append('roomLocation', document.getElementById('address-input-hidden').value);
-            formData.append('roomDescription', document.getElementById('room-detail').value);
-            formData.append('roomCapacity', document.getElementById('room-capacity').value);
-            formData.append('tags', document.getElementById('tags-list-hidden').value);
-
-            // ส่งไฟล์รูป
-            if (fileInput && fileInput.files.length > 0) {
-                formData.append('room_image', fileInput.files[0]);
+            // --- VALIDATION ZONE (ตรวจสอบความถูกต้อง) ---
+            // Tag ต้องมีอย่างน้อย 1 รายการ
+            if (currentTags.length === 0) {
+                alert('กรุณาเพิ่ม Tag อย่างน้อย 1 รายการ เพื่อให้เพื่อนๆ ค้นหากิจกรรมเจอ');
+                return;
             }
 
-            // ส่งไป Backend
-            const response = await fetch('/api/create-room', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                alert('สร้างห้องสำเร็จ!');
-                window.location.href = '/home-page.html'; // หรือไปหน้า detail ห้องใหม่
-            } else {
-                alert('เกิดข้อผิดพลาด: ' + result.message);
+            // ตรวจสอบสถานที่ (ต้องมีใน Database)
+            const inputLocationName = addressDisplayInput.value.trim();
+            const validLocation = availableAddresses.find(loc => loc.LOCATION_NAME === inputLocationName);
+            if (!validLocation) {
+                alert('กรุณาเลือก "สถานที่" จากรายการที่กำหนดให้เท่านั้น (ห้ามพิมพ์เองนอกเหนือจากรายการ)');
+                return;
             }
-        } catch (error) {
-            console.error(error);
-            alert('เชื่อมต่อ Server ไม่ได้');
-        } finally {
+            // ---------------------------------------------
+
+            const submitBtn = createForm.querySelector('button[type="submit"]');
             if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'ยืนยันการสร้าง';
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'กำลังสร้าง...';
             }
-        }
-    });
-    // #endregion ----- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม -----
+
+            try {
+                // มันจะดึงข้อมูลทุกอย่างในฟอร์มมาให้หมด อ้างอิงจาก name attribute และ value
+                // เช่น <input name="roomTitle" value="My Room">
+                const formData = new FormData(this);
+                formData.set('tags', hiddenInput.value); // ใส่ค่าแท็กที่ซ่อนอยู่
+
+                // ส่งไฟล์รูป
+                if (fileInput && fileInput.files.length > 0) formData.append('room_image', fileInput.files[0]);
+                const response = await fetch('/api/create-room', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('สร้างห้องสำเร็จ!');
+                    window.location.href = '/home-page.html';
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('เชื่อมต่อ Server ไม่ได้');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'ยืนยันการสร้าง';
+                }
+            }
+        });
+        // #endregion ======== ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ==========
+    }
 });
 // #endregion
