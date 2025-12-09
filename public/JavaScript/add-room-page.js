@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region init ตัวแปร หาองค์ประกอบ 
     const addressDisplayInput = document.getElementById("address-input-display");
     const addressHiddenInput = document.getElementById("address-input-hidden");
-    const addressOptionsList = document.querySelector("#places-listbox");
+    const addressOptionsList = document.getElementById("places-listbox");
     let availableAddresses = [];
 
     // ฟังก์ชันดึงสถานที่จาก Server
@@ -21,8 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const res = await fetch('/api/locations');
             const locations = await res.json();
             availableAddresses = locations;
+
+            renderAddressesOption(); // เรียกฟังก์ชันแสดงตัวเลือก
         } catch (error) {
             console.error("Error fetching locations:", error);
+            addressOptionsList.innerHTML = '<div style="padding:10px; color:red;">โหลดข้อมูลไม่สำเร็จ</div>';
         }
     }
     fetchLocations(); // เรียกทำงานทันที
@@ -31,18 +34,35 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region renderAddressesOption 
     function renderAddressesOption() {
         addressOptionsList.innerHTML = '';
-        availableAddresses.forEach(addressText => {
+
+        // เพิ่ม: เช็คว่ามีข้อมูลไหม
+        if (availableAddresses.length === 0) {
+            addressOptionsList.innerHTML = '<div style="padding:10px; color:#999;">ไม่พบข้อมูลสถานที่</div>';
+            return;
+        }
+
+        availableAddresses.forEach(loc => {
             const option = document.createElement('div');
             option.className = 'custom-option';
             option.setAttribute('role', "option")
-            option.setAttribute('aria-selected', "false")
-            option.setAttribute('data-value', addressText.LOCATION_ID);
-            option.textContent = addressText.LOCATION_NAME;
+            option.setAttribute('data-value', loc.LOCATION_ID);
+            option.textContent = loc.LOCATION_NAME;
+
+
+            // #region เมื่อคลิก เลือกตัวเลือก (Option) 
+            option.addEventListener("click", function () {
+                const value = this.getAttribute("data-value");
+                const text = this.textContent;
+
+                addressDisplayInput.value = text;
+                addressHiddenInput.value = value;
+
+                addressOptionsList.classList.remove("show");
+            });
             addressOptionsList.appendChild(option);
         });
+        // #endregion
     }
-    renderAddressesOption();
-    const allOptions = addressOptionsList.querySelectorAll('.custom-option');
     // #endregion
 
     // #region เมื่อ "พิมพ์" ในช่องค้นหา ให้กรอง 
@@ -50,7 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const filterValue = addressDisplayInput.value.toLowerCase();
         addressOptionsList.classList.add("show");
 
-        allOptions.forEach(option => {
+        const currentOptions = addressOptionsList.querySelectorAll('.custom-option');
+        currentOptions.forEach(option => {
             const text = option.textContent.toLowerCase();
             if (text.includes(filterValue)) {
                 option.style.display = "block";
@@ -65,23 +86,11 @@ document.addEventListener("DOMContentLoaded", function () {
     addressDisplayInput.addEventListener("click", function (e) {
         e.stopPropagation();
         addressOptionsList.classList.toggle("show");
+        
         // เมื่อคลิกเปิด ให้แสดงตัวเลือกทั้งหมด
+        const currentOptions = addressOptionsList.querySelectorAll('.custom-option');
         allOptions.forEach(option => {
             option.style.display = "block";
-        });
-    });
-    // #endregion
-
-    // #region เมื่อคลิก เลือกตัวเลือก (Option) 
-    allOptions.forEach(option => {
-        option.addEventListener("click", function () {
-            const value = this.getAttribute("data-value");
-            const text = this.textContent;
-
-            addressDisplayInput.value = text;
-            addressHiddenInput.value = value;
-
-            addressOptionsList.classList.remove("show");
         });
     });
     // #endregion
