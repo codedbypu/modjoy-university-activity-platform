@@ -102,4 +102,40 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 });
 // #endregion
 
+router.get('/rooms', async (req, res) => {
+    try {
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                r.ROOM_EVENT_START_TIME,
+                r.ROOM_EVENT_END_TIME,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+
+                l.LOCATION_NAME,
+
+                COUNT(rm.USER_ID) AS member_count,
+                GROUP_CONCAT(t.TAG_NAME) AS tags
+
+            FROM ROOMS r
+            LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_EVENT_DATE ASC
+        `;
+
+        const rooms = await dbQuery(sql);
+
+        res.json({ success: true, rooms });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
+
 module.exports = router;

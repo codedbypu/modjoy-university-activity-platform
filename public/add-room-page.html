@@ -56,7 +56,7 @@
                 <div class="custom-select-container">
                     <input type="text" class="custom-select-input" id="address-input-display"
                         placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
-                        aria-expanded="false" aria-haspopup="listbox" aria-controls="places-listbox">
+                        aria-expanded="false" aria-haspopup="listbox" aria-controls="places-listbox" required>
                     <div class="custom-options-list" id="places-listbox" role="listbox"></div>
                     <input type="hidden" name="roomLocation" id="address-input-hidden">
                 </div>
@@ -64,19 +64,19 @@
 
             <div class="form-group time-input-group">
                 <label for="room-start-time">เวลา</label>
-                <input type="time" id="room-start-time" class="time-input" name="roomEventStartTime" placeholder="เริ่ม">
+                <input type="time" id="room-start-time" class="time-input" name="roomEventStartTime" placeholder="เริ่ม" required>
                 <span class="inline-separator">-</span>
-                <input type="time" id="room-end-time" class="time-input" name="roomEventEndTime" placeholder="สิ้นสุด">
+                <input type="time" id="room-end-time" class="time-input" name="roomEventEndTime" placeholder="สิ้นสุด" required>
             </div>
 
             <div class="form-group">
                 <label for="room-event-date">วัน / เดือน / ปี</label>
-                <input type="date" id="room-event-date" class="date-input" name="roomEventDate" placeholder="วัน">
+                <input type="date" id="room-event-date" class="date-input" name="roomEventDate" placeholder="วัน" required>
             </div>
 
             <div class="form-group">
                 <label for="room-detail">รายละเอียด</label>
-                <textarea id="room-detail" name="roomDescription" class="detail-textarea"></textarea>
+                <textarea id="room-detail" name="roomDescription" class="detail-textarea" required></textarea>
             </div>
 
             <div class="form-group">
