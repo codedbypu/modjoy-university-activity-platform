@@ -92,7 +92,7 @@ router.get('/me', (req, res) => {
             SELECT 
                 U.USER_ID, U.USER_EMAIL, U.USER_FNAME, U.USER_LNAME, 
                 U.USER_ROLE, U.USER_IMG, U.USER_CREDIT_SCORE, 
-                U.USER_YEAR, U.USER_DESCRIPTION,
+                U.USER_YEAR, U.USER_DESCRIPTION, U.USER_FACULTY,
                 F.FACULTY_NAME
             FROM USERS U
             LEFT JOIN FACULTYS F ON U.USER_FACULTY = F.FACULTY_ID
@@ -116,6 +116,7 @@ router.get('/me', (req, res) => {
                         credit: user.USER_CREDIT_SCORE || 0,
                         profile_image: user.USER_IMG,
                         faculty: user.FACULTY_NAME || 'ไม่ได้ระบุ', // ชื่อคณะ
+                        faculty_id: user.USER_FACULTY,
                         year: user.USER_YEAR || 1,         // ชั้นปี
                         about: user.USER_DESCRIPTION || '' // เกี่ยวกับฉัน
                     }
@@ -203,6 +204,16 @@ router.post('/update', upload.single('profile_image'), (req, res) => {
         console.error(err);
         res.json({ success: false, message: 'Session หมดอายุ' });
     }
+});
+
+router.get('/faculties', (req, res) => {
+    db.query('SELECT * FROM FACULTYS', (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
 });
 
 module.exports = router;

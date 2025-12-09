@@ -44,7 +44,7 @@ async function loadGlobalUserData() {
             if (myAccountEmail) myAccountEmail.textContent = u.email;
             if (myAccountEducation) {
                 // ตัวอย่าง: "คณะวิศวกรรมศาสตร์ ระดับชั้นปีที่ 3"
-                myAccountEducation.textContent = `คณะ : ${u.faculty} ระดับชั้นปีที่ : ${u.year}`;
+                myAccountEducation.textContent = `คณะ${u.faculty} ระดับชั้นปีที่ ${u.year}`;
             }
             if (myAccountAbout) {
                 myAccountAbout.value = u.about || "ไม่มีข้อมูลเพิ่มเติม";

@@ -2,37 +2,63 @@ document.addEventListener("DOMContentLoaded", function () {
     // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
     async function loadInitialData() {
         try {
-            // เรียก API /me โดยตรง (หรือจะรอจาก global-loader ก็ได้ แต่วิธีนี้ชัวร์กว่าสำหรับฟอร์ม)
+            // 1. ดึงรายชื่อคณะทั้งหมด (Dropdown)
+            const facultyRes = await fetch('/api/faculties');
+            const faculties = await facultyRes.json();
+
+            const facultySelect = document.getElementById('select-faculty');
+            facultySelect.innerHTML = '<option value="0">เลือกคณะ</option>'; // เคลียร์ค่า
+
+            // วนลูปสร้างตัวเลือกคณะ
+            faculties.forEach(fac => {
+                const option = document.createElement('option');
+                option.value = fac.FACULTY_ID;   // ค่าที่จะส่งไป DB (เช่น 1, 2)
+                option.textContent = fac.FACULTY_NAME; // คำที่โชว์ (เช่น วิศวกรรมศาสตร์)
+                facultySelect.appendChild(option);
+            });
+
+            // 2. ดึงข้อมูลผู้ใช้ (User Data)
             const response = await fetch('/api/me');
             const data = await response.json();
 
             if (data.loggedIn && data.user) {
-                const u = data.user;
+                const user = data.user;
 
-                // 1. เติมข้อมูลลง Input
+                // เติมข้อมูล Text
                 if (document.getElementById('user-fullname'))
-                    document.getElementById('user-fullname').value = u.fullname || '';
-
+                    document.getElementById('user-fullname').value = user.fullname || '';
                 if (document.getElementById('user-lastname'))
-                    document.getElementById('user-lastname').value = u.lastname || '';
+                    document.getElementById('user-lastname').value = user.lastname || '';
 
                 if (document.getElementById('user-email'))
-                    document.getElementById('user-email').value = u.email || '';
+                    document.getElementById('user-email').value = user.email || '';
 
                 if (document.getElementById('user-about-detail'))
-                    document.getElementById('user-about-detail').value = u.about || '';
+                    document.getElementById('user-about-detail').value = user.about || '';
 
-                // 2. เติมรูปภาพ
-                const userProfileUrl = u.profile_image || "./Resource/img/profile.jpg";
+                // เติมรูปภาพ
+                const userProfileUrl = user.profile_image || "./Resource/img/profile.jpg";
                 updateImagePreview(userProfileUrl);
 
-                // 3. เลือก Dropdown คณะ/ปี (ถ้ามี)
-                // (ต้องเขียน Logic เพิ่มถ้าใน HTML มี value ที่ตรงกับ DB)
+                // --- 3. เลือกค่าใน Dropdown ให้ตรงกับของเดิม ---
+
+                // เลือกคณะ (ถ้ามีข้อมูล)
+                if (user.faculty_id) {
+                    facultySelect.value = user.faculty_id;
+                }
+
+                // เลือกชั้นปี (ถ้ามีข้อมูล)
+                if (user.year) {
+                    const yearSelect = document.getElementById('select-years');
+                    if (yearSelect) yearSelect.value = user.year;
+                }
             }
         } catch (error) {
-            console.error("Error loading user data:", error);
+            console.error("Error loading data:", error);
         }
     }
+
+    loadInitialData(); // เรียกใช้งาน
     // #endregion loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก ---
 
     // #region ======== Profile Image Uploader ==========
@@ -272,7 +298,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (result.success) {
                     alert('บันทึกข้อมูลเรียบร้อย!');
-                    window.location.href = '/my-account-page.html';
+                    window.location.href = '/my-account-page.html'; // กลับไปหน้า Profile
                 } else {
                     alert('เกิดข้อผิดพลาด: ' + result.message);
                 }
@@ -287,4 +313,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     // #endregion ======== จบ ส่วนบันทึกข้อมูล (Save) ==========
+
+
 });
