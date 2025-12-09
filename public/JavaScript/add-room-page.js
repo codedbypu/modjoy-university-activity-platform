@@ -85,10 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // #region ======== Tag Input สำหรับแท็กห้อง (Room Tags) ========== 
     // #region init ตัวแปร หาองค์ประกอบ
-    const availableTags = [
-        "อ่านหนังสือ", "Calculus", "ติวฟรี", "เล่นเกม",
-        "ดูหนัง", "ฟังเพลง", "Physics", "Art", "Coding"
-    ];
+    let availableTags = [];
     const MAX_TAGS = 5;
     let currentTags = [];
     // #endregion
@@ -102,6 +99,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // #endregion
 
     // #region ----- ฟังก์ชันหลัก (Core Functions) ----- 
+    // #region ฟังก์ชันดึง Tag ทั้งหมดจาก Server มาใส่ใน Suggestion
+    async function fetchAllTags() {
+        try {
+            const res = await fetch('/api/tags');
+            const tags = await res.json();
+            availableTags = tags; // อัปเดตตัวแปร global
+        } catch (error) {
+            console.error("Error fetching tags:", error);
+        }
+    }
+    fetchAllTags(); // เรียกทำงานทันที
+    // #endregion
+
     // #region ฟังก์ชัน hideSuggestions 
     function hideSuggestions() {
         suggestionsContainer.style.display = 'none';
@@ -293,13 +303,11 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 // #endregion
 
-// #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (add-room-page.html) ---
+// #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม ---
 document.querySelector('.add-room-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    // (เทคนิค) อัปเดตค่า input tag ที่ซ่อนอยู่ก่อนส่ง ถ้าจำเป็น
-    // document.getElementById('tags-list-hidden').value = currentTags.join(',');
-
+    // ดึงข้อมูลจากฟอร์ม
     const formData = new FormData(this);
     const data = Object.fromEntries(formData.entries());
 
@@ -311,10 +319,10 @@ document.querySelector('.add-room-form').addEventListener('submit', async functi
 
     const result = await response.json();
     if (result.success) {
-        alert('สร้างห้องสำเร็จ!');
+        alert(result.message);
         window.location.href = '/home-page.html';
     } else {
-        alert('สร้างห้องไม่สำเร็จ');
+        alert(result.message);
     }
 });
 // #endregion

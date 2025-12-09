@@ -19,7 +19,7 @@ function dbQuery(sql, params) {
     });
 }
 
-// #region register API Routes
+// #region --- API register --- 
 router.post('/register', async (req, res) => {
     const { email, fullname, lastname, password } = req.body;
     const sql = `INSERT INTO USERS (USER_EMAIL, USER_FNAME, USER_LNAME, USER_PASSWORD, USER_YEAR) VALUES (?, ?, ?, ?, 1)`;
@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
 });
 // #endregion
 
-// #region login API Routes
+// #region --- API login ---
 router.post('/login', (req, res) => {
     const { email, password } = req.body;
     const sql = 'SELECT * FROM USERS WHERE USER_EMAIL = ?';
@@ -88,7 +88,7 @@ router.post('/login', (req, res) => {
 });
 // #endregion
 
-// #region --- API เช็คว่า User ล็อกอินอยู่ไหม (Me) ---
+// #region --- API เช็คว่า User ล็อกอินอยู่ไหม (Me) --- 
 router.get('/me', (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ loggedIn: false });
@@ -147,14 +147,14 @@ router.get('/me', (req, res) => {
 });
 // #endregion
 
-// #region --- Logout ---
+// #region --- API Logout --- 
 router.post('/logout', (req, res) => {
     res.clearCookie('token');
     res.json({ success: true });
 });
 // #endregion
 
-// #region --- ตั้งค่าการเก็บไฟล์รูปภาพ (Multer Config) ---
+// #region --- ตั้งค่าการเก็บไฟล์รูปภาพ (Multer Config) --- 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadPath = path.join(__dirname, '../public/uploads');
