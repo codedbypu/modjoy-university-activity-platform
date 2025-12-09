@@ -62,7 +62,7 @@
 
 ## ต้องลงอันนี้ก่อน
 1. ลง Database ใน MySQL Workbench(MySQL) ใช้ไฟล์ `inint.sql` ในโฟล์เดอร์ database 
-2. ลง nap และ extension : `npm install jsonwebtoken cookie-parser multer`
+2. ลง npm และ extension : `npm install jsonwebtoken cookie-parser multer`
 3. ลงโปรแกรม XAMPP ก่อน
 4. ก็อป .env.example มาอีกไฟล์แล้วเปลี่ยนนามสกุลเป็น .env
 5. ตั้งค่าตัวแปร และ Port ที่จะใช้ใน .env
