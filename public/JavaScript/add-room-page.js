@@ -1,10 +1,10 @@
- // #region (DOMContentLoaded)
+// #region (DOMContentLoaded)
 document.addEventListener("DOMContentLoaded", function () {
     // #region ======== Custom Select สำหรับที่อยู่ (Address) ========== 
     // #region init ตัวแปร หาองค์ประกอบ 
     const addressDisplayInput = document.getElementById("address-input-display");
     const addressHiddenInput = document.getElementById("address-input-hidden");
-    const addressOptionsList = document.querySelector("#address-options-list");
+    const addressOptionsList = document.querySelector("#places-listbox");
     const availableAddresses = ["N7", "N10", "S2", "S3"];
 
     // ป้องกันการกด Enter เพื่อ submit form
@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
         availableAddresses.forEach(addressText => {
             const option = document.createElement('div');
             option.className = 'custom-option';
+            option.setAttribute('role', "option")
+            option.setAttribute('aria-selected', "false")
             option.setAttribute('data-value', addressText);
             option.textContent = addressText;
             addressOptionsList.appendChild(option);
@@ -90,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const MAX_TAGS = 5;
     let currentTags = [];
     // #endregion
-    
+
     // #region หาองค์ประกอบทั้งหมดที่ต้องใช้
     const tagInput = document.getElementById('room-tag-input');
     const addTagBtn = document.getElementById('add-tag-btn');
@@ -292,9 +294,9 @@ document.addEventListener("DOMContentLoaded", function () {
 // #endregion
 
 // #region --- ส่งข้อมูลฟอร์มสร้างห้องกิจกรรม (add-room-page.html) ---
-document.querySelector('.add-room-form').addEventListener('submit', async function(e) {
+document.querySelector('.add-room-form').addEventListener('submit', async function (e) {
     e.preventDefault();
-    
+
     // (เทคนิค) อัปเดตค่า input tag ที่ซ่อนอยู่ก่อนส่ง ถ้าจำเป็น
     // document.getElementById('tags-list-hidden').value = currentTags.join(',');
 
@@ -306,7 +308,7 @@ document.querySelector('.add-room-form').addEventListener('submit', async functi
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
-    
+
     const result = await response.json();
     if (result.success) {
         alert('สร้างห้องสำเร็จ!');
