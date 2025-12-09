@@ -1,4 +1,40 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
+    async function loadInitialData() {
+        try {
+            // เรียก API /me โดยตรง (หรือจะรอจาก global-loader ก็ได้ แต่วิธีนี้ชัวร์กว่าสำหรับฟอร์ม)
+            const response = await fetch('/api/me');
+            const data = await response.json();
+
+            if (data.loggedIn && data.user) {
+                const u = data.user;
+
+                // 1. เติมข้อมูลลง Input
+                if (document.getElementById('user-fullname'))
+                    document.getElementById('user-fullname').value = u.username || '';
+
+                if (document.getElementById('user-lastname'))
+                    document.getElementById('user-lastname').value = u.lastname || '';
+
+                if (document.getElementById('user-email'))
+                    document.getElementById('user-email').value = u.email || '';
+
+                if (document.getElementById('user-about-detail'))
+                    document.getElementById('user-about-detail').value = u.about || '';
+
+                // 2. เติมรูปภาพ
+                const userProfileUrl = u.profile_image || "./Resource/img/profile.jpg";
+                updateImagePreview(userProfileUrl);
+
+                // 3. เลือก Dropdown คณะ/ปี (ถ้ามี)
+                // (ต้องเขียน Logic เพิ่มถ้าใน HTML มี value ที่ตรงกับ DB)
+            }
+        } catch (error) {
+            console.error("Error loading user data:", error);
+        }
+    }
+    // #endregion loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก ---
+
     // #region ======== Profile Image Uploader ==========
     // #region init ตัวแปร หาองค์ประกอบ 
     const imageContainer = document.getElementById('profile-image-container');
@@ -18,16 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // #endregion
 
-    // (นี่คือส่วนที่คุณต้องไปดึงข้อมูลจาก Database จริง)
-    // #region loadInitialData โหลดข้อมูลผู้ใช้ครั้งแรก --- 
-    function loadInitialData() {
-        // สมมุติว่าเราได้ URL ของรูปโปรไฟล์จากฐานข้อมูล
-        const userProfileUrl = "./Resource/img/profile.jpg";
-        updateImagePreview(userProfileUrl);
-    }
-    // สั่งให้โหลดข้อมูล 1 ครั้งตอนเปิดหน้า
+    // เรียกโหลดข้อมูลผู้ใช้ครั้งแรก
     loadInitialData();
-    // #endregion
 
     // #region เมื่อผู้ใช้ "เลือกไฟล์ใหม่"
     fileInput.addEventListener('change', function (event) {
@@ -45,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
     // #endregion
-    // #endregion ----- จบ Image Uploader -----
+    // #endregion ======== จบ Profile Image Uploader ==========
 
     // #region ======== Tag Input สำหรับแท็ก User ========== 
     // #region init ตัวแปร หาองค์ประกอบ

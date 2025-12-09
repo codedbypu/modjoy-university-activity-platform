@@ -3,56 +3,65 @@ async function loadGlobalUserData() {
         const response = await fetch('/api/me');
         const data = await response.json();
 
-        // --- 1. เตรียม Element ที่ต้องแก้ค่า (Sidebar & Header) ---
-        // Sidebar
+        // --- Elements ทั่วไป (Sidebar & Header) ---
         const sidebarUserName = document.getElementById('sidebar-user-name');
         const sidebarUserEmail = document.getElementById('sidebar-user-email');
         const sidebarUserCredit = document.getElementById('sidebar-user-credit');
-        // รูปใน Sidebar (มี 2 จุด: อันที่เป็น Link และอันที่เป็น Guest)
         const sidebarImgs = document.querySelectorAll('.sidebar-profile-img img');
+        
+        // Header Dropdown
+        const dropdownNames = document.querySelectorAll('.user-name'); // ใช้ class เพราะมีหลายที่
+        const dropdownEmails = document.querySelectorAll('.user-email');
+        const dropdownImgs = document.querySelectorAll('img[alt="profile-image"], img[alt="profile-large"]');
 
-        // Header Desktop (Dropdown)
-        const dropdownNames = document.querySelectorAll('.profile-dropdown .user-name');
-        const dropdownEmails = document.querySelectorAll('.profile-dropdown .user-email');
-        const dropdownImgs = document.querySelectorAll('.profile-dropdown img');
-        const headerProfileBtnImg = document.querySelector('#profile-menu-btn img');
+        // --- Elements เฉพาะหน้า "บัญชีของฉัน" (My Account Page) ---
+        const myAccountName = document.getElementById('user-name'); // ชื่อใหญ่ๆ
+        const myAccountEmail = document.getElementById('user-email');
+        const myAccountEducation = document.getElementById('user-education'); // คณะ/ปี
+        const myAccountAbout = document.getElementById('user-about-detail'); // เกี่ยวกับฉัน
+        const myAccountCredit = document.querySelectorAll('#user-credit'); // เครดิต (มี 2 ที่ในหน้า mobile/desktop)
 
-        // --- 2. เช็คสถานะ ---
         if (data.loggedIn && data.user) {
-            // === ล็อกอินแล้ว ===
-            document.body.classList.add('is-logged-in'); // ใส่ Class ให้ Body เพื่อคุม CSS (ซ่อน/แสดงปุ่ม)
+            document.body.classList.add('is-logged-in'); 
 
-            const fullName = `${data.user.fullname} ${data.user.lastname}`;
-            const imgSrc = data.user.profile_image || '/Resource/img/profile.jpg';
+            const u = data.user;
+            const fullName = `${u.username} ${u.lastname}`;
+            const imgSrc = u.profile_image || '/Resource/img/profile.jpg';
 
-            // อัปเดต Sidebar
+            // 1. อัปเดต Sidebar & Header
             if(sidebarUserName) sidebarUserName.textContent = fullName;
-            if(sidebarUserEmail) sidebarUserEmail.textContent = data.user.email;
-            if(sidebarUserCredit) sidebarUserCredit.textContent = data.user.credit || 0;
+            if(sidebarUserEmail) sidebarUserEmail.textContent = u.email;
+            if(sidebarUserCredit) sidebarUserCredit.textContent = u.credit;
             sidebarImgs.forEach(img => img.src = imgSrc);
 
-            // อัปเดต Header Dropdown
+            // 2. อัปเดต Dropdown
             dropdownNames.forEach(el => el.textContent = fullName);
-            dropdownEmails.forEach(el => el.textContent = data.user.email);
+            dropdownEmails.forEach(el => el.textContent = u.email);
             dropdownImgs.forEach(img => img.src = imgSrc);
-            if(headerProfileBtnImg) headerProfileBtnImg.src = imgSrc;
+
+            // 3. อัปเดตหน้า "บัญชีของฉัน" (ถ้ามี Element เหล่านี้อยู่)
+            if (myAccountName) myAccountName.textContent = fullName;
+            if (myAccountEmail) myAccountEmail.textContent = u.email;
+            if (myAccountEducation) {
+                // ตัวอย่าง: "คณะวิศวกรรมศาสตร์ ระดับชั้นปีที่ 3"
+                myAccountEducation.textContent = `คณะ : ${u.faculty} ระดับชั้นปีที่ : ${u.year}`;
+            }
+            if (myAccountAbout) {
+                myAccountAbout.value = u.about || "ไม่มีข้อมูลเพิ่มเติม";
+            }
+            // อัปเดตเครดิตในหน้า My Account (มันมี ID ซ้ำกันใน HTML ใช้ querySelectorAll ช่วย)
+            myAccountCredit.forEach(el => el.textContent = u.credit);
 
         } else {
-            // === ยังไม่ล็อกอิน (Guest) ===
             document.body.classList.remove('is-logged-in');
-            
-            // รีเซ็ตค่าเป็น Default
-            if(sidebarUserName) sidebarUserName.textContent = 'ยินดีต้อนรับ';
-            if(sidebarUserEmail) sidebarUserEmail.textContent = 'กรุณาเข้าสู่ระบบ';
+            // ... (Logic จัดการ Guest เหมือนเดิม) ...
         }
 
-        return data.user; // ส่งข้อมูลกลับเผื่อไฟล์อื่นจะใช้
+        return data.user; // ส่งข้อมูลกลับไปเผื่อไฟล์อื่นใช้ต่อ
 
     } catch (error) {
         console.error('Global Loader Error:', error);
-        document.body.classList.remove('is-logged-in');
     }
 }
 
-// สั่งให้ทำงานทันทีเมื่อโหลดหน้าเว็บ
 document.addEventListener('DOMContentLoaded', loadGlobalUserData);

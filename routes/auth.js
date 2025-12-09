@@ -83,25 +83,43 @@ router.get('/me', (req, res) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        const sql = `SELECT USER_ID, USER_EMAIL, USER_FNAME, USER_LNAME, USER_ROLE, USER_IMG, USER_CREDIT_SCORE FROM USERS WHERE USER_ID = ?`;
+        // Query ข้อมูล User + ชื่อคณะ (JOIN ตาราง FACULTYS)
+        const sql = `
+            SELECT 
+                U.USER_ID, U.USER_EMAIL, U.USER_FNAME, U.USER_LNAME, 
+                U.USER_ROLE, U.USER_IMG, U.USER_CREDIT_SCORE, 
+                U.USER_YEAR, U.USER_DESCRIPTION,
+                F.FACULTY_NAME
+            FROM USERS U
+            LEFT JOIN FACULTYS F ON U.USER_FACULTY = F.FACULTY_ID
+            WHERE U.USER_ID = ?
+        `;
 
         db.query(sql, [decoded.id], (err, results) => {
             if (err || results.length === 0) return res.json({ loggedIn: false });
 
-            const user = results[0];
-            // ส่งกลับในรูปแบบที่หน้าบ้าน (Global Loader) คุ้นเคย
-            res.json({
-                loggedIn: true,
-                user: {
-                    id: user.USER_ID,
-                    fullname: user.USER_FNAME,
-                    lastname: user.USER_LNAME,
-                    email: user.USER_EMAIL,
-                    role: user.USER_ROLE,
-                    credit: user.USER_CREDIT_SCORE,
-                    profile_image: user.USER_IMG
-                }
-            });
+            if (results.length > 0) {
+                const user = results[0];
+                // ส่งข้อมูลกลับไปให้หน้าบ้าน
+                res.json({
+                    loggedIn: true,
+                    user: {
+                        id: user.USER_ID,
+                        email: user.USER_EMAIL,
+                        username: user.USER_FNAME,
+                        lastname: user.USER_LNAME,
+                        role: user.USER_ROLE,
+                        credit: user.USER_CREDIT_SCORE || 0,
+                        profile_image: user.USER_IMG,
+                        faculty: user.FACULTY_NAME || 'ไม่ได้ระบุ', // ชื่อคณะ
+                        year: user.USER_YEAR || 1,         // ชั้นปี
+                        about: user.USER_DESCRIPTION || '' // เกี่ยวกับฉัน
+                    }
+                });
+            } else {
+                res.clearCookie('token');
+                res.json({ loggedIn: false });
+            }
         });
     } catch (err) {
         res.json({ loggedIn: false });
