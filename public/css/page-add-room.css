@@ -63,6 +63,7 @@ body {
 .add-room-form input[type="email"],
 .add-room-form input[type="date"],
 .add-room-form input[type="text"],
+.add-room-form input[type="number"],
 .add-room-form select,
 .add-room-form textarea,
 .detail-room-form textarea {
@@ -78,10 +79,35 @@ body {
     box-sizing: border-box;
 }
 
+.add-room-form input[type="time"]:focus,
+.add-room-form input[type="email"]:focus,
+.add-room-form input[type="date"]:focus,
+.add-room-form input[type="text"]:focus,
+.add-room-form select:focus,
+.add-room-form textarea:focus,
+.detail-room-form textarea:focus,
+.custom-select-input:focus, /* เพิ่มสำหรับ input ชื่อสถานที่ */
+#capacity:focus /* เพิ่มสำหรับ input จำนวนผู้เข้าร่วม */
+{
+    /* ทำให้ขอบหนาขึ้น */
+    border-width: 2px;
+    
+    /* เปลี่ยนสีขอบเป็นสีหลัก (primary-color) เพื่อให้เห็นชัดเจน */
+    border-color: var(--primary-color); 
+    
+    /* ลบ outline สีฟ้าที่เบราว์เซอร์สร้างขึ้นเองออกไป */
+    outline: none;
+}
+
 input[type="time"].time-input {
     padding: 0px 0px 0px 10px;
 }
 
+.capacity input{
+    border: 2px solid var(--primary-color-light);
+    text-align: right;
+    font-weight: 500;
+}
 .inline-separator {
     display: inline-block;
     margin: 0 6px;
