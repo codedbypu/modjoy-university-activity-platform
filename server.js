@@ -25,7 +25,6 @@ app.use('/api', roomRoutes); // /rooms -> /api/rooms
 
 // เพิ่ม Route สำหรับหน้าแรก (Root Path)
 app.get('/', (req, res) => {
-    // สั่งให้ Redirect ไปที่ไฟล์ home-page.html
     res.redirect('/home-page.html');
 });
 

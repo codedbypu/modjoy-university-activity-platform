@@ -29,8 +29,7 @@
 
 
     <main class="add-home-main">
-        <form action="./add-room.html" class="add-room-form">
-
+        <form class="add-room-form">
             <div class="form-group">
                 <label for="cover-image-input" class="add-cover-label profile-uploader">
                     <div class="add-cover-box has-image" id="profile-image-container">
@@ -87,18 +86,15 @@
                         <input type="text" id="room-tag-input" name="room-tag" placeholder="พิมพ์เพื่อค้นหาแท็ก...">
                         <button type="button" class="btn" id="add-tag-btn">+</button>
                     </div>
-
-                    <div class="tag-suggestions" id="tag-suggestions">
-                    </div>
+                    <div class="tag-suggestions" id="tag-suggestions"></div>
                 </div>
-                <ul class="tag-list-item" id="tag-list-display">
-                </ul>
+                <ul class="tag-list-item" id="tag-list-display"></ul>
                 <input type="hidden" name="tags_list" id="tags-list-hidden" value="">
                 <p class="tag-helper-text">เลือกจากแท็กที่มีให้ หรือพิมพ์แท็กใหม่ (สูงสุด 5 อัน)</p>
             </div>
 
             <div class="btn-box">
-                <button type="submit" class="btn">สร้าง</button>
+                <button type="submit" class="btn">สร้างห้องกิจกรรม</button>
             </div>
         </form>
 
