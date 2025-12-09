@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const faculties = await facultyRes.json();
 
             const facultySelect = document.getElementById('select-faculty');
-            facultySelect.innerHTML = '<option value="0">เลือกคณะ</option>'; // เคลียร์ค่า
+            facultySelect.innerHTML = '<option value="">ไม่ระบุ</option>'; // เคลียร์ค่า
 
             // วนลูปสร้างตัวเลือกคณะ
             faculties.forEach(fac => {
@@ -79,9 +79,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
     // #endregion
-
-    // เรียกโหลดข้อมูลผู้ใช้ครั้งแรก
-    loadInitialData();
 
     // #region เมื่อผู้ใช้ "เลือกไฟล์ใหม่"
     fileInput.addEventListener('change', function (event) {

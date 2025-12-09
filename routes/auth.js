@@ -168,6 +168,12 @@ router.post('/update', upload.single('profile_image'), (req, res) => {
         // รับค่า Text จากฟอร์ม
         const { fullname, lastname, faculty, year, about, tags } = req.body;
 
+        // กรณีเลือก "-" ในคณะ ให้ตั้งค่าเป็น null
+        let finalFaculty = faculty;
+        if (faculty === '') {
+            finalFaculty = null;
+        }
+
         // รับค่าไฟล์รูป (ถ้ามีการอัปโหลดใหม่)
         let imagePath = null;
         if (req.file) {
@@ -178,7 +184,7 @@ router.post('/update', upload.single('profile_image'), (req, res) => {
         // สร้าง SQL Query แบบ Dynamic (อัปเดตเฉพาะค่าที่ส่งมา)
         // เทคนิค: ถ้า imagePath มีค่า ให้รวมเข้าไปในการอัปเดตด้วย
         let sql = `UPDATE USERS SET USER_FNAME=?, USER_LNAME=?, USER_FACULTY=?, USER_YEAR=?, USER_DESCRIPTION=?`;
-        let params = [fullname, lastname, faculty, year, about];
+        let params = [fullname, lastname, finalFaculty, year, about];
 
         if (imagePath) {
             sql += `, USER_IMG=?`;

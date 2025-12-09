@@ -1,5 +1,6 @@
 # ไม่เอา library ขึ้น (เพราะหนักมาก และทุกคนกด npm install เองได้)
 node_modules/
+uploads/
 
 # ไม่เอาไฟล์ความลับขึ้น (เช่น รหัสผ่าน database)
 .env
