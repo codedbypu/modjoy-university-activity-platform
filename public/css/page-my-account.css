@@ -24,6 +24,12 @@ body {
     /* 1. ใช้ Flexbox */
     flex-direction: column;
     /* 2. เรียงบน-ล่าง */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.7)),
+        url(/public/Resource/img/background4.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
 }
 
 .material-symbols-outlined {
@@ -50,12 +56,8 @@ body {
     box-shadow:
         0 4px 8px rgba(0, 0, 0, 0.06),
         0 10px 30px rgba(0, 0, 0, 0.10);
-    background-image: linear-gradient(rgba(255, 255, 255, 0.7)),
-        url(/public/Resource/img/background4.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
+
+
 }
 
 .account-form {
@@ -176,16 +178,6 @@ body {
     width: 100%;
 }
 
-body {
-    background-image: linear-gradient(rgba(255, 255, 255, 0.7)),
-        url(/public/Resource/img/background4.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
-
-
 .account-main .about-detail-textarea {
     flex: 1;
     max-width: 100%;
@@ -285,7 +277,7 @@ body {
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     padding: 20px 20px 20px 20px;
-    background: white;
+    background: none;
     margin-bottom: 0;
 }
 
@@ -293,10 +285,11 @@ body {
     width: 100%;
     max-width: 500px;
     margin: auto;
-    background: #ffffff;
+    background: #F3F3F3;
     border-radius: 7px;
     overflow: hidden;
     text-align: center;
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* header-item */
@@ -342,7 +335,7 @@ body {
 /* separator-line */
 .separator-line {
     width: 95%;
-    border: #aaaaaa solid 2px;
+    border: #ffffff solid 2px;
     border-radius: 25px;
     margin: 5px auto;
 }
@@ -861,4 +854,3 @@ body {
         border-radius: 12px;
     }
 }
-

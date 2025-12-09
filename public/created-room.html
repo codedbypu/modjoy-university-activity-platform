@@ -329,6 +329,71 @@
             &copy; 2025 MODJOY. All rights reserved.
         </p>
     </footer>
+
+    <!-- #region filter-modal -->
+    <div class="filter-modal" id="filter-modal">
+        <div class="filter-modal-content">
+            <div class="filter-header">
+                <h2>ค้นหาแบบละเอียด</h2>
+                <button class="material-symbols-outlined filter-close-btn" id="filter-close-btn"
+                    aria-label="ปิดตัวกรอง">close</button>
+            </div>
+
+            <form id="filter-form">
+
+                <div class="filter-group">
+                    <label for="filter-date">เวลาเริ่มกิจกรรม</label>
+                    <input type="date" id="filter-date" name="filter_date">
+                </div>
+
+                <div class="filter-group-row">
+                    <div class="filter-group">
+                        <label for="filter-start-time">เวลา (เริ่ม)</label>
+                        <input type="time" id="filter-start-time" name="filter_start_time">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-end-time">เวลา (สิ้นสุด)</label>
+                        <input type="time" id="filter-end-time" name="filter_end_time">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-location-search">ชื่อสถานที่</label>
+                    <div class="filter-search-bar">
+                        <input type="text" id="filter-location-search" placeholder="ค้นหาสถานที่...">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <div class="filter-tag-cloud" id="location-tag-cloud">
+                        <button type="button" class="tag" data-value="หอสมุด N10">หอสมุด N10</button>
+                        <button type="button" class="tag" data-value="N7">N7 ตึกวิทยาศาสตร์</button>
+                        <button type="button" class="tag" data-value="S2">S2</button>
+                        <button type="button" class="tag" data-value="S3">S3</button>
+                    </div>
+                    <input type="hidden" name="selected_locations" id="selected-locations">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-tag-search">Tag</label>
+                    <div class="filter-search-bar">
+                        <input type="text" id="filter-tag-search" placeholder="ค้นหาแท็ก...">
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <div class="filter-tag-cloud" id="tag-tag-cloud">
+                        <button type="button" class="tag" data-value="Calculus">Calculus</button>
+                        <button type="button" class="tag" data-value="อ่านหนังสือ">อ่านหนังสือ</button>
+                        <button type="button" class="tag" data-value="ติวฟรี">ติวฟรี</button>
+                        <button type="button" class="tag" data-value="เล่นเกม">เล่นเกม</button>
+                    </div>
+                    <input type="hidden" name="selected_tags" id="selected-tags">
+                </div>
+
+                <div class="btn-box">
+                    <button type="submit" class="btn filter-submit-btn">ค้นหา</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- #endregion -->
 </body>
 
 </html>
