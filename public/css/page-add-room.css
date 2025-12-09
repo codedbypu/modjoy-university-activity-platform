@@ -355,6 +355,10 @@ strong {
     color: var(--text-dark);
 }
 
+.checkin-icon{
+    font-size: 24px;
+    color: #22c55e;
+}
 /* --- Uploader --- */
 .add-cover-box {
     border-radius: 12px;
