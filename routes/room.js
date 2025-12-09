@@ -19,7 +19,7 @@ function dbQuery(sql, params) {
     });
 }
 
-// API: ดึงรายชื่อสถานที่ (เพื่อเอา ID ไปใส่ใน Dropdown)
+// #region --- API ดึงรายชื่อสถานที่ --- 
 router.get('/locations', (req, res) => {
     db.query('SELECT * FROM LOCATIONS', (err, results) => {
         if (err) {
@@ -29,61 +29,60 @@ router.get('/locations', (req, res) => {
         res.json(results);
     });
 });
+// #endregion
 
-// --- Config Multer สำหรับอัปโหลดรูปปกห้อง ---
+// #region --- Config Multer สำหรับอัปโหลดรูปปกห้อง --- 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadPath = path.join(__dirname, '../public/uploads/rooms');
-        if (!fs.existsSync(uploadPath)) {
+        if (!fs.existsSync(uploadPath))
             fs.mkdirSync(uploadPath, { recursive: true });
-        }
         cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
+        // ตัวอย่างชื่อไฟล์: room-1632345678901-123456789.png มาจากการผสม timestamp กับ random number
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, 'room-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage: storage });
+// #endregion
 
-// API: สร้างห้องกิจกรรมใหม่
-// URL: /api/create-room (เพราะ server.js ใช้ app.use('/api', roomRoutes))
+// #region --- API สร้างห้องกิจกรรมใหม่ (create-room) --- 
 router.post('/create-room', upload.single('room_image'), async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบก่อน' });
 
     try {
-        // 1. แกะ Token หาตัวคนสร้าง (Leader)
         const decoded = jwt.verify(token, JWT_SECRET);
         const leaderId = decoded.id;
-        // 2. รับค่าจากฟอร์ม
+
+        // ดึงข้อมูลจากฟอร์ม
         const { roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, roomCapacity, tags } = req.body;
-        // 3. จัดการรูปภาพ (ถ้ามี)
+
+        // จัดการรูปภาพ (ถ้ามี)
         let imagePath = '/Resource/img/bangmod.png'; // รูป Default
-        if (req.file) {
-            imagePath = '/uploads/rooms/' + req.file.filename;
-        }
-        // 4. บันทึกลงตาราง ROOMS
+        if (req.file) imagePath = '/uploads/rooms/' + req.file.filename;
+
+        // บันทึกลงตาราง ROOMS
         const sql = `INSERT INTO ROOMS
                 (ROOM_TITLE, ROOM_EVENT_START_TIME, ROOM_EVENT_END_TIME, ROOM_EVENT_DATE, ROOM_EVENT_LOCATION, ROOM_DESCRIPTION, ROOM_LEADER_ID, ROOM_CAPACITY, ROOM_IMG, ROOM_STATUS)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending');`;
-        let locationId = isNaN(roomLocation) ? null : roomLocation;
         const roomResult = await dbQuery(sql, [
-            roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, locationId, roomDescription, leaderId, roomCapacity, imagePath
+            roomTitle, roomEventStartTime, roomEventEndTime, roomEventDate, roomLocation, roomDescription, leaderId, roomCapacity, imagePath
         ]);
         const newRoomId = roomResult.insertId;
-        // 5. เอาคนสร้าง จับยัดเป็นสมาชิกคนแรก (Leader) ใน ROOMMEMBERS
+        // เอาคนสร้าง จับยัดเป็นสมาชิกคนแรก (Leader) ใน ROOMMEMBERS
         await dbQuery(`
             INSERT INTO ROOMMEMBERS (ROOM_ID, USER_ID, ROOMMEMBER_STATUS) 
             VALUES (?, ?, 'present')`, [newRoomId, leaderId]);
 
-        // 6. จัดการ Tags
+        // จัดการ Tags
         if (typeof tags !== 'undefined') {
             const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
 
             for (const tagName of tagList) {
                 let tagId;
-                // เช็คว่ามี Tag หรือยัง
                 const existingTags = await dbQuery('SELECT TAG_ID FROM TAGS WHERE TAG_NAME = ?', [tagName]);
                 if (existingTags.length > 0) {
                     tagId = existingTags[0].TAG_ID;
@@ -101,5 +100,6 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
         res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
     }
 });
+// #endregion
 
 module.exports = router;
