@@ -22,17 +22,17 @@ CREATE TABLE TAGS (
 
 -- 4. ตารางผู้ใช้งาน (อิงตาม Diagram ของคุณ)
 CREATE TABLE USERS (
-    USER_ID INT AUTO_INCREMENT PRIMARY KEY, -- ใช้ Auto ID ไปก่อน (ถ้าจะใช้รหัสนศ. ต้องแก้เป็น VARCHAR และเพิ่มช่องกรอกหน้าเว็บ)
+    USER_ID INT AUTO_INCREMENT PRIMARY KEY,
     USER_EMAIL VARCHAR(50) NOT NULL UNIQUE,
     USER_FNAME VARCHAR(50) NOT NULL,
     USER_LNAME VARCHAR(50) NOT NULL,
-    USER_PASSWORD VARCHAR(50) NOT NULL, -- เก็บ Plain Text ตามโจทย์
+    USER_PASSWORD VARCHAR(50) NOT NULL,
     USER_FACULTY INT, -- FK
     USER_YEAR INT NOT NULL DEFAULT 1,
     USER_DESCRIPTION TEXT,
     USER_CREDIT_SCORE INT DEFAULT 0,
     USER_ROLE ENUM('student', 'admin') DEFAULT 'student',
-    USER_IMG VARCHAR(255) DEFAULT '/Resource/img/profile.jpg', -- เพิ่มเพื่อความสมบูรณ์
+    USER_IMG VARCHAR(255) DEFAULT '/Resource/img/profile.jpg',
     
     FOREIGN KEY (USER_FACULTY) REFERENCES FACULTYS(FACULTY_ID) ON DELETE SET NULL
 );
@@ -44,7 +44,7 @@ CREATE TABLE ROOMS (
     ROOM_STATUS ENUM('pending', 'inProgress', 'completed') DEFAULT 'pending',
     ROOM_EVENT_START_TIME TIME NOT NULL,
     ROOM_EVENT_END_TIME TIME NOT NULL,
-    ROOM_EVENT_DATE DATE NOT NULL, -- เพิ่มวันที่
+    ROOM_EVENT_DATE DATE NOT NULL,
     ROOM_EVENT_LOCATION INT, -- FK
     ROOM_DESCRIPTION TEXT,
     ROOM_LEADER_ID INT NOT NULL, -- FK
@@ -90,6 +90,6 @@ CREATE TABLE USERTAGS (
 );
 
 -- --- ข้อมูลเริ่มต้น (Seed Data) ---
-INSERT INTO FACULTYS (FACULTY_NAME) VALUES ('วิศวกรรมศาสตร์'), ('วิทยาศาสตร์'), ('ครุศาสตร์อุตสาหกรรมฯ'), ('เทคโนโลยีสารสนเทศ (SIT)'), ('สถาปัตยกรรมศาสตร์');
-INSERT INTO LOCATIONS (LOCATION_NAME) VALUES ('N10 (หอสมุด)'), ('N7 (ตึกฟิสิกส์)'), ('S2'), ('ตึกแดง (อาคารเรียนรวม 1)'), ('CB2');
+INSERT INTO FACULTYS (FACULTY_NAME) VALUES ('วิศวกรรมศาสตร์'), ('วิทยาศาสตร์'), ('ครุศาสตร์อุตสาหกรรมฯ'), ('เทคโนโลยีสารสนเทศ (SIT)'), ('สถาปัตยกรรมศาสตร์'), ('พลังงานสิ่งแวดล้อมและวัสดุ'), ('ทรัพยากรชีวภาพ'), ('ศิลปศาสตร์');
+INSERT INTO LOCATIONS (LOCATION_NAME) VALUES ('N10 (หอสมุด)'), ('N7 (ตึกวิทย์)'), ('S2'), ('CB1 (อาคารเรียนรวม 1)'), ('CB2');
 INSERT INTO TAGS (TAG_NAME) VALUES ('Calculus'), ('Physics'), ('Coding'), ('Board Game'), ('Badminton'), ('Music');
