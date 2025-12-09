@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // ปรับ opacity ให้แสดงเฉพาะรูปใกล้เคียง (คุณจะเปลี่ยนได้ตามต้องการ)
       slide.style.opacity = Math.abs(diff) > 1 ? "0" : "";
-      slide.style.pointerEvents = diff === 0 ? "auto" : "none";
     });
 
     dots.forEach((d) => d.classList.remove("active"));
