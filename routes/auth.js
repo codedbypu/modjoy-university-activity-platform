@@ -29,13 +29,10 @@ router.post('/login', (req, res) => {
 
     // ค้นหา User จาก Email ก่อน
     const sql = 'SELECT * FROM USERS WHERE USER_EMAIL = ?';
-
     db.query(sql, [email], async (err, results) => {
         if (err) return res.status(500).json({ error: err });
 
-        if (results.length === 0) {
-            return res.json({ success: false, message: 'ไม่พบบัญชีนี้ในระบบ' });
-        }
+        if (results.length === 0) return res.json({ success: false, message: 'ไม่พบบัญชีนี้ในระบบ' });
         const user = results[0];
 
         // ตรวจสอบรหัสผ่าน (USER_PASSWORD)
@@ -90,7 +87,7 @@ router.get('/me', (req, res) => {
 
         db.query(sql, [decoded.id], (err, results) => {
             if (err || results.length === 0) return res.json({ loggedIn: false });
-        
+
             const user = results[0];
             // ส่งกลับในรูปแบบที่หน้าบ้าน (Global Loader) คุ้นเคย
             res.json({
