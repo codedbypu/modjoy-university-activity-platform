@@ -1,45 +1,3 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     // #region initialize elements
-//     const joinBox = document.getElementById('join-box');
-//     const checkInForm = document.getElementById('check-in-form');
-//     const checkedInMessage = document.getElementById('checked-in-message');
-//     const joinButton = document.getElementById('join-room-btn');
-//     // #endregion
-
-// const e = require("express");
-
-//     // #region event listeners ปุ่ม "เข้าร่วม"
-//     if (joinButton) {
-//         joinButton.addEventListener('click', function () {
-//             // fetch('/join-room', { ... });
-
-//             // --- สลับหน้าจอ (State 0 -> State 1) ---
-//             joinBox.style.display = 'none';
-
-//             checkInForm.style.display = 'flex';
-//         });
-//     }
-//     // #endregion
-
-//     // #region event listeners ปุ่ม "ยืนยันรหัสเช็คชื่อ"
-//     if (checkInForm) {
-//         checkInForm.addEventListener('submit', function (event) {
-//             event.preventDefault();
-
-//             // (อนาคต: คุณต้องส่งรหัสไปตรวจสอบที่เซิร์ฟเวอร์ที่นี่)
-//             // const code = checkInForm.querySelector('.check-in-input').value;
-//             // fetch('/submit-check-in-code', { ... });
-
-//             // --- สลับหน้าจอ (State 1 -> State 2) ---
-//             checkInForm.style.display = 'none';
-
-//             checkedInMessage.style.display = 'flex';
-//         });
-//     }
-//     // #endregion
-
-// });
-
 // #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล --- 
 document.addEventListener('DOMContentLoaded', async () => {
     // ดึง ID จาก URL (เช่น ?id=15)
@@ -90,7 +48,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const unownerControls = document.getElementById('unowner-room-btns');
             const joinBtn = document.getElementById('join-room-btn');
             const leaveBtn = document.getElementById('leave-room-btn');
-            const fullBtn = document.getElementById('room-full-btn');
+            const fullMessage = document.getElementById('full-room-message');
             const checkInForm = document.getElementById('check-in-form');
             const checkedInMessage = document.getElementById('checked-in-message');
 
@@ -102,7 +60,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             if (unownerControls) unownerControls.style.display = 'none';
             if (joinBtn) joinBtn.style.display = 'none';
             if (leaveBtn) leaveBtn.style.display = 'none';
-            if (fullBtn) fullBtn.style.display = 'none';
+            if (fullMessage) fullMessage.style.display = 'none';
             if (manageCheckInBtn) manageCheckInBtn.style.display = 'none';
             if (checkInForm) checkInForm.style.display = 'none';
             if (checkedInMessage) checkedInMessage.style.display = 'none';
@@ -112,6 +70,14 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const isAdmin = (currentUserRole === 'admin');
             const isMember = members.some(m => m.USER_ID == currentUserId); // เช็คว่า ID เราอยู่ในลิสต์สมาชิกไหม
             const isFull = (room.CURRENT_MEMBERS >= room.ROOM_CAPACITY);
+
+            // 3. เช็คเวลา (Time Logic) 🕒
+            // แปลงวันและเวลาเริ่มให้เป็น Date Object เดียวกัน
+            const now = new Date();
+            const eventStart = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_EVENT_START_TIME}`); // Format: YYYY-MM-DDTHH:mm:ss
+
+            // ถ้าเวลานี้ เลยเวลาเริ่มกิจกรรมมาแล้ว (หรือเท่ากัน) -> ถือว่า "กิจกรรมเริ่มแล้ว"
+            const isEventStarted = now >= eventStart;
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน
@@ -127,17 +93,35 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             } else if (isMember) {
                 // กรณี: เป็นสมาชิกแล้ว -> โชว์ปุ่มออกจากห้อง
                 if (unownerControls) unownerControls.style.display = 'flex'; // โชว์ปุ่มควบคุมสมาชิก
-                if (leaveBtn) leaveBtn.style.display = 'block'; // โชว์ปุ่มออกจากห้อง
-                if (leaveBtn) leaveBtn.onclick = () => handleLeaveRoom(roomId);
+                if (isEventStarted) {
+                    // 🔴 กิจกรรมเริ่มแล้ว -> ซ่อนปุ่มออก, โชว์ช่องเช็คชื่อ
+                    if (leaveBtn) leaveBtn.style.display = 'none'; // ซ่อนปุ่มออก
+                    if (checkInForm) checkInForm.style.display = 'flex'; // โชว์ฟอร์มเช็คชื่อ
+                    if (checkInForm) checkInForm.onclick = () => handleCheckIn(roomId);
+                } else {
+                    // 🟢 กิจกรรมยังไม่เริ่ม -> โชว์ปุ่มออก (Leave)
+                    if (leaveBtn) {
+                        leaveBtn.style.display = 'block';
+                        leaveBtn.onclick = () => handleLeaveRoom(roomId);
+                    }
+                }
             } else if (isFull) {
                 // กรณี: ห้องเต็ม -> โชว์ปุ่มแจ้งเต็ม
                 if (unownerControls) unownerControls.style.display = 'flex';
-                if (fullBtn) fullBtn.style.display = 'block'; // โชว์ปุ่มแจ้งเต็ม
+                if (fullMessage) fullMessage.style.display = 'flex'; // โชว์ปุ่มแจ้งเต็ม
             } else {
                 // กรณี: ยังไม่เป็นสมาชิก และห้องยังไม่เต็ม -> โชว์ปุ่มเข้าร่วม
                 if (unownerControls) unownerControls.style.display = 'flex';
-                if (joinBtn) joinBtn.style.display = 'block';
-                if (joinBtn) joinBtn.onclick = () => handleJoinRoom(roomId, currentUserId);
+                if (isEventStarted) {
+                    // 🔴 กิจกรรมเริ่มแล้ว -> ปิดปุ่มเข้าร่วม
+                    const fullText = document.getElementById('full-room-text');
+                    if (fullText) fullText.textContent = 'ปิดรับสมัคร (เริ่มแล้ว)';
+                    if (fullMessage) fullMessage.style.display = 'flex';
+                } else {
+                    // 🟢 กิจกรรมยังไม่เริ่ม -> โชว์ปุ่มเข้าร่วม
+                    if (joinBtn) joinBtn.style.display = 'block';
+                    if (joinBtn) joinBtn.onclick = () => handleJoinRoom(roomId, currentUserId);
+                }
             }
         } else {
             alert('ไม่พบข้อมูลห้องกิจกรรม');
@@ -148,6 +132,36 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
         console.error('Error:', error);
     }
 };
+
+// --- ฟังก์ชันส่งรหัสเช็คชื่อ ---
+async function handleCheckIn(roomId) {
+    const codeInput = document.getElementById('check-in-code');
+    const code = codeInput.value.trim();
+
+    if (!code) {
+        alert('กรุณากรอกรหัสเช็คชื่อ');
+        return;
+    }
+
+    try {
+        const res = await fetch(`/api/room/${roomId}/check-in`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            alert('เช็คชื่อเรียบร้อย! ได้รับเครดิต +10 💰');
+            location.reload(); // รีเฟรชเพื่ออัปเดตสถานะ (อาจจะเปลี่ยนช่องเช็คชื่อเป็น "เช็คชื่อแล้ว")
+        } else {
+            alert(result.message);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+    }
+}
 
 // #region ฟังก์ชันแสดงข้อมูลห้องกิจกรรม 
 function renderRoomDetail(room) {
