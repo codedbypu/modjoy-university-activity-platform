@@ -6,22 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkedInMessage = document.getElementById('checked-in-message');
     // #endregion
 
-    // #region initialize buttons
-    const joinButton = document.getElementById('join-btn');
-    const manageCheckInButton = document.getElementById('manage-check-in-btn');
-    // #endregion
-
-    // #region check owner room
-    const ownerRoom = true;
-    if (ownerRoom) {
-        joinButton.style.display = 'none';
-        manageCheckInButton.style.display = 'flex';
-    } else {
-        joinButton.style.display = 'inline-block';
-        manageCheckInButton.style.display = 'none';
-    }
-    // #endregion
-
     // #region event listeners ปุ่ม "เข้าร่วม"
     if (joinButton) {
         joinButton.addEventListener('click', function () {
@@ -68,11 +52,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. ดึงข้อมูล User ปัจจุบันก่อน
     let currentUserId = null;
+    let currentUserRole = null;
     try {
         const userRes = await fetch('/api/me');
         const userData = await userRes.json();
         if (userData.loggedIn) {
             currentUserId = userData.user.id;
+            currentUserRole = userData.user.role;
         }
     } catch (err) { console.error('Auth Check Error', err); }
 
@@ -86,12 +72,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderRoomDetail(room);
             fetchRoomMembers(roomId);
 
-            if (currentUserId && room.ROOM_LEADER_ID == currentUserId) {
+            if (currentUserId && (room.ROOM_LEADER_ID == currentUserId || currentUserRole === 'admin')) {
                 const editBtn = document.getElementById('edit-room-btn');
                 const headerBlank = document.querySelector('.header-blank');
+                const joinButton = document.getElementById('join-btn');
+                const manageCheckInButton = document.getElementById('manage-check-in-btn');
                 if (headerBlank) headerBlank.style.display = 'none'; // ซ่อนช่องว่าง
                 if (editBtn) editBtn.style.display = 'block'; // โชว์ปุ่ม
                 if (editBtn) editBtn.href = `/edit-room-page.html?id=${room.ROOM_ID}`;
+                if (joinButton) joinButton.style.display = 'none'; // ซ่อนปุ่มเข้าร่วม
+                if (manageCheckInButton) manageCheckInButton.style.display = 'flex'; // โชว์ปุ่มจัดการเช็คชื่อ
             }
         } else {
             alert('ไม่พบข้อมูลห้องกิจกรรม');

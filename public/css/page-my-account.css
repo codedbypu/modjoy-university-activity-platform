@@ -42,7 +42,9 @@ body {
     cursor: pointer;
 }
 
-
+.new-credit-score {
+    color: #FA8816;
+}
 
 /* main */
 .account-main {
@@ -210,10 +212,10 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    font-size: 30px;
-    font-weight: 600;
     gap: 4px;
     color: #FA8816;
+    font-size: 30px;
+    font-weight: 600;
 }
 
 .creditperson img {
@@ -290,7 +292,7 @@ body {
     border-radius: 7px;
     overflow: hidden;
     text-align: center;
-     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* header-item */
