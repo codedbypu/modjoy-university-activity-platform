@@ -123,13 +123,10 @@ router.get('/rooms', async (req, res) => {
             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
             LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
-
             GROUP BY r.ROOM_ID
             ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
         `;
-
         const rooms = await dbQuery(sql);
-
         res.json({ success: true, rooms });
     } catch (err) {
         console.error(err);

@@ -25,10 +25,11 @@ function createRoomItem(room) {
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
     const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
+    // เตรียม Path รูปภาพ (ถ้าไม่มีใน DB ให้ใช้รูป Default)
 
     li.innerHTML = `
         <article>
-            <div class="header-item">
+            <div class="header-item" style="background-image: url('${room.ROOM_IMG}');">
                 <div class="group-date-month">
                     <span class="date-activity">${day}</span>
                     <span class="month-activity">${month}</span>
@@ -76,6 +77,5 @@ function createRoomItem(room) {
             </a>
         </article>
     `;
-
     return li;
 }
