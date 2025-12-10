@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-// #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล ---
+// #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล --- 
 document.addEventListener('DOMContentLoaded', async () => {
     // 1. ดึง ID จาก URL (เช่น ?id=15)
     const params = new URLSearchParams(window.location.search);
@@ -75,6 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (data.success) {
             const room = data.room;
             renderRoomDetail(room);
+
+            fetchRoomMembers(roomId);
         } else {
             alert('ไม่พบข้อมูลห้องกิจกรรม');
             window.location.href = '/home-page.html';
@@ -85,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// #region ฟังก์ชันแสดงข้อมูลห้องกิจกรรม
 function renderRoomDetail(room) {
     // รูปปก
     const imgEl = document.getElementById('detail-room-img');
@@ -135,10 +138,53 @@ function renderRoomDetail(room) {
         }
     }
 }
-
 // ฟังก์ชันช่วยใส่ข้อความ (กัน Error ถ้าหา ID ไม่เจอ)
 function setText(id, text) {
     const el = document.getElementById(id);
     if (el) el.textContent = text;
 }
 // #endregion
+
+// #region ฟังก์ชันดึงและแสดงสมาชิก
+async function fetchRoomMembers(roomId) {
+    try {   
+        const res = await fetch(`/api/room/${roomId}/members`);
+        const data = await res.json();
+
+        if (data.success) {
+            const listContainer = document.getElementById('detail-room-member-list');
+            if (!listContainer) return;
+
+            listContainer.innerHTML = ''; // เคลียร์ค่าเก่า
+
+            data.members.forEach(member => {
+                // เตรียมข้อมูล
+                const fullName = `${member.USER_FNAME} ${member.USER_LNAME}`;
+                const imgSrc = member.USER_IMG || '/Resource/img/profile.jpg';
+                const credit = member.USER_CREDIT_SCORE || 0;
+
+                // สร้าง HTML
+                const li = document.createElement('li');
+                li.className = 'member-room-box';
+                li.innerHTML = `
+                    <div class="profile-member">
+                        <img src="${imgSrc}" alt="profile-image">
+                        <span>${fullName}</span>
+                    </div>
+                    <div class="creditperson">
+                        <span>${credit}</span>
+                        <img src="/Resource/img/credit.png" alt="credit-image">
+                    </div>
+                `;
+                
+                listContainer.appendChild(li);
+            });
+        }
+
+    } catch (error) {
+        console.error('Error fetching members:', error);
+    }
+}
+// #endregion
+// #endregion --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล ---
+

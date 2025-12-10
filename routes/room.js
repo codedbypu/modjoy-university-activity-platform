@@ -172,4 +172,27 @@ router.get('/room/:id', (req, res) => {
 });
 // #endregion
 
+// #region --- API ดึงรายชื่อสมาชิกในห้องกิจกรรม (room/:id/members) ---
+router.get('/room/:id/members', (req, res) => {
+    const roomId = req.params.id;
+
+    // Join ตาราง ROOMMEMBERS กับ USERS เพื่อเอารูปและชื่อ
+    const sql = `
+        SELECT 
+            U.USER_ID, U.USER_FNAME, U.USER_LNAME, U.USER_IMG, U.USER_CREDIT_SCORE
+        FROM ROOMMEMBERS RM
+        JOIN USERS U ON RM.USER_ID = U.USER_ID
+        WHERE RM.ROOM_ID = ?
+    `;
+
+    db.query(sql, [roomId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.json({ success: false, message: 'Database error' });
+        }
+        res.json({ success: true, members: results });
+    });
+});
+// #endregion
+
 module.exports = router;
