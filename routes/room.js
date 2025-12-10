@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-// --- Helper Function สำหรับ Database Query (Async/Await) ---
+// #region --- Helper Function สำหรับ Database Query (Async/Await) ---
 function dbQuery(sql, params) {
     return new Promise((resolve, reject) => {
         db.query(sql, params, (err, result) => {
@@ -18,6 +18,7 @@ function dbQuery(sql, params) {
         });
     });
 }
+// #endregion
 
 // #region --- API ดึงรายชื่อสถานที่ --- 
 router.get('/locations', (req, res) => {
@@ -110,16 +111,13 @@ router.get('/rooms', async (req, res) => {
                 r.ROOM_ID,
                 r.ROOM_TITLE,
                 r.ROOM_EVENT_DATE,
-                r.ROOM_EVENT_START_TIME,
-                r.ROOM_EVENT_END_TIME,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
-
                 l.LOCATION_NAME,
-
                 COUNT(rm.USER_ID) AS member_count,
                 GROUP_CONCAT(t.TAG_NAME) AS tags
-
             FROM ROOMS r
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
@@ -127,7 +125,7 @@ router.get('/rooms', async (req, res) => {
             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
 
             GROUP BY r.ROOM_ID
-            ORDER BY r.ROOM_EVENT_DATE ASC
+            ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
         `;
 
         const rooms = await dbQuery(sql);

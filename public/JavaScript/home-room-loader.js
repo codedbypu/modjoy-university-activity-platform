@@ -21,14 +21,10 @@ async function loadRooms() {
 function createRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';
-
     const date = new Date(room.ROOM_EVENT_DATE);
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
-
-    const tagsHTML = room.tags
-        ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('')
-        : '<li>-</li>';
+    const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
 
     li.innerHTML = `
         <article>
@@ -67,7 +63,7 @@ function createRoomItem(room) {
                     <p class="time-activity">
                         <span class="material-symbols-outlined">pace</span>
                         <span>
-                            ${room.ROOM_EVENT_START_TIME} - ${room.ROOM_EVENT_END_TIME}
+                            ${room.formatted_start_time} - ${room.formatted_end_time}
                         </span>
                     </p>
                 </div>

@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // เมื่อคลิกเปิด ให้แสดงตัวเลือกทั้งหมด
         const currentOptions = addressOptionsList.querySelectorAll('.custom-option');
-        allOptions.forEach(option => {
+        currentOptions.forEach(option => {
             option.style.display = "block";
         });
     });
@@ -305,7 +305,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const inputLocationName = addressDisplayInput.value.trim();
             const validLocation = availableAddresses.find(loc => loc.LOCATION_NAME === inputLocationName);
             if (!validLocation) {
-                alert('กรุณาเลือก "สถานที่" จากรายการที่กำหนดให้เท่านั้น (ห้ามพิมพ์เองนอกเหนือจากรายการ)');
+                alert('กรุณาเลือก "สถานที่" จากรายการที่กำหนดให้เท่านั้น');
                 return;
             }
             // ---------------------------------------------

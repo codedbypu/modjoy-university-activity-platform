@@ -9,7 +9,7 @@ const fs = require('fs');
 
 const JWT_SECRET = process.env.JWT_SECRET
 
-// ฟังก์ชันช่วยเปลี่ยน db.query ให้เป็น async/await (จะได้เขียน Logic ซับซ้อนได้ง่ายๆ)
+// #region --- Helper Function สำหรับ Database Query (Async/Await) ---
 function dbQuery(sql, params) {
     return new Promise((resolve, reject) => {
         db.query(sql, params, (err, result) => {
@@ -18,6 +18,7 @@ function dbQuery(sql, params) {
         });
     });
 }
+// #endregion
 
 // #region --- API register --- 
 router.post('/register', async (req, res) => {
