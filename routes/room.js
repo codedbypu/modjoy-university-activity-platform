@@ -135,4 +135,41 @@ router.get('/rooms', async (req, res) => {
 });
 // #endregion
 
+// #region --- API ดึงข้อมูลห้องกิจกรรมตาม ID (get-room/:id) ---
+router.get('/room/:id', (req, res) => {
+    const roomId = req.params.id;
+
+    // SQL Query: ดึงข้อมูลห้อง + ชื่อคนสร้าง + ชื่อสถานที่ + จำนวนคน + Tags
+    const sql = `
+        SELECT 
+            R.*,
+            L.LOCATION_NAME,
+            CONCAT(U.USER_FNAME, ' ', U.USER_LNAME) AS LEADER_NAME,
+            U.USER_IMG AS LEADER_IMG,
+            (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = R.ROOM_ID) AS CURRENT_MEMBERS,
+            GROUP_CONCAT(T.TAG_NAME) AS TAGS
+        FROM ROOMS R
+        LEFT JOIN LOCATIONS L ON R.ROOM_EVENT_LOCATION = L.LOCATION_ID
+        LEFT JOIN USERS U ON R.ROOM_LEADER_ID = U.USER_ID
+        LEFT JOIN ROOMTAGS RT ON R.ROOM_ID = RT.ROOM_ID
+        LEFT JOIN TAGS T ON RT.TAG_ID = T.TAG_ID
+        WHERE R.ROOM_ID = ?
+        GROUP BY R.ROOM_ID
+    `;
+
+    db.query(sql, [roomId], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.json({ success: false, message: 'Database error' });
+        }
+
+        if (results.length > 0) {
+            res.json({ success: true, room: results[0] });
+        } else {
+            res.json({ success: false, message: 'ไม่พบห้องกิจกรรมนี้' });
+        }
+    });
+});
+// #endregion
+
 module.exports = router;
