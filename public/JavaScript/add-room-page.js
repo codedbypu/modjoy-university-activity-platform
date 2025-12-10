@@ -323,7 +323,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 formData.set('tags', hiddenInput.value); // ใส่ค่าแท็กที่ซ่อนอยู่
 
                 // ส่งไฟล์รูป
-                if (fileInput && fileInput.files.length > 0) formData.append('room_image', fileInput.files[0]);
+                if (fileInput && fileInput.files.length > 0){
+                    formData.append('room_image', fileInput.files[0]);
+                }
                 const response = await fetch('/api/create-room', {
                     method: 'POST',
                     body: formData
