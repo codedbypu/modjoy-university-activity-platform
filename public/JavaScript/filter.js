@@ -1,6 +1,7 @@
 // filter.js
 import { loadRooms } from './home-room-loader.js';
 import { loadMyCreatedRooms } from './created-room-loader.js';
+import { loadMyHistoryRooms } from './history-room-loader.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. ประกาศตัวแปรหลัก
@@ -65,10 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // เช็ค URL ว่าอยู่หน้าไหน
         if (window.location.pathname.includes('created-room')) {
-            // ถ้าอยู่หน้า "กิจกรรมที่สร้าง" -> เรียก API ของห้องตัวเอง
             loadMyCreatedRooms(params);
-        } else {
-            // ถ้าอยู่หน้า Home หรืออื่นๆ -> เรียก API ห้องรวม
+        } 
+        else if (window.location.pathname.includes('history-page')) { // 2. เพิ่มเงื่อนไขนี้
+            loadMyHistoryRooms(params);
+        } 
+        else {
             loadRooms(params);
         }
     }

@@ -585,6 +585,90 @@ router.post('/room/:id/leave', async (req, res) => {
         res.json({ success: false, message: 'เกิดข้อผิดพลาด' });
     }
 });
+
+
+// #region --- API ดึงประวัติกิจกรรมที่จบไปแล้ว (History) ---
+router.get('/my-history', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        const { search, date, start_time, end_time, locations, tags } = req.query;
+
+        let whereClauses = [];
+        let queryParams = [];
+
+        // 1. เงื่อนไข "กิจกรรมที่จบไปแล้ว" (เวลาปัจจุบัน เลยเวลาจบกิจกรรมแล้ว)
+        whereClauses.push(`(
+            r.ROOM_EVENT_DATE < CURRENT_DATE() OR 
+            (r.ROOM_EVENT_DATE = CURRENT_DATE() AND r.ROOM_EVENT_END_TIME < CURRENT_TIME())
+        )`);
+
+        // 2. เงื่อนไขการค้นหา (Filter)
+        if (search) {
+            whereClauses.push("r.ROOM_TITLE LIKE ?");
+            queryParams.push(`%${search}%`);
+        }
+        if (date) {
+            whereClauses.push("r.ROOM_EVENT_DATE = ?");
+            queryParams.push(date);
+        }
+        if (locations) {
+            const locationNames = locations.split(',').map(name => name.trim()).filter(name => name !== '');
+            if (locationNames.length > 0) {
+                whereClauses.push(`l.LOCATION_NAME IN (?)`);
+                queryParams.push(locationNames);
+            }
+        }
+        if (tags) {
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+            if (tagList.length > 0) {
+                whereClauses.push(`t.TAG_NAME IN (?)`);
+                queryParams.push(tagList);
+            }
+        }
+
+        const whereSql = whereClauses.length > 0 ? `AND ${whereClauses.join(' AND ')}` : '';
+
+        // SQL Query
+        // ใช้ INNER JOIN กับ ROOMMEMBERS เพื่อดึง "เฉพาะห้องที่ User นี้เข้าร่วม (หรือเป็น Leader)"
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+                r.ROOM_STATUS, 
+                l.LOCATION_NAME,
+                COUNT(DISTINCT rm_all.USER_ID) AS member_count,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+            FROM ROOMS r
+            INNER JOIN ROOMMEMBERS rm_me ON r.ROOM_ID = rm_me.ROOM_ID AND rm_me.USER_ID = ? 
+            LEFT JOIN ROOMMEMBERS rm_all ON r.ROOM_ID = rm_all.ROOM_ID
+            LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+            WHERE 1=1 ${whereSql}
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_EVENT_DATE DESC, r.ROOM_EVENT_START_TIME DESC
+        `;
+
+        // ใส่ userId เป็น parameter ตัวแรก (สำหรับ rm_me.USER_ID = ?)
+        const finalParams = [userId, ...queryParams];
+
+        const rooms = await dbQuery(sql, finalParams);
+        res.json({ success: true, rooms });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
 // #endregion
 
 module.exports = router;

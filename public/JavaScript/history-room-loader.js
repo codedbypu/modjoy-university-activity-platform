@@ -1,61 +1,62 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // เช็คว่าตอนนี้อยู่หน้าไหน
-    const isHistoryPage = window.location.pathname.includes('history-page');
-    const isCreatedPage = window.location.pathname.includes('created-room');
-    
-    // เช็คว่ามี element ที่ชื่อ rooms-list อยู่ในหน้าไหม
-    const listElement = document.getElementById('rooms-list');
+// public/JavaScript/history-room-loader.js
 
-    // สั่งโหลดเฉพาะเมื่อ: มี List, ไม่ใช่หน้า History, และไม่ใช่หน้า Created Room
-    if (listElement && !isHistoryPage && !isCreatedPage) {
-        loadRooms();
+document.addEventListener("DOMContentLoaded", function () {
+    if (document.getElementById('rooms-list') && window.location.pathname.includes('history-page')) {
+        loadMyHistoryRooms();
     }
 });
 
-export { loadRooms };
-async function loadRooms(filterParams = {}) {
+export async function loadMyHistoryRooms(filterParams = {}) {
+    const list = document.getElementById('rooms-list');
+    if (!list) return;
+
     try {
-        const list = document.getElementById('rooms-list');
-        list.innerHTML = '<li>กำลังค้นหากิจกรรม...</li>'; // แสดงสถานะ loading
-        
-        // สร้าง URL Query String จาก Object
+        list.innerHTML = '<li>กำลังค้นหาประวัติ...</li>';
         const queryString = new URLSearchParams(filterParams).toString();
-        
-        // ใช้ fetch เพื่อดึงข้อมูลพร้อม Query String
-        const res = await fetch(`/api/rooms?${queryString}`);
-        const data = await res.json();
+
+        // เรียก API ประวัติ
+        const response = await fetch(`/api/my-history?${queryString}`);
+        const data = await response.json();
 
         if (!data.success) {
-            list.innerHTML = '<li>ไม่สามารถโหลดห้องกิจกรรมได้</li>';
+            if (data.message === 'กรุณาเข้าสู่ระบบ') {
+                window.location.href = '/login-page.html';
+                return;
+            }
+            list.innerHTML = '<li>ไม่สามารถโหลดข้อมูลได้</li>';
             return;
         }
 
         list.innerHTML = '';
+
         if (data.rooms.length === 0) {
-            list.innerHTML = '<li style="text-align:center; padding: 20px;">ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ</li>';
+            list.innerHTML = '<li style="text-align:center; padding: 20px; width:100%;">ไม่พบประวัติการเข้าร่วมกิจกรรม</li>';
         } else {
             data.rooms.forEach(room => {
-                list.appendChild(createRoomItem(room));
+                list.appendChild(createHistoryRoomItem(room));
             });
         }
-    } catch (err) {
-        console.error(err);
-        document.getElementById('rooms-list').innerHTML = '<li>เกิดข้อผิดพลาดในการเชื่อมต่อ</li>';
+    } catch (error) {
+        console.error('Error loading history:', error);
+        list.innerHTML = '<li>เกิดข้อผิดพลาดในการเชื่อมต่อ</li>';
     }
 }
-    
-function createRoomItem(room) {
+
+function createHistoryRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';
+
     const date = new Date(room.ROOM_EVENT_DATE);
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
     const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
-    // เตรียม Path รูปภาพ (ถ้าไม่มีใน DB ให้ใช้รูป Default)
+    const bgImage = room.ROOM_IMG ? room.ROOM_IMG : '/Resource/img/bangmod.png';
+
+    // เพิ่ม Badge "จบแล้ว"
 
     li.innerHTML = `
-        <article>
-            <div class="header-item" style="background-image: url('${room.ROOM_IMG}');">
+        <article style="display:flex; flex-direction:column; height:100%;">
+            <div class="header-item" style="background-image: url('${bgImage}'); position: relative;">
                 <div class="group-date-month">
                     <span class="date-activity">${day}</span>
                     <span class="month-activity">${month}</span>
@@ -65,7 +66,6 @@ function createRoomItem(room) {
             <hr class="separator-line">
 
             <div class="body-item">
-
                 <div class="first-row-item-body">
                     <h2>${room.ROOM_TITLE}</h2>
                     <span class="people-activity">
@@ -94,16 +94,14 @@ function createRoomItem(room) {
                         </span>
                     </p>
                 </div>
-
             </div>
 
             <a class="btn-room-item a-btn"
-               href="./room-detail-page.html?id=${room.ROOM_ID}">
-               ดูรายละเอียด
+               href="./room-detail-page.html?id=${room.ROOM_ID}" 
+               style="display:flex; justify-content:center; align-items:center; text-decoration:none; background-color: #6c757d;">
+               ดูย้อนหลัง
             </a>
         </article>
     `;
     return li;
-
-
 }
