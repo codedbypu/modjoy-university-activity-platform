@@ -1,5 +1,6 @@
 // filter.js
 import { loadRooms } from './home-room-loader.js';
+import { loadMyCreatedRooms } from './created-room-loader.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. ประกาศตัวแปรหลัก
@@ -7,13 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById('filter-open-btn');
     const closeBtn = document.getElementById('filter-close-btn');
     const overlay = document.getElementById('overlay');
-    
+
     const mainSearchInput = document.getElementById('search-input');
     const mainSearchBtn = document.querySelector('.search-bar .material-symbols-outlined');
     const filterForm = document.getElementById('filter-form');
 
-    let allLocations = []; 
-    let allTags = []; 
+    let allLocations = [];
+    let allTags = [];
 
     // 2. ฟังก์ชันเปิด/ปิด Modal
     function openFilterModal() {
@@ -50,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (key === 'filter_end_time') paramName = 'end_time';
                     if (key === 'roomLocation') paramName = 'locations';
                     if (key === 'selected_tags') paramName = 'tags';
-                    
+
                     params[paramName] = value;
                 }
             }
@@ -59,9 +60,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function performSearch() {
-        const params = getAllFilters();
+        const params = getAllFilters(); // ฟังก์ชันดึงค่าจาก input ของคุณ
         console.log("Performing search with:", params);
-        loadRooms(params);
+
+        // เช็ค URL ว่าอยู่หน้าไหน
+        if (window.location.pathname.includes('created-room')) {
+            // ถ้าอยู่หน้า "กิจกรรมที่สร้าง" -> เรียก API ของห้องตัวเอง
+            loadMyCreatedRooms(params);
+        } else {
+            // ถ้าอยู่หน้า Home หรืออื่นๆ -> เรียก API ห้องรวม
+            loadRooms(params);
+        }
     }
 
     // Event Listeners สำหรับ Search Bar ด้านบน
@@ -85,11 +94,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const container = document.getElementById(containerId);
         const hiddenInput = document.getElementById(hiddenInputId);
         const addBtn = document.getElementById(btnId);
-        let selectedItems = []; 
-        
+        let selectedItems = [];
+
         function render(filterText = "") {
             if (!container) return;
-            container.innerHTML = ''; 
+            container.innerHTML = '';
             if (hiddenInput) hiddenInput.value = selectedItems.join(',');
 
             // --- ส่วนที่ 1: รายการที่เลือกแล้ว (Selected) ---
@@ -97,10 +106,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 const tagBtn = document.createElement('div');
                 tagBtn.className = 'tag active'; // สีส้ม
                 tagBtn.textContent = item;
-                
+
                 // กดซ้ำเพื่อ "ลบออก" (Toggle Off)
                 tagBtn.addEventListener('click', () => removeItem(item));
-                
+
                 container.appendChild(tagBtn);
             });
 
@@ -114,17 +123,17 @@ document.addEventListener("DOMContentLoaded", function () {
             }).slice(0, 10);
 
             if (suggestions.length === 0 && selectedItems.length === 0 && filterText !== "") {
-                 container.innerHTML += '<span style="font-size:12px; color:#999; width:100%;">ไม่พบข้อมูลที่ค้นหา</span>';
+                container.innerHTML += '<span style="font-size:12px; color:#999; width:100%;">ไม่พบข้อมูลที่ค้นหา</span>';
             }
 
             suggestions.forEach(item => {
                 const tagBtn = document.createElement('div');
                 tagBtn.className = 'tag'; // สีเทา
                 tagBtn.textContent = item;
-                
+
                 // กดเพื่อ "เลือก" (Toggle On) - ส่ง item ตรงๆ (ตัวพิมพ์ถูกต้อง)
-                tagBtn.addEventListener('click', () => addItem(item)); 
-                
+                tagBtn.addEventListener('click', () => addItem(item));
+
                 container.appendChild(tagBtn);
             });
         }
@@ -134,9 +143,9 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!name) return;
             const cleanName = name.trim();
             if (cleanName === "") return;
-            
+
             const allData = dataProvider();
-            
+
             // ค้นหาตัวจริงใน Database แบบไม่สนตัวพิมพ์
             const match = allData.find(item => item.toLowerCase() === cleanName.toLowerCase());
 
@@ -147,20 +156,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!selectedItems.includes(match)) {
                 selectedItems.push(match);
-                input.value = ''; 
-                render(""); 
+                input.value = '';
+                render("");
                 input.focus();
             }
         }
 
         function removeItem(name) {
             selectedItems = selectedItems.filter(i => i !== name);
-            render(input.value); 
+            render(input.value);
         }
 
         function clearAll() {
             selectedItems = [];
-            if(input) input.value = '';
+            if (input) input.value = '';
             render("");
         }
 
@@ -176,14 +185,14 @@ document.addEventListener("DOMContentLoaded", function () {
             input.addEventListener('keyup', (e) => {
                 if (e.key === 'Enter') {
                     // ❌ ตัด addItem(input.value) ออกตามที่ขอ
-                    return; 
+                    return;
                 } else {
                     render(input.value);
                 }
             });
 
             input.addEventListener('focus', () => render(input.value));
-            
+
             // ปุ่ม + เท่านั้นที่เรียก addItem
             if (addBtn) addBtn.addEventListener('click', () => addItem(input.value));
         }
@@ -200,18 +209,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 fetch('/api/tags')
             ]);
             const locData = await locRes.json();
-            allLocations = locData.map(l => l.LOCATION_NAME); 
+            allLocations = locData.map(l => l.LOCATION_NAME);
             allTags = await tagRes.json();
 
             // Init Managers
             locManager = createUnifiedManager({
                 inputId: 'filter-location-input',
-                containerId: 'location-suggestion-container', 
+                containerId: 'location-suggestion-container',
                 hiddenInputId: 'filter-locations-hidden',
                 btnId: 'filter-add-location-btn',
                 dataProvider: () => allLocations
             });
-            
+
             tagManager = createUnifiedManager({
                 inputId: 'filter-tag-search',
                 containerId: 'filter-tag-suggestions',
@@ -219,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 btnId: 'filter-add-tag-btn',
                 dataProvider: () => allTags
             });
-            
+
             locManager.render("");
             tagManager.render("");
 
@@ -243,10 +252,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (clearBtn) {
         clearBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            if(filterForm) filterForm.reset();
-            if(locManager) locManager.clearAll();
-            if(tagManager) tagManager.clearAll();
-            if(mainSearchInput) mainSearchInput.value = '';
+            if (filterForm) filterForm.reset();
+            if (locManager) locManager.clearAll();
+            if (tagManager) tagManager.clearAll();
+            if (mainSearchInput) mainSearchInput.value = '';
 
             performSearch();
             closeFilterModal();
