@@ -73,11 +73,14 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const isMember = members.some(m => m.USER_ID == currentUserId); // เช็คว่า ID เราอยู่ในลิสต์สมาชิกไหม
             const isFull = (room.CURRENT_MEMBERS >= room.ROOM_CAPACITY);
             const hasCheckedIn = members.some(m => m.USER_ID == currentUserId && m.ROOMMEMBER_STATUS === 'present');
-        
+
             // เช็คเวลา (Time Logic) 🕒
             const now = new Date();
             const eventStart = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_EVENT_START_TIME}`); // Format: YYYY-MM-DDTHH:mm:ss
             const isEventStarted = now >= eventStart;
+
+            const checkinExpire = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_CHECKIN_EXPIRE}`);
+            const isCheckinExpired = now > checkinExpire; // เช็คว่ารหัสเช็คชื่อยังไม่หมดอายุ true = หมดอายุ
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน
@@ -98,12 +101,26 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                     if (checkInForm) checkInForm.style.display = 'none';
                     return;
                 }
+                if (!isCheckinExpired && room.ROOM_CHECKIN_EXPIRE) {
+                    // รหัสเช็คชื่อหมดอายุ -> โชว์ข้อความหมดเวลาเช็คชื่อ
+                    if (fullMessage) {
+                        fullMessage.style.display = 'flex';
+                        const fullText = document.getElementById('full-room-text');
+                        if (fullText) fullText.textContent = 'หมดเวลาการเช็คชื่อแล้ว';
+                    }
+                    return;
+                }
                 // กรณี: เป็นสมาชิกแล้ว -> โชว์ปุ่มออกจากห้อง
                 if (isEventStarted) {
                     // 🔴 กิจกรรมเริ่มแล้ว -> ซ่อนปุ่มออก, โชว์ช่องเช็คชื่อ
                     if (leaveBtn) leaveBtn.style.display = 'none'; // ซ่อนปุ่มออก
                     if (checkInForm) checkInForm.style.display = 'flex'; // โชว์ฟอร์มเช็คชื่อ
-                    if (checkInBtn) checkInBtn.onclick = () => handleCheckIn(roomId);
+                    if (checkInForm) {
+                        checkInForm.onsubmit = (e) => {
+                            e.preventDefault();
+                            handleCheckIn(roomId);
+                        };
+                    }
                 } else {
                     // 🟢 กิจกรรมยังไม่เริ่ม -> โชว์ปุ่มออก (Leave)
                     if (leaveBtn) {
