@@ -425,4 +425,76 @@ router.get('/rooms', async (req, res) => {
     }
 });
 // #endregion
+
+// #region --- API เข้าร่วมห้องกิจกรรม (join-room/:id) ---
+router.post('/room/:id/join', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบก่อน' });
+
+    const roomId = req.params.id;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // 1. เช็คว่าห้องเต็มหรือยัง? และเช็คว่าเคย join ไปหรือยัง?
+        const roomCheck = await dbQuery(`
+            SELECT 
+                r.ROOM_CAPACITY,
+                (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) as current_members,
+                (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID AND USER_ID = ?) as is_joined
+            FROM ROOMS r
+            WHERE r.ROOM_ID = ?
+        `, [userId, roomId]);
+
+        if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
+
+        const room = roomCheck[0];
+
+        if (room.is_joined > 0) return res.json({ success: false, message: 'คุณเข้าร่วมกิจกรรมนี้ไปแล้ว' });
+
+        if (room.current_members >= room.ROOM_CAPACITY) return res.json({ success: false, message: 'ห้องเต็มแล้วครับ T_T' });
+
+        // 2. บันทึกลงตาราง ROOMMEMBERS
+        await dbQuery(`
+            INSERT INTO ROOMMEMBERS (ROOM_ID, USER_ID, ROOMMEMBER_STATUS)
+            VALUES (?, ?, 'pending')
+        `, [roomId, userId]);
+
+        res.json({ success: true, message: 'เข้าร่วมสำเร็จ!' });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
+    }
+});
+// #endregion
+
+// #region --- API ออกจากห้องกิจกรรม (leave-room/:id) ---
+router.post('/room/:id/leave', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    const roomId = req.params.id;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // เช็คก่อนว่าเป็นเจ้าของห้องไหม? (เจ้าของห้ามออก ต้องลบห้องอย่างเดียว)
+        const room = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+        if (room.length > 0 && room[0].ROOM_LEADER_ID == userId) {
+            return res.json({ success: false, message: 'เจ้าของห้องไม่สามารถกดออกได้ (ต้องลบห้องกิจกรรม)' });
+        }
+
+        // ลบออกจากตาราง
+        await dbQuery('DELETE FROM ROOMMEMBERS WHERE ROOM_ID = ? AND USER_ID = ?', [roomId, userId]);
+
+        res.json({ success: true, message: 'ยกเลิกการเข้าร่วมแล้ว' });
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'เกิดข้อผิดพลาด' });
+    }
+});
+// #endregion
 module.exports = router;

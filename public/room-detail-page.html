@@ -34,7 +34,8 @@
 
             <div class="form-group">
                 <div class="add-cover-box">
-                    <img src=".\Resource\img\bangmod.png" alt="background image" class="cover-image-display" id="detail-room-img">
+                    <img src=".\Resource\img\bangmod.png" alt="background image" class="cover-image-display"
+                        id="detail-room-img">
                 </div>
             </div>
 
@@ -92,26 +93,37 @@
                 <strong id="detail-room-member-count">ผู้เข้าร่วม ( 1 / 2 ) : </strong>
                 <ul class="member-list" id="detail-room-member-list"></ul>
             </div>
-
-            <div class="btn-box" id="join-box">
-                <button type="button" class="btn" id="join-btn">เข้าร่วม</button>
-                <a href="./check-in-room-page.html" class="btn a-btn" id="manage-check-in-btn">การเช็คชื่อ</a>
-            </div>
         </form>
 
-        <section class="check-in-container" id="check-in-container">
+        <section class="action-buttons-container" id="action-buttons-container">
+            <!-- State 1 -->
+            <div class="btn-box" id="join-box">
+                <div class="unowner-room-btns" id="unowner-room-btns">
+                    <!-- ผู้เข้าร่วม(เริ่มต้น) --><button class="btn" id="join-room-btn">เข้าร่วมกิจกรรม</button>
+                    <!-- ผู้เข้าร่วม(หลังกดเข้าร่วม) --><button class="btn" id="leave-room-btn">ยกเลิกเข้าร่วม</button>
+                    <!-- ผู้เข้าร่วม(เต็ม) -->
+                    <div class="full-room-message" id="full-room-message">
+                        <span class="material-symbols-outlined">block</span>
+                        <span>กิจกรรมเต็มแล้ว</span>
+                    </div>
+                </div>
+                <!-- เจ้าของห้อง --><button class="btn a-btn" id="manage-check-in-btn">การเช็คชื่อ</button>
+            </div>
+
+
+            <!-- State 2 -->
             <form class="check-in-box" id="check-in-form">
-                <span class="material-symbols-outlined btn check-in-icon">qr_code_scanner</span>
+                <!-- <span class="material-symbols-outlined btn check-in-icon">qr_code_scanner</span> -->
                 <input type="text" class="check-in-input" name="check_in_code" placeholder="กรอกรหัสเช็คชื่อของห้อง"
                     required>
                 <button type="submit" class="btn check-in-btn">ยืนยัน</button>
             </form>
 
+            <!-- State 3 -->
             <div class="checked-in-message" id="checked-in-message">
                 <span class="material-symbols-outlined">check_circle</span>
                 <span>เช็คชื่อแล้ว</span>
             </div>
-
         </section>
     </main>
 

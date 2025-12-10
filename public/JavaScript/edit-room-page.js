@@ -1,8 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-
-
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
     // #region ======== ป้องกันการกด Enter เพื่อ submit form ========
     document.querySelector('.add-room-form').addEventListener('keydown', function (e) {
