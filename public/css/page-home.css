@@ -151,8 +151,6 @@ body {
 
 .room-item {
     width: 100%;
-    max-width: 500px;
-    margin: auto;
     background: #F3F3F3;
     border-radius: 7px;
     overflow: hidden;
@@ -547,6 +545,7 @@ body {
 
     .rooms-List {
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)) !important;
+        align-items: start !important;
 
     }
 
