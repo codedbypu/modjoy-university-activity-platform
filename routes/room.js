@@ -110,6 +110,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 //                 r.ROOM_ID,
 //                 r.ROOM_TITLE,
 //                 r.ROOM_EVENT_DATE,
+//                 r.ROOM_EVENT_START_TIME,
 //                 TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
 //                 TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
 //                 r.ROOM_CAPACITY,
@@ -125,7 +126,69 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 //             GROUP BY r.ROOM_ID
 //             ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
 //         `;
-//         const rooms = await dbQuery(sql);
+//         let rooms = await dbQuery(sql);
+
+//         // 2. เช็คว่า User Login อยู่ไหม? (เพื่อทำระบบแนะนำ)
+//         const token = req.cookies.token;
+//         if (token) {
+//             try {
+//                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+//                 // 3. ดึง Tag ของผู้ใช้คนนี้ (เรียงตามที่บันทึกไว้)
+//                 const sqlUserTags = `
+//                     SELECT T.TAG_NAME 
+//                     FROM USERTAGS UT
+//                     JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
+//                     WHERE UT.USER_ID = ?
+//                 `;
+//                 const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
+
+//                 // แปลงเป็น Array ชื่อ Tag เช่น ['Coding', 'Music', 'Calculus']
+//                 const userTags = userTagResult.map(row => row.TAG_NAME);
+
+//                 if (userTags.length > 0) {
+//                     // 4. คำนวณคะแนนความตรงกัน (Ranking)
+//                     // Priority 1: ตรงกับ Tag แรกของผู้ใช้
+//                     // Priority 2: ตรงกับ Tag สอง
+//                     // Priority 3: ตรงกับ Tag สาม
+//                     // Priority 99: ไม่ตรงเลย (ไว้ล่างสุด)
+
+//                     rooms = rooms.map(room => {
+//                         let priority = 99; // ค่าเริ่มต้น (ไม่ตรง)
+
+//                         // หา Main Tag ของห้อง (เอาตัวแรกสุด)
+//                         const roomMainTag = room.tags ? room.tags.split(',')[0] : null;
+
+//                         if (roomMainTag) {
+//                             // เช็คว่า Main Tag ของห้อง ตรงกับ User Tag อันดับที่เท่าไหร่?
+//                             const matchIndex = userTags.indexOf(roomMainTag);
+
+//                             if (matchIndex !== -1) {
+//                                 // ถ้าตรง ให้คะแนน priority เท่ากับลำดับ (0, 1, 2)
+//                                 priority = matchIndex;
+//                             }
+//                         }
+
+//                         return { ...room, priority }; // แปะป้าย priority ไว้ชั่วคราว
+//                     });
+
+//                     // 5. เรียงลำดับใหม่ (Sort)
+//                     rooms.sort((a, b) => {
+//                         // เรียงตาม Priority น้อยไปมาก (0 -> 1 -> 2 -> 99)
+//                         if (a.priority !== b.priority) {
+//                             return a.priority - b.priority;
+//                         }
+//                         // ถ้า Priority เท่ากัน (เช่น ไม่ตรงทั้งคู่) ให้เรียงตามวันที่เหมือนเดิม
+//                         return new Date(a.ROOM_EVENT_DATE) - new Date(b.ROOM_EVENT_DATE);
+//                     });
+//                 }
+
+//             } catch (err) {
+//                 // ถ้า Token ผิด หรือ Error อื่นๆ ก็ปล่อยผ่าน (แสดงแบบปกติ)
+//                 console.error('Feed Sort Error:', err);
+//             }
+//         }
+
 //         res.json({ success: true, rooms });
 //     } catch (err) {
 //         console.error(err);
@@ -235,7 +298,7 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
                 ROOM_EVENT_LOCATION=?, ROOM_CAPACITY=?, ROOM_DESCRIPTION=? ${imageUpdateSql}
             WHERE ROOM_ID = ?
         `;
-        
+
         await dbQuery(sql, params);
 
         // 5. จัดการ Tags (ลบของเก่า -> ใส่ของใหม่)
@@ -274,7 +337,7 @@ router.get('/rooms', async (req, res) => {
         let whereClauses = [];
         let queryParams = [];
         // กำหนดให้ JOINs เป็นมาตรฐาน เพื่อให้ GROUP_CONCAT ทำงานได้เสมอ
-        let tagsJoin = ""; 
+        let tagsJoin = "";
         let locationJoin = "LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID";
 
         // 1. เงื่อนไขการค้นหา (search input)
@@ -282,7 +345,7 @@ router.get('/rooms', async (req, res) => {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
             queryParams.push(`%${search}%`);
         }
-        
+
         // 2. เงื่อนไขตัวกรองวันที่/เวลา (ถูกต้องแล้ว)
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE = ?");
@@ -305,7 +368,7 @@ router.get('/rooms', async (req, res) => {
             if (locationNames.length > 0) {
                 // ใช้ IN (?) เพื่อให้ node-mysql จัดการ Array
                 whereClauses.push(`l.LOCATION_NAME IN (?)`);
-                queryParams.push(locationNames); 
+                queryParams.push(locationNames);
             }
         }
 
@@ -317,7 +380,7 @@ router.get('/rooms', async (req, res) => {
                 // และต้องใช้ Subquery/HAVING หรือวิธีอื่น หากต้องการกรองด้วย Tag หลายตัว (แต่ใช้ IN ก็อาจพอ)
                 // เพื่อความรัดกุม เราจะใช้ Subquery/INNER JOIN แต่ในโค้ดเดิมใช้ LEFT JOIN + WHERE
                 // เพื่อให้สอดคล้องกับโค้ดเดิม แต่ปรับให้เป็น INNER JOIN ชั่วคราวเมื่อกรองด้วย TAG
-                
+
                 // ใช้ LEFT JOIN ใน SQL หลัก เพื่อให้ GROUP_CONCAT ทำงาน
                 // และเพิ่มเงื่อนไข t.TAG_NAME IN (?) ใน WHERE
                 whereClauses.push(`t.TAG_NAME IN (?)`);
@@ -326,10 +389,10 @@ router.get('/rooms', async (req, res) => {
                 // สำหรับตอนนี้ ใช้ IN (?) จะหมายถึง (OR Logic) คือ ห้องที่มี Tag ใด Tag หนึ่งในรายการ
             }
         }
-        
+
         // สร้าง WHERE clause
         const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
-        
+
         // **ปรับปรุง SQL Query หลัก:** ทำให้ JOINs ชัดเจนและใช้ DISTINCT ใน GROUP_CONCAT
         const sql = `
             SELECT 
@@ -352,7 +415,7 @@ router.get('/rooms', async (req, res) => {
             GROUP BY r.ROOM_ID
             ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
         `;
-        
+
         // เรียกใช้ Query
         const rooms = await dbQuery(sql, queryParams);
         res.json({ success: true, rooms });
