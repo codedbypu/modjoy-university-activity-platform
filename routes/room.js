@@ -515,5 +515,97 @@ router.get('/my-created-rooms', async (req, res) => {
 });
 // #endregion
 
+        let whereClauses = [];
+        let queryParams = [];
+        // กำหนดให้ JOINs เป็นมาตรฐาน เพื่อให้ GROUP_CONCAT ทำงานได้เสมอ
+        let tagsJoin = "";
+        let locationJoin = "LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID";
+
+<<<<<<< HEAD
+        // 1. เงื่อนไขการค้นหา (search input)
+        if (search) {
+            whereClauses.push("r.ROOM_TITLE LIKE ?");
+            queryParams.push(`%${search}%`);
+        }
+
+        // 2. เงื่อนไขตัวกรองวันที่/เวลา (ถูกต้องแล้ว)
+        if (date) {
+            whereClauses.push("r.ROOM_EVENT_DATE >= ?");
+            queryParams.push(date);
+        }
+        if (start_time && end_time) {
+            whereClauses.push("r.ROOM_EVENT_START_TIME >= ? AND r.ROOM_EVENT_END_TIME <= ?");
+            queryParams.push(start_time, end_time);
+        } else if (start_time) {
+            whereClauses.push("r.ROOM_EVENT_START_TIME >= ?");
+            queryParams.push(start_time);
+        } else if (end_time) {
+            whereClauses.push("r.ROOM_EVENT_END_TIME <= ?");
+            queryParams.push(end_time);
+        }
+
+        // 3. เงื่อนไขตัวกรองสถานที่ (Location Tags)
+        if (locations) {
+            const locationNames = locations.split(',').map(name => name.trim()).filter(name => name !== '');
+            if (locationNames.length > 0) {
+                // ใช้ IN (?) เพื่อให้ node-mysql จัดการ Array
+                whereClauses.push(`l.LOCATION_NAME IN (?)`);
+                queryParams.push(locationNames);
+            }
+        }
+
+        // 4. เงื่อนไขตัวกรอง Tag (Tags)
+        if (tags) {
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+            if (tagList.length > 0) {
+                // **ถ้ามีการกรอง Tag ต้องใช้ INNER JOIN เพื่อกรองเฉพาะห้องที่มี Tag นั้นๆ**
+                // และต้องใช้ Subquery/HAVING หรือวิธีอื่น หากต้องการกรองด้วย Tag หลายตัว (แต่ใช้ IN ก็อาจพอ)
+                // เพื่อความรัดกุม เราจะใช้ Subquery/INNER JOIN แต่ในโค้ดเดิมใช้ LEFT JOIN + WHERE
+                // เพื่อให้สอดคล้องกับโค้ดเดิม แต่ปรับให้เป็น INNER JOIN ชั่วคราวเมื่อกรองด้วย TAG
+
+                // ใช้ LEFT JOIN ใน SQL หลัก เพื่อให้ GROUP_CONCAT ทำงาน
+                // และเพิ่มเงื่อนไข t.TAG_NAME IN (?) ใน WHERE
+                whereClauses.push(`t.TAG_NAME IN (?)`);
+                queryParams.push(tagList);
+                // **หมายเหตุ:** หากต้องการกรองหลาย Tag พร้อมกัน (AND Logic) ต้องใช้ Subquery หรือ HAVING COUNT(DISTINCT t.TAG_NAME)
+                // สำหรับตอนนี้ ใช้ IN (?) จะหมายถึง (OR Logic) คือ ห้องที่มี Tag ใด Tag หนึ่งในรายการ
+            }
+        }
+
+        // สร้าง WHERE clause
+        const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+        // **ปรับปรุง SQL Query หลัก:** ทำให้ JOINs ชัดเจนและใช้ DISTINCT ใน GROUP_CONCAT
+        const sql = `
+            SELECT 
+                r.ROOM_ID,
+                r.ROOM_TITLE,
+                r.ROOM_EVENT_DATE,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                r.ROOM_CAPACITY,
+                r.ROOM_IMG,
+                l.LOCATION_NAME,
+                COUNT(DISTINCT rm.USER_ID) AS member_count,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+            FROM ROOMS r
+            ${locationJoin}
+            LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
+            LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+            LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+            ${whereSql}
+            GROUP BY r.ROOM_ID
+            ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
+        `;
+
+        // เรียกใช้ Query
+        const rooms = await dbQuery(sql, queryParams);
+        res.json({ success: true, rooms });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Database error' });
+    }
+});
+// #endregion
 
 module.exports = router;
