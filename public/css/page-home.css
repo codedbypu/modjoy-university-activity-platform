@@ -481,12 +481,6 @@ body {
     font-size: 22px;
 }
 
-/* 7. กลุ่มปุ่ม Tag (Tag Cloud) */
-.filter-tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
 
 .filter-tag-cloud .tag {
     font-family: var(--font-main);
@@ -514,8 +508,14 @@ body {
 
 .btn-box {
     text-align: center;
+    width: 100%;
 }
-
+.filter-clear-btn {
+    border: 1px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    margin-top: 10px;
+}
 /* ปุ่มค้นหาหลัก (สีส้ม) */
 .filter-submit-btn {
     margin-top: 5px;
@@ -543,6 +543,185 @@ body {
 .history-detail-btn:hover {
     background: #717171;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.tag-input-container {
+    position: relative;
+}
+.tag-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.tag-group .btn {
+    width: 40px;
+    height: 36px;
+    font-size: 24px;
+    line-height: 0px;
+    font-weight: 500;
+    border-radius: 0px 10px 10px 0px;
+}
+.tag-group input[type="text"] {
+    border-radius: 10px 0px 0px 10px;
+}
+/* ปรับให้ input ใน filter group เป็น style เดียวกัน */
+.filter-group input[type="text"] {
+    /* ให้ใช้ความสูง 36px เหมือนใน add-room แทน 38px */
+    height: 36px; 
+    border-radius: 10px 0px 0px 10px; /* ใช้ 10px เหมือน add-room */
+}
+.tag-list-item { /* นำเข้าสไตล์จาก page-add-room.css */
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+.tag-list-item li {
+    color: #FA5A16;
+    border: #FA5A16 solid 1px;
+    border-radius: 3.5px;
+    padding: 0px 10px;
+    margin: 2px 5px;
+    display: flex;
+    gap: 1px;
+    background-color: #f9f9f9; /* อาจจะเพิ่มสีพื้นหลัง */
+}
+.tag-list-item li>button {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    color: #FA4616;
+}
+/* อาจจะต้องปรับสไตล์ input ของ Location/Tag ใน filter-modal ให้เข้ากับ .custom-select-input */
+.filter-group input[type="text"].custom-select-input {
+    width: 100%;
+    /* ... สไตล์เดิมจาก base.css/page-add-room.css ... */
+    border-radius: 10px 0 0 10px !important; /* สำคัญ: ให้ขอบซ้ายโค้ง, ขอบขวาตรง */
+}
+
+/* page-home.css */
+
+/* กล่องเก็บปุ่มแนะนำ */
+.filter-tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-height: 120px; /* จำกัดความสูงเผื่อเยอะเกิน */
+    overflow-y: auto;
+}
+
+/* ตัวปุ่มแนะนำ (Suggestion Chip) */
+.suggestion-chip {
+    font-family: var(--font-main);
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggestion-chip:hover {
+    background-color: var(--primary-color-light);
+    color: white;
+    border-color: var(--primary-color-light);
+}
+
+/* Scrollbar สวยๆ สำหรับกล่องแนะนำ */
+.filter-tag-cloud::-webkit-scrollbar {
+    width: 4px;
+}
+.filter-tag-cloud::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+/* page-home.css เพิ่มต่อท้ายสุด */
+
+/* ปรับแต่งปุ่ม Tag ทั่วไป */
+.filter-tag-cloud .tag {
+    display: inline-flex;       /* จัดให้เรียงแนวนอน */
+    align-items: center;        /* จัดกึ่งกลางแนวตั้ง */
+    justify-content: center;
+    padding: 6px 14px;          /* เพิ่มพื้นที่หายใจให้ปุ่ม */
+    border-radius: 20px;        /* ความโค้งมน */
+    border: 1px solid var(--border-color);
+    background-color: #f9f9f9;
+    color: #555;
+    font-size: 14px;
+    transition: all 0.2s ease;  /* เอฟเฟกต์ตอนเปลี่ยนสี */
+}
+
+/* ปรับแต่งปุ่ม Tag เมื่อถูกเลือก (Active) */
+.filter-tag-cloud .tag.active {
+    background-color: var(--primary-color); /* สีส้ม */
+    border-color: var(--primary-color);
+    color: #ffffff;             /* ตัวหนังสือสีขาว */
+    font-weight: 500;
+}
+
+/* Hover Effect */
+.filter-tag-cloud .tag:hover {
+    border-color: var(--primary-color-light);
+    background-color: #fff0e6; /* สีส้มอ่อนๆ ตอนเอาเมาส์ชี้ */
+}
+
+.filter-tag-cloud .tag.active:hover {
+    background-color: var(--primary-color-dark); /* สีส้มเข้มขึ้นตอนชี้ตัวที่เลือกแล้ว */
+    color: #ffffff;
+}
+
+.filter-tag-cloud {
+    display: flex;         /* บังคับให้แสดงผลแบบ Flex */
+    flex-wrap: wrap;       /* ให้ปุ่มตกบรรทัดถ้ายาวเกิน */
+    gap: 8px;              /* ระยะห่างระหว่างปุ่ม */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    min-height: 40px;      /* กันกล่องยุบจนมองไม่เห็น */
+}
+
+/* สไตล์ปุ่ม Tag ทั่วไป (สีเทา) */
+.filter-tag-cloud .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: #f9f9f9;
+    color: #555;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none; /* กัน User ลากคลุมดำตัวหนังสือ */
+}
+
+/* Hover Effect ปุ่มทั่วไป */
+.filter-tag-cloud .tag:hover {
+    background-color: #eee;
+    border-color: var(--text-secondary);
+}
+
+/* สไตล์ปุ่ม Tag "เมื่อถูกเลือก" (Active - สีส้ม) */
+.filter-tag-cloud .tag.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.filter-tag-cloud .tag.active:hover {
+    background-color: var(--primary-color-dark);
+}
+
+/* ปรับแต่งปุ่มกากบาท (X) ใน Tag ที่เลือก */
+.filter-tag-cloud .tag.active span:last-child {
+    font-size: 18px !important; /* บังคับขนาด */
+    margin-left: 4px;
+    display: flex;
+    align-items: center;
 }
 
 @media screen and (min-width: 1024px) {

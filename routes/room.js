@@ -284,7 +284,7 @@ router.get('/rooms', async (req, res) => {
         
         // 2. เงื่อนไขตัวกรองวันที่/เวลา (ถูกต้องแล้ว)
         if (date) {
-            whereClauses.push("r.ROOM_EVENT_DATE = ?");
+            whereClauses.push("r.ROOM_EVENT_DATE >= ?");
             queryParams.push(date);
         }
         if (start_time && end_time) {
@@ -310,8 +310,8 @@ router.get('/rooms', async (req, res) => {
 
         // 4. เงื่อนไขตัวกรอง Tag (Tags)
         if (tags) {
-            const tagNames = tags.split(',').map(name => name.trim()).filter(name => name !== '');
-            if (tagNames.length > 0) {
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
+            if (tagList.length > 0) {
                 // **ถ้ามีการกรอง Tag ต้องใช้ INNER JOIN เพื่อกรองเฉพาะห้องที่มี Tag นั้นๆ**
                 // และต้องใช้ Subquery/HAVING หรือวิธีอื่น หากต้องการกรองด้วย Tag หลายตัว (แต่ใช้ IN ก็อาจพอ)
                 // เพื่อความรัดกุม เราจะใช้ Subquery/INNER JOIN แต่ในโค้ดเดิมใช้ LEFT JOIN + WHERE
@@ -320,7 +320,7 @@ router.get('/rooms', async (req, res) => {
                 // ใช้ LEFT JOIN ใน SQL หลัก เพื่อให้ GROUP_CONCAT ทำงาน
                 // และเพิ่มเงื่อนไข t.TAG_NAME IN (?) ใน WHERE
                 whereClauses.push(`t.TAG_NAME IN (?)`);
-                queryParams.push(tagNames);
+                queryParams.push(tagList);
                 // **หมายเหตุ:** หากต้องการกรองหลาย Tag พร้อมกัน (AND Logic) ต้องใช้ Subquery หรือ HAVING COUNT(DISTINCT t.TAG_NAME)
                 // สำหรับตอนนี้ ใช้ IN (?) จะหมายถึง (OR Logic) คือ ห้องที่มี Tag ใด Tag หนึ่งในรายการ
             }
@@ -361,4 +361,5 @@ router.get('/rooms', async (req, res) => {
     }
 });
 // #endregion
+
 module.exports = router;

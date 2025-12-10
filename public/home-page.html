@@ -39,12 +39,14 @@
             <button class="material-symbols-outlined sidebar-close-btn" id="sidebar-close-btn"
                 aria-label="ปิดเมนู">close</button>
             <div class="sidebar-profile-img">
-                <!-- Member --><a href="./my-account-page.html" class="member-only"><img src="./Resource/img/profile.png" alt="Profile Picture"></a>
+                <!-- Member --><a href="./my-account-page.html" class="member-only"><img
+                        src="./Resource/img/profile.png" alt="Profile Picture"></a>
                 <!-- Gust --><img src="./Resource/img/profile.png" class="guest-only" alt="Profile Image">
             </div>
             <div class="sidebar-name-group">
                 <h3 id="sidebar-user-name">ยินดีต้อนรับ</h3>
-                <!-- Member --><div class="creditperson member-only">
+                <!-- Member -->
+                <div class="creditperson member-only">
                     <span id="sidebar-user-credit">100</span>
                     <img src="./Resource/img/credit.png" alt="credit icon">
                 </div>
@@ -54,22 +56,29 @@
 
         <!-- Links -->
         <ul class="sidebar-links">
-            <!-- Global --><li class="active-page"><a href="./home-page.html"><span
+            <!-- Global -->
+            <li class="active-page"><a href="./home-page.html"><span
                         class="material-symbols-outlined">home</span><span>หน้าแรก</span></a>
             </li>
-            <!-- Member --><li><a href="./my-account-page.html" class="member-only"><span
+            <!-- Member -->
+            <li><a href="./my-account-page.html" class="member-only"><span
                         class="material-symbols-outlined">person</span><span>บัญชีของฉัน</span></a></li>
-            <!-- Member --><li><a href="./created-room.html" class="member-only"><span
+            <!-- Member -->
+            <li><a href="./created-room.html" class="member-only"><span
                         class="material-symbols-outlined">check_box</span><span>กิจกรรมที่สร้าง</span></a></li>
-            <!-- Member --><li><a href="./history-page.html" class="member-only"><span
+            <!-- Member -->
+            <li><a href="./history-page.html" class="member-only"><span
                         class="material-symbols-outlined">history</span><span>ประวัติการเข้าร่วม</span></a></li>
-            <!-- Member --><li><a href="./settings-page.html" class="member-only"><span
+            <!-- Member -->
+            <li><a href="./settings-page.html" class="member-only"><span
                         class="material-symbols-outlined">settings</span><span>การตั้งค่า</span></a></li>
-            <!-- Member --><li><a href="./login-page.html" class="logout-button member-only" ><span
+            <!-- Member -->
+            <li><a href="./login-page.html" class="logout-button member-only"><span
                         class="material-symbols-outlined">logout</span><span>ออกจากระบบ</span></a>
             </li>
         </ul>
-        <!-- Gust --><div class="sidebar-auth-action guest-only">
+        <!-- Gust -->
+        <div class="sidebar-auth-action guest-only">
             <a href="./login-page.html" class="sidebar-btn-login">เข้าสู่ระบบ</a>
             <a href="./register-page.html" class="sidebar-btn-register">ลงทะเบียน</a>
         </div>
@@ -90,21 +99,24 @@
 
         <!-- #region desktop-header -->
         <div class="desktop-header">
-            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png" alt="MODJOY Logo"></a>
+            <a href="./home-page.html" class="desktop-logo"><img src="Resource/img/small-logo.png"
+                    alt="MODJOY Logo"></a>
             <div class="desktop-right-group">
                 <nav class="desktop-nav">
                     <!-- Member --><a href="./home-page.html" class="active member-only">หน้าหลัก</a>
                     <!-- Member --><a href="./created-room.html" class="member-only">กิจกรรมที่สร้าง</a>
                     <!-- Member --><a href="./history-page.html" class="member-only">ประวัติการเข้าร่วม</a>
                     <!-- Member --><a href="./add-room-page.html" class="material-symbols-outlined member-only">add</a>
-                    <!-- Member --><div class="profile-menu-container member-only">
+                    <!-- Member -->
+                    <div class="profile-menu-container member-only">
                         <div class="desktop-profile" id="profile-menu-btn" onclick="toggleProfileMenu()">
                             <img src="./Resource/img/profile.png" alt="profile-image" class="my-profile-image">
                         </div>
                         <div class="profile-dropdown" id="profile-dropdown">
                             <div class="dropdown-header">
                                 <div class="dropdown-img-large">
-                                    <img src="./Resource/img/profile.png" alt="profile-large" class="profile-large-image">
+                                    <img src="./Resource/img/profile.png" alt="profile-large"
+                                        class="profile-large-image">
                                 </div>
                                 <p class="user-name" id="user-name">Guest</p>
                                 <p class="user-email" id="user-email">guest@kmutt.ac.th</p>
@@ -119,8 +131,8 @@
                     </div>
 
                     <!-- Gust -->
-                        <a href="./login-page.html" class="btn-auth-login guest-only">เข้าสู่ระบบ</a>
-                        <a href="./register-page.html" class="btn-auth-register guest-only">ลงทะเบียน</a>
+                    <a href="./login-page.html" class="btn-auth-login guest-only">เข้าสู่ระบบ</a>
+                    <a href="./register-page.html" class="btn-auth-register guest-only">ลงทะเบียน</a>
                 </nav>
             </div>
         </div>
@@ -212,29 +224,41 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="filter-location-search">ชื่อสถานที่</label>
-                    <div class="filter-search-bar">
-                        <input type="text" id="filter-location-search" placeholder="ค้นหาสถานที่...">
-                        <span class="material-symbols-outlined">search</span>
+                    <label for="filter-location-input">ชื่อสถานที่</label>
+                    <div class="tag-input-container filter-search-bar">
+                        <div class="tag-group">
+                            <input type="text" class="custom-select-input" id="filter-location-input"
+                                placeholder="พิมพ์ค้นหา หรือเลือกจากรายการ..." role="combobox" aria-autocomplete="list"
+                                aria-expanded="false" aria-haspopup="listbox" aria-controls="filter-places-listbox">
+                            <button type="button" class="btn" id="filter-add-location-btn">+</button>
+                        </div>
+                        <div class="custom-options-list" id="filter-places-listbox" role="listbox"></div>
+                        <div id="location-suggestion-container" class="filter-tag-cloud"
+                            style="margin-top: 10px; margin-bottom: 10px;">
+                        </div>
                     </div>
-                    <div class="filter-tag-cloud" id="location-tag-cloud">
-                    </div>
-                    <input type="hidden" name="selected_locations" id="selected-locations">
+                    <ul class="tag-list-item" id="filter-location-list-display"></ul>
+                    <input type="hidden" name="roomLocation" id="filter-locations-hidden">
                 </div>
 
                 <div class="filter-group">
                     <label for="filter-tag-search">Tag</label>
-                    <div class="filter-search-bar">
-                        <input type="text" id="filter-tag-search" placeholder="ค้นหาแท็ก...">
-                        <span class="material-symbols-outlined">search</span>
+                    <div class="tag-input-container filter-search-bar">
+                        <div class="tag-group">
+                            <input type="text" id="filter-tag-search" name="room-tag"
+                                placeholder="พิมพ์เพื่อค้นหาแท็ก...">
+                            <button type="button" class="btn" id="filter-add-tag-btn">+</button>
+                        </div>
+
+                        <div class="tag-suggestions filter-tag-cloud" id="filter-tag-suggestions"></div>
                     </div>
-                    <div class="filter-tag-cloud" id="tag-tag-cloud">
-                    </div>
-                    <input type="hidden" name="selected_tags" id="selected-tags">
+                    <ul class="tag-list-item" id="filter-tag-list-display"></ul>
+                    <input type="hidden" name="selected_tags" id="selected-tags-hidden">
                 </div>
 
                 <div class="btn-box">
                     <button type="submit" class="btn filter-submit-btn">ค้นหา</button>
+                    <button type="clear" class="btn filter-clear-btn">ล้างรายการทั้งหมด</button>
                 </div>
             </form>
         </div>
