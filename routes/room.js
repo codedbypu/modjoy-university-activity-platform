@@ -329,10 +329,6 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
 });
 // #endregion
 
-// #region --- API ดึงข้อมูลห้องกิจกรรมทั้งหมด (get-rooms) พร้อม Filter/Search ---
-router.get('/rooms', async (req, res) => {
-    try {
-        const { search, date, start_time, end_time, locations, tags } = req.query;
 
         let whereClauses = [];
         let queryParams = [];
@@ -340,6 +336,7 @@ router.get('/rooms', async (req, res) => {
         let tagsJoin = "";
         let locationJoin = "LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID";
 
+<<<<<<< HEAD
         // 1. เงื่อนไขการค้นหา (search input)
         if (search) {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
