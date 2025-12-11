@@ -41,8 +41,10 @@ async function loadRooms(filterParams = {}, isAppend = false) {
         currentFilters = filterParams; // จำค่า Filter นี้ไว้
         currentPage = 1;
         hasMore = true;
-        if (list) message.innerHTML = '<li>กำลังค้นหากิจกรรม...</li>';
-        if (message) message.innerHTML = '';
+        if (list) {
+            message.style.display = 'block';
+            message.innerText = 'กำลังค้นหากิจกรรม...';}
+        if (message) message.innerText = '';
     }
 
     isLoading = true;
@@ -63,16 +65,20 @@ async function loadRooms(filterParams = {}, isAppend = false) {
         if (!isAppend && list) list.innerHTML = '';
 
         if (!data.success) {
-            message.innerHTML = 'ไม่สามารถโหลดห้องกิจกรรมได้';
+            message.innerText = 'ไม่สามารถโหลดห้องกิจกรรมได้';
             return;
         }
 
         // กรณีไม่พบข้อมูลเลย
         if (data.rooms.length === 0) {
             hasMore = false; // ไม่มีข้อมูลแล้ว
-            if (!isAppend) message.innerHTML = 'ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ';
+            if (!isAppend) { 
+                message.style.display = 'block'; 
+                message.innerText = 'ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ';}
         } else {
             // มีข้อมูล -> วาดลงจอ
+            message.innerText = '';
+            message.style.display = 'none';
             data.rooms.forEach(room => {
                 list.appendChild(createRoomItem(room));
             });

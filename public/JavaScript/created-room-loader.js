@@ -37,8 +37,8 @@ export async function loadMyCreatedRooms(filterParams = {}) {
 
         if (data.rooms.length === 0) {
             // 4. สถานะ Empty: ไม่พบข้อมูล
-            message.innerText = 'ไม่พบกิจกรรมที่คุณสร้าง';
             message.style.display = 'block';
+            message.innerText = 'ไม่พบกิจกรรมที่คุณสร้าง';
         } else {
             // 5. สถานะ Success: ซ่อนข้อความ และแสดงรายการห้อง
             message.innerText = ''; 
@@ -69,7 +69,7 @@ function createRoomItem(room) {
 
     li.innerHTML = `
         <article style="display:flex; flex-direction:column; height:100%;">
-            <div class="header-item" style="background-image: url('${bgImage}'); position: relative;">
+            <div class="header-item">
                 <div class="group-date-month">
                     <span class="date-activity">${day}</span>
                     <span class="month-activity">${month}</span>
