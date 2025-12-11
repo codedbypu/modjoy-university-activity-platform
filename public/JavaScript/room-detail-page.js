@@ -85,11 +85,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const isEventStarted = (status === 'inProgress' || status === 'completed');
             const isEventEnded = (status === 'completed');
 
-            let isCheckinExpired = false;
-            if (room.ROOM_CHECKIN_EXPIRE) {
-                const checkinExpire = new Date(room.ROOM_CHECKIN_EXPIRE);
-                isCheckinExpired = new Date() > checkinExpire;
-            }
+            let isCheckinExpired =  (room.is_expired === 1) || false;
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน

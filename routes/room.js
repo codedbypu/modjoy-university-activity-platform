@@ -359,8 +359,17 @@ router.post('/room/:id/check-in', async (req, res) => {
         const checkSql = `
             SELECT 
                 R.ROOM_CHECKIN_CODE,
-                R.ROOM_CHECKIN_EXPIRE,
-                RM.ROOMMEMBER_STATUS
+                RM.ROOMMEMBER_STATUS,
+                -- เช็คว่ามีการตั้งรหัสหรือยัง (1 = มี, 0 = ไม่มี)
+                CASE 
+                    WHEN R.ROOM_CHECKIN_CODE IS NOT NULL AND R.ROOM_CHECKIN_CODE != '' THEN 1 
+                    ELSE 0 
+                END AS has_code,
+                -- สร้างตัวแปร is_expired (1 = หมดอายุ, 0 = ยังไม่หมด)
+                CASE 
+                    WHEN R.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > R.ROOM_CHECKIN_EXPIRE THEN 1 
+                    ELSE 0 
+                END AS is_expired
             FROM ROOMS R
             JOIN ROOMMEMBERS RM ON R.ROOM_ID = RM.ROOM_ID
             WHERE R.ROOM_ID = ? AND RM.USER_ID = ?
@@ -377,11 +386,11 @@ router.post('/room/:id/check-in', async (req, res) => {
             return res.json({ success: false, message: 'คุณเช็คชื่อเข้าร่วมกิจกรรมนี้ไปแล้ว' });
         }
 
-        if (!roomData.ROOM_CHECKIN_CODE || !roomData.ROOM_CHECKIN_EXPIRE) {
+        if (roomData.has_code === 0) {
             return res.json({ success: false, message: 'ห้องนี้ยังไม่ได้เปิดการเช็คชื่อ (ติดต่อหัวหน้าห้อง)' });
         }
 
-        if (new Date() > new Date(roomData.ROOM_CHECKIN_EXPIRE)) {
+        if (roomData.is_expired === 1) {
             return res.json({ success: false, message: 'รหัสเช็คชื่อหมดอายุแล้ว' });
         }
 
@@ -715,6 +724,10 @@ router.get('/room/:id', (req, res) => {
     const sql = `
         SELECT 
             R.*,
+            CASE 
+                WHEN R.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > R.ROOM_CHECKIN_EXPIRE THEN 1 
+                ELSE 0 
+            END AS is_expired,
 
             CASE 
                 WHEN NOW() < TIMESTAMP(R.ROOM_EVENT_DATE, R.ROOM_EVENT_START_TIME) THEN 'pending'
