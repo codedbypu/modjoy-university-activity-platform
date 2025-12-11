@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userRes = await fetch('/api/me');
         const userData = await userRes.json();
         if (userData.loggedIn) {
-            currentUserId = userData.user.USER_ID;
-            currentUserRole = userData.user.USER_ROLE;
+            currentUserId = userData.user.id;
+            currentUserRole = userData.user.role;
         }
     } catch (err) { console.error('Auth Check Error', err); }
     // 2. ดึงข้อมูลห้อง
@@ -48,7 +48,9 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const unownerControls = document.getElementById('unowner-room-btns');
             const joinBtn = document.getElementById('join-room-btn');
             const leaveBtn = document.getElementById('leave-room-btn');
-            const fullMessage = document.getElementById('full-room-message');
+
+            const RoomMessage = document.getElementById('room-message');
+            const RoomTextMessage = document.getElementById('room-text-message');
 
             const checkInForm = document.getElementById('check-in-form');
             const checkedInMessage = document.getElementById('checked-in-message');
@@ -61,7 +63,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             if (unownerControls) unownerControls.style.display = 'none';
             if (joinBtn) joinBtn.style.display = 'none';
             if (leaveBtn) leaveBtn.style.display = 'none';
-            if (fullMessage) fullMessage.style.display = 'none';
+            if (RoomMessage) RoomMessage.style.display = 'none';
             if (manageCheckInBtn) manageCheckInBtn.style.display = 'none';
             if (checkInForm) checkInForm.style.display = 'none';
             if (checkedInMessage) checkedInMessage.style.display = 'none';
@@ -96,56 +98,68 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                 if (manageCheckInBtn) manageCheckInBtn.style.display = 'flex'; // โชว์ปุ่มจัดการเช็คชื่อ
                 if (manageCheckInBtn) manageCheckInBtn.onclick = () => { window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`; }
             } else if (isMember) {
+                // --- สมาชิก (Member) ---
                 if (unownerControls) unownerControls.style.display = 'flex';
-                if (hasCheckedIn) {
+
+                if (isEventEnded) {
+                    // ⚫ จบกิจกรรมแล้ว (completed) -> ทำอะไรไม่ได้
+                    if (RoomMessage) {
+                        if (RoomTextMessage) RoomTextMessage.textContent = 'กิจกรรมจบแล้ว';
+                        RoomMessage.style.display = 'flex';
+                    }
+                } else if (hasCheckedIn) {
                     // กรณี: เช็คชื่อแล้ว -> โชว์ข้อความเช็คชื่อแล้ว
                     if (checkedInMessage) checkedInMessage.style.display = 'flex';
-                    if (checkInForm) checkInForm.style.display = 'none';
-                    return;
-                }
-                if (isCheckinExpired && room.ROOM_CHECKIN_EXPIRE) {
+                } else if (isCheckinExpired && room.ROOM_CHECKIN_EXPIRE) {
                     // รหัสเช็คชื่อหมดอายุ -> โชว์ข้อความหมดเวลาเช็คชื่อ
-                    if (fullMessage) {
-                        fullMessage.style.display = 'flex';
-                        const fullText = document.getElementById('full-room-text');
-                        if (fullText) fullText.textContent = 'หมดเวลาการเช็คชื่อแล้ว';
+                    if (RoomMessage) {
+                        if (RoomTextMessage) RoomTextMessage.textContent = 'หมดเวลาการเช็คชื่อแล้ว';
+                        RoomMessage.style.display = 'flex';
                     }
-                    return;
-                }
-                // กรณี: เป็นสมาชิกแล้ว -> โชว์ปุ่มออกจากห้อง
-                if (isEventStarted) {
-                    // 🔴 กิจกรรมเริ่มแล้ว -> ซ่อนปุ่มออก, โชว์ช่องเช็คชื่อ
-                    if (leaveBtn) leaveBtn.style.display = 'none'; // ซ่อนปุ่มออก
-                    if (checkInForm) checkInForm.style.display = 'flex'; // โชว์ฟอร์มเช็คชื่อ
+                } else if (isEventStarted) {
+                    // 🟠 กำลังดำเนินกิจกรรม (inProgress) (ยังไม่จบ, ยังไม่เช็ค, ยังไม่หมดเวลา) -> ซ่อนปุ่มออก, โชว์ช่องเช็คชื่อ
                     if (checkInForm) {
+                        checkInForm.style.display = 'flex'; // โชว์ฟอร์มเช็คชื่อ
                         checkInForm.onsubmit = (e) => {
                             e.preventDefault();
                             handleCheckIn(roomId);
                         };
                     }
                 } else {
-                    // 🟢 กิจกรรมยังไม่เริ่ม -> โชว์ปุ่มออก (Leave)
+                    // 🟢 ยังไม่เริ่ม (pending) -> โชว์ปุ่มออก
                     if (leaveBtn) {
                         leaveBtn.style.display = 'block';
                         leaveBtn.onclick = () => handleLeaveRoom(roomId);
                     }
                 }
-            } else if (isFull) {
-                // กรณี: ห้องเต็ม -> โชว์ปุ่มแจ้งเต็ม
-                if (unownerControls) unownerControls.style.display = 'flex';
-                if (fullMessage) fullMessage.style.display = 'flex'; // โชว์ปุ่มแจ้งเต็ม
             } else {
-                // กรณี: ยังไม่เป็นสมาชิก และห้องยังไม่เต็ม -> โชว์ปุ่มเข้าร่วม
+                // กรณี: ยังไม่เป็นสมาชิก
                 if (unownerControls) unownerControls.style.display = 'flex';
-                if (isEventStarted) {
-                    // 🔴 กิจกรรมเริ่มแล้ว -> ปิดปุ่มเข้าร่วม
-                    const fullText = document.getElementById('full-room-text');
-                    if (fullText) fullText.textContent = 'ปิดรับสมัคร (เริ่มแล้ว)';
-                    if (fullMessage) fullMessage.style.display = 'flex';
+
+                if (isEventEnded) {
+                    // ⚫ เช็คก่อนว่าจบหรือยัง? -> ถ้าจบแล้วบอก "กิจกรรมจบแล้ว"
+                    if (RoomMessage) {
+                        if (RoomTextMessage) RoomTextMessage.textContent = 'ปิดรับสมัคร (กิจกรรมจบแล้ว)';
+                        RoomMessage.style.display = 'flex';
+                    }
+                } else if (isEventStarted) {
+                    // 🔴 กิจกรรมเริ่มแล้ว -> ปิดรับ
+                    if (RoomMessage) {
+                        if (RoomTextMessage) RoomTextMessage.textContent = 'ปิดรับสมัคร (เริ่มแล้ว)';
+                        RoomMessage.style.display = 'flex';
+                    }
+                } else if (isFull) {
+                    // กรณี: ห้องเต็ม -> โชว์ปุ่มแจ้งเต็ม
+                    if (RoomMessage) {
+                        if (RoomTextMessage) RoomTextMessage.textContent = 'ห้องเต็มแล้ว';
+                        RoomMessage.style.display = 'flex';
+                    }
                 } else {
                     // 🟢 กิจกรรมยังไม่เริ่ม -> โชว์ปุ่มเข้าร่วม
-                    if (joinBtn) joinBtn.style.display = 'block';
-                    if (joinBtn) joinBtn.onclick = () => handleJoinRoom(roomId, currentUserId);
+                    if (joinBtn) {
+                        joinBtn.style.display = 'block';
+                        joinBtn.onclick = () => handleJoinRoom(roomId, currentUserId);
+                    }
                 }
             }
         } else {
