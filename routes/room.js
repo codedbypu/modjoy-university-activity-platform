@@ -102,101 +102,6 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
 });
 // #endregion
 
-// #region --- API ดึงข้อมูลห้องกิจกรรมทั้งหมด (get-rooms) --- 
-// router.get('/rooms', async (req, res) => {
-//     try {
-//         const sql = `
-//             SELECT 
-//                 r.ROOM_ID,
-//                 r.ROOM_TITLE,
-//                 r.ROOM_EVENT_DATE,
-//                 r.ROOM_EVENT_START_TIME,
-//                 TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
-//                 TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
-//                 r.ROOM_CAPACITY,
-//                 r.ROOM_IMG,
-//                 l.LOCATION_NAME,
-//                 COUNT(rm.USER_ID) AS member_count,
-//                 GROUP_CONCAT(t.TAG_NAME) AS tags
-//             FROM ROOMS r
-//             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
-//             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
-//             LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
-//             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
-//             GROUP BY r.ROOM_ID
-//             ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
-//         `;
-//         let rooms = await dbQuery(sql);
-
-//         // 2. เช็คว่า User Login อยู่ไหม? (เพื่อทำระบบแนะนำ)
-//         const token = req.cookies.token;
-//         if (token) {
-//             try {
-//                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-//                 // 3. ดึง Tag ของผู้ใช้คนนี้ (เรียงตามที่บันทึกไว้)
-//                 const sqlUserTags = `
-//                     SELECT T.TAG_NAME 
-//                     FROM USERTAGS UT
-//                     JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
-//                     WHERE UT.USER_ID = ?
-//                 `;
-//                 const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
-
-//                 // แปลงเป็น Array ชื่อ Tag เช่น ['Coding', 'Music', 'Calculus']
-//                 const userTags = userTagResult.map(row => row.TAG_NAME);
-
-//                 if (userTags.length > 0) {
-//                     // 4. คำนวณคะแนนความตรงกัน (Ranking)
-//                     // Priority 1: ตรงกับ Tag แรกของผู้ใช้
-//                     // Priority 2: ตรงกับ Tag สอง
-//                     // Priority 3: ตรงกับ Tag สาม
-//                     // Priority 99: ไม่ตรงเลย (ไว้ล่างสุด)
-
-//                     rooms = rooms.map(room => {
-//                         let priority = 99; // ค่าเริ่มต้น (ไม่ตรง)
-
-//                         // หา Main Tag ของห้อง (เอาตัวแรกสุด)
-//                         const roomMainTag = room.tags ? room.tags.split(',')[0] : null;
-
-//                         if (roomMainTag) {
-//                             // เช็คว่า Main Tag ของห้อง ตรงกับ User Tag อันดับที่เท่าไหร่?
-//                             const matchIndex = userTags.indexOf(roomMainTag);
-
-//                             if (matchIndex !== -1) {
-//                                 // ถ้าตรง ให้คะแนน priority เท่ากับลำดับ (0, 1, 2)
-//                                 priority = matchIndex;
-//                             }
-//                         }
-
-//                         return { ...room, priority }; // แปะป้าย priority ไว้ชั่วคราว
-//                     });
-
-//                     // 5. เรียงลำดับใหม่ (Sort)
-//                     rooms.sort((a, b) => {
-//                         // เรียงตาม Priority น้อยไปมาก (0 -> 1 -> 2 -> 99)
-//                         if (a.priority !== b.priority) {
-//                             return a.priority - b.priority;
-//                         }
-//                         // ถ้า Priority เท่ากัน (เช่น ไม่ตรงทั้งคู่) ให้เรียงตามวันที่เหมือนเดิม
-//                         return new Date(a.ROOM_EVENT_DATE) - new Date(b.ROOM_EVENT_DATE);
-//                     });
-//                 }
-
-//             } catch (err) {
-//                 // ถ้า Token ผิด หรือ Error อื่นๆ ก็ปล่อยผ่าน (แสดงแบบปกติ)
-//                 console.error('Feed Sort Error:', err);
-//             }
-//         }
-
-//         res.json({ success: true, rooms });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ success: false, message: 'Database error' });
-//     }
-// });
-// #endregion
-
 // #region --- API ดึงข้อมูลห้องกิจกรรมตาม ID (get-room/:id) ---
 router.get('/room/:id', (req, res) => {
     const roomId = req.params.id;
@@ -346,7 +251,7 @@ router.get('/rooms', async (req, res) => {
             queryParams.push(`%${search}%`);
         }
 
-        // 2. เงื่อนไขตัวกรองวันที่/เวลา (ถูกต้องแล้ว)
+        // 2. เงื่อนไขตัวกรองวันที่/เวลา
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE >= ?");
             queryParams.push(date);
@@ -417,7 +322,69 @@ router.get('/rooms', async (req, res) => {
         `;
 
         // เรียกใช้ Query
-        const rooms = await dbQuery(sql, queryParams);
+        let rooms = await dbQuery(sql, queryParams);
+
+        // 2. เช็คว่า User Login อยู่ไหม? (เพื่อทำระบบแนะนำ)
+        const token = req.cookies.token;
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+                // 3. ดึง Tag ของผู้ใช้คนนี้ (เรียงตามที่บันทึกไว้)
+                const sqlUserTags = `
+                    SELECT T.TAG_NAME 
+                    FROM USERTAGS UT
+                    JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
+                    WHERE UT.USER_ID = ?
+                `;
+                const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
+
+                // แปลงเป็น Array ชื่อ Tag เช่น ['Coding', 'Music', 'Calculus']
+                const userTags = userTagResult.map(row => row.TAG_NAME);
+
+                if (userTags.length > 0) {
+                    // 4. คำนวณคะแนนความตรงกัน (Ranking)
+                    // Priority 1: ตรงกับ Tag แรกของผู้ใช้
+                    // Priority 2: ตรงกับ Tag สอง
+                    // Priority 3: ตรงกับ Tag สาม
+                    // Priority 99: ไม่ตรงเลย (ไว้ล่างสุด)
+
+                    rooms = rooms.map(room => {
+                        let priority = 99; // ค่าเริ่มต้น (ไม่ตรง)
+
+                        // หา Main Tag ของห้อง (เอาตัวแรกสุด)
+                        const roomMainTag = room.tags ? room.tags.split(',')[0] : null;
+
+                        if (roomMainTag) {
+                            // เช็คว่า Main Tag ของห้อง ตรงกับ User Tag อันดับที่เท่าไหร่?
+                            const matchIndex = userTags.indexOf(roomMainTag);
+
+                            if (matchIndex !== -1) {
+                                // ถ้าตรง ให้คะแนน priority เท่ากับลำดับ (0, 1, 2)
+                                priority = matchIndex;
+                            }
+                        }
+
+                        return { ...room, priority }; // แปะป้าย priority ไว้ชั่วคราว
+                    });
+
+                    // 5. เรียงลำดับใหม่ (Sort)
+                    rooms.sort((a, b) => {
+                        // เรียงตาม Priority น้อยไปมาก (0 -> 1 -> 2 -> 99)
+                        if (a.priority !== b.priority) {
+                            return a.priority - b.priority;
+                        }
+                        // ถ้า Priority เท่ากัน (เช่น ไม่ตรงทั้งคู่) ให้เรียงตามวันที่เหมือนเดิม
+                        return new Date(a.ROOM_EVENT_DATE) - new Date(b.ROOM_EVENT_DATE);
+                    });
+                }
+
+            } catch (err) {
+                // ถ้า Token ผิด หรือ Error อื่นๆ ก็ปล่อยผ่าน (แสดงแบบปกติ)
+                console.error('Feed Sort Error:', err);
+            }
+        }
+
         res.json({ success: true, rooms });
     } catch (err) {
         console.error(err);

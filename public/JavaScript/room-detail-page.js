@@ -79,8 +79,11 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const eventStart = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_EVENT_START_TIME}`); // Format: YYYY-MM-DDTHH:mm:ss
             const isEventStarted = now >= eventStart;
 
-            const checkinExpire = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_CHECKIN_EXPIRE}`);
-            const isCheckinExpired = now > checkinExpire; // เช็คว่ารหัสเช็คชื่อยังไม่หมดอายุ true = หมดอายุ
+            let isCheckinExpired = false;
+            if (room.ROOM_CHECKIN_EXPIRE) {
+                const checkinExpire = new Date(room.ROOM_CHECKIN_EXPIRE);
+                isCheckinExpired = now > checkinExpire;
+            }
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน
@@ -101,7 +104,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                     if (checkInForm) checkInForm.style.display = 'none';
                     return;
                 }
-                if (!isCheckinExpired && room.ROOM_CHECKIN_EXPIRE) {
+                if (isCheckinExpired && room.ROOM_CHECKIN_EXPIRE) {
                     // รหัสเช็คชื่อหมดอายุ -> โชว์ข้อความหมดเวลาเช็คชื่อ
                     if (fullMessage) {
                         fullMessage.style.display = 'flex';
