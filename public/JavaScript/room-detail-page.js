@@ -1,6 +1,5 @@
 // #region --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล --- 
 document.addEventListener('DOMContentLoaded', async () => {
-    // ดึง ID จาก URL (เช่น ?id=15)
     const params = new URLSearchParams(window.location.search);
     const roomId = params.get('id');
 
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
     try {
-        // 2. เรียก API ไปดึงข้อมูลห้อง
+        // ดึงข้อมูลห้อง
         const roomRes = await fetch(`/api/room/${roomId}`);
         const roomData = await roomRes.json();
 
@@ -176,11 +175,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
 async function handleCheckIn(roomId) {
     const codeInput = document.getElementById('check-in-input');
     const code = codeInput.value.trim();
-
-    if (!code) {
-        alert('กรุณากรอกรหัสเช็คชื่อ');
-        return;
-    }
+    if (!code) { alert('กรุณากรอกรหัสเช็คชื่อ'); return;}
 
     try {
         const res = await fetch(`/api/room/${roomId}/check-in`, {
@@ -202,7 +197,7 @@ async function handleCheckIn(roomId) {
     }
 }
 
-// #region ฟังก์ชันแสดงข้อมูลห้องกิจกรรม 
+// #region --- ฟังก์ชันแสดงข้อมูลห้องกิจกรรม ---
 function renderRoomDetail(room) {
     // รูปปก
     const imgEl = document.getElementById('detail-room-img');
@@ -258,7 +253,7 @@ function setText(id, text) {
 }
 // #endregion
 
-// #region ฟังก์ชันแสดงรายชื่อสมาชิกในห้อง
+// #region --- ฟังก์ชันแสดงรายชื่อสมาชิกในห้อง ---
 function renderMembersList(members) {
     const listContainer = document.getElementById('detail-room-member-list');
     if (!listContainer) return;
