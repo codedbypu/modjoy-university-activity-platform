@@ -102,7 +102,7 @@ router.get('/me', (req, res) => {
                 U.USER_ROLE, U.USER_IMG, U.USER_CREDIT_SCORE, 
                 U.USER_YEAR, U.USER_DESCRIPTION, U.USER_FACULTY,
                 F.FACULTY_NAME,
-                GROUP_CONCAT(T.TAG_NAME) AS user_tags
+                GROUP_CONCAT(T.TAG_NAME ORDER BY UT.id ASC) AS user_tags
             FROM USERS U
             LEFT JOIN FACULTYS F ON U.USER_FACULTY = F.FACULTY_ID
             LEFT JOIN USERTAGS UT ON U.USER_ID = UT.USER_ID

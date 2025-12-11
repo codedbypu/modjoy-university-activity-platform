@@ -477,7 +477,7 @@ router.get('/rooms', async (req, res) => {
 
                 l.LOCATION_NAME,
                 COUNT(DISTINCT rm.USER_ID) AS member_count,
-                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY t.TAG_ID ASC) AS tags
+                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS tags
             FROM ROOMS r
             ${locationJoin}
             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
@@ -487,7 +487,6 @@ router.get('/rooms', async (req, res) => {
             GROUP BY r.ROOM_ID
             ORDER BY r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME ASC
 
-            -- ✅ 2. เพิ่มคำสั่งตัดแบ่งหน้า (Pagination)
             LIMIT ? OFFSET ?
         `;
         // ✅ 3. ยัดค่า limit และ offset ใส่ parameter ตัวสุดท้าย
@@ -507,7 +506,7 @@ router.get('/rooms', async (req, res) => {
                     FROM USERTAGS UT
                     JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
                     WHERE UT.USER_ID = ?
-                    ORDER BY UT.TAG_ID ASC
+                    ORDER BY UT.ID ASC
                 `;
                 const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
                 // แปลงเป็น Array ชื่อ Tag เช่น ['Coding', 'Music', 'Calculus']
@@ -580,7 +579,7 @@ router.get('/my-joined-active-rooms', async (req, res) => {
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
                 (SELECT COUNT(USER_ID) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) AS member_count,
-                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS tags
             FROM ROOMS r
             JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
@@ -672,7 +671,7 @@ router.get('/my-created-rooms', async (req, res) => {
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
                 COUNT(DISTINCT rm.USER_ID) AS member_count,
-                GROUP_CONCAT(DISTINCT t.TAG_NAME) AS tags
+                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS tags
             FROM ROOMS r
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
@@ -712,7 +711,7 @@ router.get('/room/:id', (req, res) => {
             CONCAT(U.USER_FNAME, ' ', U.USER_LNAME) AS LEADER_NAME,
             U.USER_IMG AS LEADER_IMG,
             (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = R.ROOM_ID) AS CURRENT_MEMBERS,
-            GROUP_CONCAT(T.TAG_NAME) AS TAGS
+            GROUP_CONCAT(T.TAG_NAME ORDER BY RT.ID ASC) AS TAGS
         FROM ROOMS R
         LEFT JOIN LOCATIONS L ON R.ROOM_EVENT_LOCATION = L.LOCATION_ID
         LEFT JOIN USERS U ON R.ROOM_LEADER_ID = U.USER_ID
