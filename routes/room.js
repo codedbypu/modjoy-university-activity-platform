@@ -851,12 +851,24 @@ router.post('/room/:id/generate-code', async (req, res) => {
         const roomCheck = await dbQuery(`
             SELECT 
                 ROOM_LEADER_ID,
-                DATE_SUB(TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME), INTERVAL 10 MINUTE) AS calc_expire
+                -- คำนวณ A: เวลาปัจจุบัน จนถึง เวลาจบกิจกรรม (เหลืออีกกี่นาที?)
+                TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS minutes_until_end,
+                -- คำนวณ B: ระยะเวลาของกิจกรรม (เริ่ม ถึง จบ ห่างกันกี่นาที?)
+                TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS duration_minutes
             FROM ROOMS WHERE ROOM_ID = ?`, [roomId]);
         if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
 
-        const expireTime = roomCheck[0].calc_expire;
+        const room = roomCheck[0];
+        // เงื่อนไขที่ 2: ถ้ากิจกรรมสั้นเกินไป (ต่ำกว่า 15 นาที) -> ห้ามเปิดเช็คชื่อ
+        if (room.duration_minutes < 15) {
+            return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
+        }
+
+        // เงื่อนไขที่ 1: ถ้าใกล้จบแล้ว (เหลือน้อยกว่าหรือเท่ากับ 10 นาที) หรือจบไปแล้ว (ค่าน้อยกว่า 0) -> ห้ามเปิด
+        if (room.minutes_until_end <= 10) {
+            return res.json({ success: false, message: 'ไม่สามารถเปิดระบบเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
+        }
 
         // 2. สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -865,12 +877,17 @@ router.post('/room/:id/generate-code', async (req, res) => {
             code += chars.charAt(Math.floor(Math.random() * chars.length));
         }
 
-        // 3. อัปเดตลง Database (ใช้ค่า expireTime ที่ได้จาก DB ตะกี้)
-        await dbQuery(`
+        const sqlUpdate = `
             UPDATE ROOMS 
-            SET ROOM_CHECKIN_CODE = ?, ROOM_CHECKIN_EXPIRE = ? 
+            SET ROOM_CHECKIN_CODE = ?, 
+                -- วันหมดอายุ = เวลาจบ - 10 นาที
+                ROOM_CHECKIN_EXPIRE = DATE_SUB(TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME), INTERVAL 10 MINUTE)
             WHERE ROOM_ID = ?
-        `, [code, expireTime, roomId]);
+        `;
+        await dbQuery(sqlUpdate, [code, roomId]);
+
+        const updatedRoom = await dbQuery('SELECT ROOM_CHECKIN_EXPIRE FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+        const expireTime = updatedRoom[0].ROOM_CHECKIN_EXPIRE;
 
         res.json({ success: true, message: 'เปิดระบบเช็คชื่อแล้ว', code: code, expire: expireTime });
 
