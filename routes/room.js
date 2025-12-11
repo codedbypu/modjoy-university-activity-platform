@@ -853,16 +853,15 @@ router.post('/room/:id/generate-code', async (req, res) => {
                 ROOM_EVENT_DATE, 
                 ROOM_EVENT_START_TIME,
                 ROOM_EVENT_END_TIME,
-                
-                -- คำนวณ A: เวลาปัจจุบัน จนถึง เวลาจบกิจกรรม (เหลืออีกกี่นาที?)
+                CASE 
+                    WHEN NOW() < TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 
+                    ELSE 0 
+                END AS is_not_started,
                 TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS minutes_until_end,
-                
-                -- คำนวณ B: ระยะเวลาของกิจกรรม (เริ่ม ถึง จบ ห่างกันกี่นาที?)
                 TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS duration_minutes
-
             FROM ROOMS 
             WHERE ROOM_ID = ?
-        `;
+            `;
         const roomCheck = await dbQuery(sqlCheck, [roomId]);
         if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
@@ -871,6 +870,10 @@ router.post('/room/:id/generate-code', async (req, res) => {
         // เงื่อนไขที่ 2: ถ้ากิจกรรมสั้นเกินไป (ต่ำกว่า 15 นาที) -> ห้ามเปิดเช็คชื่อ
         if (room.duration_minutes < 15) {
             return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
+        }
+
+        if (room.is_not_started === 1) {
+            return res.json({ success: false, message: 'ยังไม่ถึงเวลาเริ่มกิจกรรม (กรุณารอให้ถึงเวลาก่อน)' });
         }
 
         // เงื่อนไขที่ 1: ถ้าใกล้จบแล้ว (เหลือน้อยกว่าหรือเท่ากับ 10 นาที) หรือจบไปแล้ว (ค่าน้อยกว่า 0) -> ห้ามเปิด
