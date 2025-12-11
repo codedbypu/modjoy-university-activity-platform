@@ -85,7 +85,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const isEventStarted = (status === 'inProgress' || status === 'completed');
             const isEventEnded = (status === 'completed');
 
-            let isCheckinExpired =  (room.is_expired === 1) || false;
+            let isCheckinExpired = (room.is_expired === 1) || false;
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน
@@ -97,7 +97,13 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                 // ด้านล่าง: โชว์ปุ่มจัดการเช็คชื่อ
                 if (joinBtn) joinBtn.style.display = 'none'; // ซ่อนปุ่มเข้าร่วม
                 if (manageCheckInBtn) manageCheckInBtn.style.display = 'flex'; // โชว์ปุ่มจัดการเช็คชื่อ
-                if (manageCheckInBtn) manageCheckInBtn.onclick = () => { window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`; }
+                if (manageCheckInBtn) manageCheckInBtn.onclick = () => {
+                    if (room.ROOM_CHECKIN_CODE) {
+                        window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
+                    } else if (confirm('คุณต้องการสร้างรหัสเช็คชื่อ เพื่อเปิดการเช็คชื่อใช่หรือไม่?')) {
+                        window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
+                    }
+                }
             } else if (isMember) {
                 // --- สมาชิก (Member) ---
                 if (unownerControls) unownerControls.style.display = 'flex';

@@ -1,3 +1,5 @@
+let countdownInterval;
+
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const roomId = params.get('id');
@@ -72,7 +74,40 @@ function renderCodeInfo(code, expireDateStr) {
     if (expireDateStr) {
         const expireTime = new Date(expireDateStr);
         const timeStr = expireTime.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-        document.getElementById('room-expiry').textContent = `เวลาหมดอายุ : ${timeStr}`;
+
+        const expiryElement = document.getElementById('room-expiry');
+
+        if (countdownInterval) clearInterval(countdownInterval);
+        const updateTimer = () => {
+            const now = new Date().getTime();
+            const distance = expireTime - now;
+            
+            // ถ้าหมดเวลาแล้ว
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                expiryElement.textContent = `รหัสหมดอายุแล้ว (${timeStr}น.)`;
+                expiryElement.style.color = "#e74c3c"; // เปลี่ยนเป็นสีแดง
+                return;
+            } else if (distance <= 10 * 60 * 1000) {
+                // ถ้าเหลือเวลาไม่เกิน 10 นาที
+                expiryElement.style.color = "#e67e22"; // เปลี่ยนเป็นสีส้ม
+            }
+
+            // คำนวณนาทีและวินาที
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // จัดรูปแบบให้มีเลข 0 นำหน้าถ้าน้อยกว่า 10 (เช่น 09, 05)
+            const minutesStr = minutes < 10 ? "0" + minutes : minutes;
+            const secondsStr = seconds < 10 ? "0" + seconds : seconds;
+
+            
+            // แสดงผล
+            expiryElement.textContent = `เหลือเวลา: ${minutesStr}:${secondsStr} นาที (${timeStr}น.)`;
+            expiryElement.style.color = ""; // สีปกติ
+        };
+        updateTimer();
+        countdownInterval = setInterval(updateTimer, 1000);
     }
 }
 
