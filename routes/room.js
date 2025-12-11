@@ -772,6 +772,7 @@ router.get('/room/:id', (req, res) => {
     const sql = `
         SELECT 
             R.*,
+            NOW() AS SERVER_TIME,
             CASE 
                 WHEN R.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > R.ROOM_CHECKIN_EXPIRE THEN 1 
                 ELSE 0 

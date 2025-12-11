@@ -1,4 +1,5 @@
 let countdownInterval;
+let serverTimeOffset = 0;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
@@ -31,6 +32,12 @@ async function initCheckInPage(roomId) {
         }
         const room = roomData.room;
 
+        if (room.SERVER_TIME) {
+            const serverTime = new Date(room.SERVER_TIME).getTime();
+            const clientTime = new Date().getTime();
+            serverTimeOffset = serverTime - clientTime; // เก็บค่าผลต่างไว้
+        }
+
         // แสดงข้อมูลพื้นฐาน
         document.getElementById('room-id').textContent = room.ROOM_ID;
         document.getElementById('room-name').textContent = room.ROOM_TITLE;
@@ -39,7 +46,6 @@ async function initCheckInPage(roomId) {
         if (!room.ROOM_CHECKIN_CODE) {
             await generateCheckInCode(roomId);
         } else {
-            // ถ้ามีแล้ว ให้แสดงผลเลย
             renderCodeInfo(room.ROOM_CHECKIN_CODE, room.ROOM_CHECKIN_EXPIRE);
         }
 
@@ -73,13 +79,14 @@ function renderCodeInfo(code, expireDateStr) {
     
     if (expireDateStr) {
         const expireTime = new Date(expireDateStr.replace(' ', 'T')).getTime();
-        const timeStr = new Date(expireTime).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
 
         const expiryElement = document.getElementById('room-expiry');
 
+        const timeStr = new Date(expireTime).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
         if (countdownInterval) clearInterval(countdownInterval);
         const updateTimer = () => {
-            const now = new Date().getTime();
+            const now = new Date().getTime() + serverTimeOffset; 
             const distance = expireTime - now;
             
             // ถ้าหมดเวลาแล้ว
@@ -91,6 +98,8 @@ function renderCodeInfo(code, expireDateStr) {
             } else if (distance <= 10 * 60 * 1000) {
                 // ถ้าเหลือเวลาไม่เกิน 10 นาที
                 expiryElement.style.color = "#e67e22"; // เปลี่ยนเป็นสีส้ม
+            }else {
+                expiryElement.style.color = ""; // สีปกติ
             }
 
             // คำนวณนาทีและวินาที
@@ -106,7 +115,6 @@ function renderCodeInfo(code, expireDateStr) {
             
             // แสดงผล
             expiryElement.textContent = `เหลือเวลา: ${hoursStr} ชั่วโมง ${minutesStr} นาที ${secondsStr} วินาที (${timeStr}น.)`;
-            expiryElement.style.color = ""; // สีปกติ
         };
         updateTimer();
         countdownInterval = setInterval(updateTimer, 1000);

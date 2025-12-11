@@ -62,7 +62,7 @@
 
 ## ต้องลงอันนี้ก่อน
 1. ลง Database ใน MySQL Workbench(MySQL) ใช้ไฟล์ `inint.sql` ในโฟล์เดอร์ database 
-2. ลง npm และ extension : `npm install jsonwebtoken cookie-parser multer` , `npm install node-cron`
+2. ลง npm และ extension : `npm install jsonwebtoken cookie-parser multer node-cron`
 3. ลงโปรแกรม XAMPP ก่อน
 4. ก็อป .env.example มาอีกไฟล์แล้วเปลี่ยนนามสกุลเป็น .env
 5. ตั้งค่าตัวแปร และ Port ที่จะใช้ใน .env
@@ -92,8 +92,8 @@
 - [x] เลื่อนลงเพื่อโหลดห้อง (ภูกำลังทำ)
 - [x] การลบห้อง (ภูกำลังทำ)
 - [x] ลด Credit / กันไม่ให้เพิ่มเกิน 100
+- [x] การเช็คชื่อทั้งคนสร้าง,เข้าร่วม
 - [ ] ไม่ให้เจ้าของแก้ไข/ลบห้องถ้าเริ่มแล้ว
-- [ ] การเช็คชื่อทั้งคนสร้าง,เข้าร่วม
 
 ## เงื่อนไขการเช็คชื่อ
 - ไม่สามารถเปิดได้ถ้าเวลาปิดกิจกรรม - เวลาปัจจุบัน แล้วน้อยกว่าหรือเท่ากับ 10นาที
