@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userRes = await fetch('/api/me');
         const userData = await userRes.json();
         if (userData.loggedIn) {
-            currentUserId = userData.user.USER_ID;
-            currentUserRole = userData.user.USER_ROLE;
+            currentUserId = userData.user.id;
+            currentUserRole = userData.user.role;
         }
     } catch (err) { console.error('Auth Check Error', err); }
     // 2. ดึงข้อมูลห้อง
