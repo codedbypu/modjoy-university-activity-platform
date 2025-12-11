@@ -12,7 +12,8 @@ export async function loadMyHistoryRooms(filterParams = {}) {
     if (!list) return;
 
     try {
-        list.innerHTML = '<li>กำลังค้นหาประวัติ...</li>';
+        message.style.display = 'block';
+        message.innerText = 'กำลังค้นหาประวัติ...';
         const queryString = new URLSearchParams(filterParams).toString();
 
         // เรียก API ประวัติ
@@ -24,7 +25,7 @@ export async function loadMyHistoryRooms(filterParams = {}) {
                 window.location.href = '/login-page.html';
                 return;
             }
-            message.innerHTML = 'ไม่สามารถโหลดข้อมูลได้';
+            message.innerText = 'ไม่สามารถโหลดข้อมูลได้';
             return;
         }
 
@@ -32,7 +33,10 @@ export async function loadMyHistoryRooms(filterParams = {}) {
 
         if (data.rooms.length === 0) {
             message.innerHTML = 'ไม่พบประวัติการเข้าร่วมกิจกรรม';
+            message.style.display = 'block';
         } else {
+            message.innerText = '';
+            message.style.display = 'none';
             data.rooms.forEach(room => {
                 list.appendChild(createHistoryRoomItem(room));
             });
