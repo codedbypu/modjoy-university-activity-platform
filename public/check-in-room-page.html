@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./css/header.css">
     <script src="./JavaScript/auth-guard.js"></script>
     <script src="./JavaScript/Base.js" defer></script>
+    <script src="./JavaScript/check-in-room-page.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inria+Sans&display=swap"
@@ -29,77 +30,29 @@
 
         <section class="check-in-details">
             <div class="info-group">
-                <strong>ไอดี</strong><span id="room-id">66080658656</span>
+                <strong>ไอดี</strong><span id="room-id">0</span>
             </div>
 
             <div class="info-group">
-                <strong>ชื่อกิจกรรม</strong><span class='room-name' id="room-name">อ่านแคลกันครับพวกลิง</span>
+                <strong>ชื่อกิจกรรม</strong><span class='room-name' id="room-name">Title</span>
             </div>
 
             <div class="info-group">
                 <div class="qr-container">
-                        <strong class="room-password" id="room-password">JB12345</strong>
+                        <strong class="room-password" id="room-password">XX00000</strong>
                     </div>
                 </div>
-                <span class="qr-expiry-text" id="room-qr-expiry">เวลาหมดอายุ : 14:00</span>
+                <span class="qr-expiry-text" id="room-expiry">เวลาหมดอายุ : -</span>
             </div>
 
             <div class="info-group">
-                <strong id="checked-in-count">เช็คชื่อแล้ว ( 2 ) : </strong>
-                <ul class="member-list" id="checked-in-list">
-                    <li class="member-room-box">
-                        <div class="profile-member">
-                            <img src=".\Resource\img\profile.png" alt="profile-image">
-                            <span>สมศรี ใจดี</span>
-                        </div>
-                        <div class="creditperson">
-                            <span>100</span>
-                            <img src=".\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined checked-in-icon">
-                                check_circle
-                            </span>
-                        </div>
-                    </li>
-                    <li class="member-room-box">
-                        <div class="profile-member">
-                            <img src=".\Resource\img\profile.png" alt="profile-image">
-                            <span>สมศรี ใจดี</span>
-                        </div>
-                        <div class="creditperson">
-                            <span>100</span>
-                            <img src=".\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined checked-in-icon">check_circle</span>
-                        </div>
-                    </li>
-                </ul>
+                <strong id="checked-in-count">เช็คชื่อแล้ว ( 0 ) : </strong>
+                <ul class="member-list" id="checked-in-list"></ul>
             </div>
 
             <div class="info-group">
-                <strong id="not-checked-in-count">ยังไม่ได้เช็คชื่อ ( 2 ) : </strong>
-                <ul class="member-list" id="not-checked-in-list">
-                    <li class="member-room-box">
-                        <div class="profile-member">
-                            <img src=".\Resource\img\profile.png" alt="profile-image">
-                            <span>สมศรี ใจดี</span>
-                        </div>
-                        <div class="creditperson">
-                            <span>100</span>
-                            <img src=".\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined not-checked-in-icon" class="checkin-icon">check_circle</span>
-                        </div>
-                    </li>
-                    <li class="member-room-box">
-                        <div class="profile-member">
-                            <img src=".\Resource\img\profile.png" alt="profile-image">
-                            <span>สมศรี ใจดี</span>
-                        </div>
-                        <div class="creditperson">
-                            <span>100</span>
-                            <img src=".\Resource\img\credit.png" alt="credit-image">
-                            <span class="material-symbols-outlined not-checked-in-icon">check_circle</span>
-                        </div>
-                    </li>
-                </ul>
+                <strong id="not-checked-in-count">ยังไม่ได้เช็คชื่อ ( 0 ) : </strong>
+                <ul class="member-list" id="not-checked-in-list"></ul>
             </div>
         </section>
     </main>

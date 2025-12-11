@@ -835,4 +835,49 @@ router.get('/room/:id/members', (req, res) => {
 });
 // #endregion
 
+// #region --- API สร้างรหัสเช็คชื่อกิจกรรม (generate-code) ---
+router.post('/room/:id/generate-code', async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
+
+    const roomId = req.params.id;
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // 1. เช็คสิทธิ์ (ต้องเป็นเจ้าของห้องเท่านั้น)
+        const roomCheck = await dbQuery(`
+            SELECT 
+                ROOM_LEADER_ID,
+                DATE_SUB(TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME), INTERVAL 10 MINUTE) AS calc_expire
+            FROM ROOMS WHERE ROOM_ID = ?`, [roomId]);
+        if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
+        if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
+
+        const expireTime = roomCheck[0].calc_expire;
+
+        // 2. สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) {
+            code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        // 3. อัปเดตลง Database (ใช้ค่า expireTime ที่ได้จาก DB ตะกี้)
+        await dbQuery(`
+            UPDATE ROOMS 
+            SET ROOM_CHECKIN_CODE = ?, ROOM_CHECKIN_EXPIRE = ? 
+            WHERE ROOM_ID = ?
+        `, [code, expireTime, roomId]);
+
+        res.json({ success: true, message: 'เปิดระบบเช็คชื่อแล้ว', code: code, expire: expireTime });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: 'เกิดข้อผิดพลาด: ' + err.message });
+    }
+});
+// #endregion
+
 module.exports = router;
