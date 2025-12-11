@@ -237,6 +237,7 @@ function renderRoomDetail(room) {
 
     // ข้อมูลหัวหน้าห้อง
     setText('detail-leader-name', room.LEADER_NAME);
+    setText('detail-leader-credit', room.LEADER_CREDIT_SCORE);
     const leaderImg = document.getElementById('detail-leader-img');
     if (leaderImg) leaderImg.src = room.LEADER_IMG || '/Resource/img/profile.jpg';
 

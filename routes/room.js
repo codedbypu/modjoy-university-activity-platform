@@ -787,6 +787,7 @@ router.get('/room/:id', (req, res) => {
             L.LOCATION_NAME,
             CONCAT(U.USER_FNAME, ' ', U.USER_LNAME) AS LEADER_NAME,
             U.USER_IMG AS LEADER_IMG,
+            U.USER_CREDIT_SCORE AS LEADER_CREDIT_SCORE,
             (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = R.ROOM_ID) AS CURRENT_MEMBERS,
             GROUP_CONCAT(T.TAG_NAME ORDER BY RT.ID ASC) AS TAGS
         FROM ROOMS R
@@ -867,19 +868,13 @@ router.post('/room/:id/generate-code', async (req, res) => {
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
 
         const room = roomCheck[0];
-        // เงื่อนไขที่ 2: ถ้ากิจกรรมสั้นเกินไป (ต่ำกว่า 15 นาที) -> ห้ามเปิดเช็คชื่อ
-        if (room.duration_minutes < 15) {
+
+        if (room.duration_minutes < 15)
             return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
-        }
-
-        if (room.is_not_started === 1) {
+        if (room.is_not_started === 1)
             return res.json({ success: false, message: 'ยังไม่ถึงเวลาเริ่มกิจกรรม (กรุณารอให้ถึงเวลาก่อน)' });
-        }
-
-        // เงื่อนไขที่ 1: ถ้าใกล้จบแล้ว (เหลือน้อยกว่าหรือเท่ากับ 10 นาที) หรือจบไปแล้ว (ค่าน้อยกว่า 0) -> ห้ามเปิด
-        if (room.minutes_until_end <= 10) {
+        if (room.minutes_until_end <= 10)
             return res.json({ success: false, message: 'ไม่สามารถเปิดระบบเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
-        }
 
         // 2. สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
