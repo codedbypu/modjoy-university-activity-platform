@@ -62,7 +62,7 @@
 
 ## ต้องลงอันนี้ก่อน
 1. ลง Database ใน MySQL Workbench(MySQL) ใช้ไฟล์ `inint.sql` ในโฟล์เดอร์ database 
-2. ลง npm และ extension : `npm install jsonwebtoken cookie-parser multer`
+2. ลง npm และ extension : `npm install jsonwebtoken cookie-parser multer` , `npm install node-cron`
 3. ลงโปรแกรม XAMPP ก่อน
 4. ก็อป .env.example มาอีกไฟล์แล้วเปลี่ยนนามสกุลเป็น .env
 5. ตั้งค่าตัวแปร และ Port ที่จะใช้ใน .env
@@ -91,6 +91,6 @@
 - [x] หน้าฟีดตามความสนใจผู้ใช้นั้นๆ (ภูกำลังทำ)
 - [x] เลื่อนลงเพื่อโหลดห้อง (ภูกำลังทำ)
 - [x] การลบห้อง (ภูกำลังทำ)
-- [x] การเช็คชื่อทั้งคนสร้าง,เข้าร่วม (ภูกำลังทำ)
-- [ ] ลด Credit / กันไม่ให้เพิ่มเกิน 100
 - [ ] ไม่ให้เจ้าของแก้ไข/ลบห้องถ้าเริ่มแล้ว
+- [ ] การเช็คชื่อทั้งคนสร้าง,เข้าร่วม
+- [x] ลด Credit / กันไม่ให้เพิ่มเกิน 100

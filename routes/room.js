@@ -455,7 +455,7 @@ router.post('/room/:id/check-in', async (req, res) => {
         `;
         await dbQuery(updateSql, [roomId, userId]);
 
-        await dbQuery('UPDATE USERS SET USER_CREDIT_SCORE = USER_CREDIT_SCORE + 10 WHERE USER_ID = ?', [userId]);
+        await dbQuery('UPDATE USERS SET USER_CREDIT_SCORE = LEAST(USER_CREDIT_SCORE + 10, 100) WHERE USER_ID = ?', [userId]);
 
         res.json({ success: true, message: 'เช็คชื่อสำเร็จ!' });
 
