@@ -105,7 +105,7 @@ function renderCodeInfo(code, expireDateStr) {
 
             
             // แสดงผล
-            expiryElement.textContent = `เหลือเวลา: ${hoursStr}:${minutesStr}:${secondsStr} นาที (${timeStr}น.)`;
+            expiryElement.textContent = `เหลือเวลา: ${hoursStr} ชั่วโมง ${minutesStr} นาที ${secondsStr} วินาที (${timeStr}น.)`;
             expiryElement.style.color = ""; // สีปกติ
         };
         updateTimer();
