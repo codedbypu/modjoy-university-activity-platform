@@ -513,7 +513,11 @@ body {
     font-size: 20px;
     color: #FA4616;
 }
-
+.describe-tag{
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
 /* --- Uploader แบบวงกลม (สำหรับ Edit Profile) --- */
 .hidden-file-input {
     display: none;

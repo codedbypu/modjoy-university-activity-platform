@@ -55,11 +55,9 @@ function createHistoryRoomItem(room) {
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
     const tagsHTML = room.tags ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
-    const bgImage = room.ROOM_IMG ? room.ROOM_IMG : '/Resource/img/bangmod.png';
-
     li.innerHTML = `
-        <article style="display:flex; flex-direction:column; height:100%;">
-            <div class="header-item" >
+        <article>
+            <div class="header-item" style="background-image: url('${room.ROOM_IMG}');">
                 <div class="group-date-month">
                     <span class="date-activity">${day}</span>
                     <span class="month-activity">${month}</span>
@@ -69,6 +67,7 @@ function createHistoryRoomItem(room) {
             <hr class="separator-line">
 
             <div class="body-item">
+
                 <div class="first-row-item-body">
                     <h2>${room.ROOM_TITLE}</h2>
                     <span class="people-activity">
@@ -97,12 +96,12 @@ function createHistoryRoomItem(room) {
                         </span>
                     </p>
                 </div>
+
             </div>
 
-            <a class="btn-room-item a-btn"
-               href="./room-detail-page.html?id=${room.ROOM_ID}" 
-               style="display:flex; justify-content:center; align-items:center; text-decoration:none; background-color: #6c757d;">
-               ดูย้อนหลัง
+            <a class="btn-htsroom-item a-btn"
+               href="./room-detail-page.html?id=${room.ROOM_ID}">
+               ดูรายละเอียด
             </a>
         </article>
     `;
