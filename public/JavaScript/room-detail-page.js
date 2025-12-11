@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const userRes = await fetch('/api/me');
         const userData = await userRes.json();
         if (userData.loggedIn) {
-            currentUserId = userData.user.id;
-            currentUserRole = userData.user.role;
+            currentUserId = userData.user.USER_ID;
+            currentUserRole = userData.user.USER_ROLE;
         }
     } catch (err) { console.error('Auth Check Error', err); }
     // 2. ดึงข้อมูลห้อง
@@ -51,7 +51,6 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const fullMessage = document.getElementById('full-room-message');
 
             const checkInForm = document.getElementById('check-in-form');
-            const checkInBtn = document.getElementById('check-in-btn');
             const checkedInMessage = document.getElementById('checked-in-message');
 
             // ซ่อนทุกปุ่มก่อน
@@ -75,14 +74,14 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const hasCheckedIn = members.some(m => m.USER_ID == currentUserId && m.ROOMMEMBER_STATUS === 'present');
 
             // เช็คเวลา (Time Logic) 🕒
-            const now = new Date();
-            const eventStart = new Date(`${room.ROOM_EVENT_DATE}T${room.ROOM_EVENT_START_TIME}`); // Format: YYYY-MM-DDTHH:mm:ss
-            const isEventStarted = now >= eventStart;
+            const status = room.ROOM_STATUS;
+            const isEventStarted = (status === 'inProgress' || status === 'completed');
+            const isEventEnded = (status === 'completed');
 
             let isCheckinExpired = false;
             if (room.ROOM_CHECKIN_EXPIRE) {
                 const checkinExpire = new Date(room.ROOM_CHECKIN_EXPIRE);
-                isCheckinExpired = now > checkinExpire;
+                isCheckinExpired = new Date() > checkinExpire;
             }
 
             if (isOwner || isAdmin) {
