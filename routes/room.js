@@ -847,18 +847,23 @@ router.post('/room/:id/generate-code', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
-        // 1. เช็คสิทธิ์ (ต้องเป็นเจ้าของห้องเท่านั้น)
-        const roomCheck = await dbQuery(`
+        const sqlCheck = `
             SELECT 
-                ROOM_LEADER_ID,
+                ROOM_LEADER_ID, 
                 ROOM_EVENT_DATE, 
                 ROOM_EVENT_START_TIME,
                 ROOM_EVENT_END_TIME,
+                
                 -- คำนวณ A: เวลาปัจจุบัน จนถึง เวลาจบกิจกรรม (เหลืออีกกี่นาที?)
                 TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS minutes_until_end,
+                
                 -- คำนวณ B: ระยะเวลาของกิจกรรม (เริ่ม ถึง จบ ห่างกันกี่นาที?)
                 TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS duration_minutes
-            FROM ROOMS WHERE ROOM_ID = ?`, [roomId]);
+
+            FROM ROOMS 
+            WHERE ROOM_ID = ?
+        `;
+        const roomCheck = await dbQuery(sqlCheck, [roomId]);
         if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
 
@@ -883,7 +888,6 @@ router.post('/room/:id/generate-code', async (req, res) => {
         const sqlUpdate = `
             UPDATE ROOMS 
             SET ROOM_CHECKIN_CODE = ?, 
-                -- วันหมดอายุ = เวลาจบ - 10 นาที
                 ROOM_CHECKIN_EXPIRE = DATE_SUB(TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME), INTERVAL 10 MINUTE)
             WHERE ROOM_ID = ?
         `;
