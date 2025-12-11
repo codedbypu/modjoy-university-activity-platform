@@ -729,6 +729,7 @@ router.get('/room/:id', (req, res) => {
         }
 
         if (results.length > 0) {
+            console.log(results[0]);
             res.json({ success: true, room: results[0] });
         } else {
             res.json({ success: false, message: 'ไม่พบห้องกิจกรรมนี้' });
