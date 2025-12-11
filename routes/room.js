@@ -481,7 +481,9 @@ router.get('/rooms', async (req, res) => {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
             queryParams.push(`%${search}%`);
         }
-        whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
+
+        // whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
+        
         // 2. เงื่อนไขตัวกรองวันที่/เวลา
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE >= ?");
