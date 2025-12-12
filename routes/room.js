@@ -114,12 +114,20 @@ router.post('/update-room/:id', upload.single('room_image'), async (req, res) =>
         const userRole = decoded.role;
 
         // 1. เช็คก่อนว่า User คนนี้เป็นเจ้าของห้องนี้จริงไหม?
-        const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+        const checkOwner = await dbQuery(`
+            SELECT 
+                ROOM_LEADER_ID, 
+                CASE WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 ELSE 0 END AS is_started
+            FROM ROOMS 
+            WHERE ROOM_ID = ?`, [roomId]);
         if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
-        if (checkOwner[0].ROOM_LEADER_ID != userId && userRole !== 'admin')
+        const roomInfo = checkOwner[0];
+        if (roomInfo.ROOM_LEADER_ID != userId && userRole !== 'admin')
             return res.json({ success: false, message: 'คุณไม่มีสิทธิ์แก้ไขห้องนี้' });
-
+        // ถ้ากิจกรรมเริ่มไปแล้ว (และไม่ใช่ Admin) ห้ามแก้ไข
+        if (roomInfo.is_started === 1 && userRole !== 'admin')
+            return res.json({ success: false, message: 'ไม่สามารถแก้ไขกิจกรรมที่เริ่มไปแล้วได้' });
         // 2. รับค่าที่ส่งมาแก้ไข
         const { roomTitle, roomEventDate, roomEventStartTime, roomEventEndTime, roomLocation, roomCapacity, roomDescription, tags } = req.body;
 
@@ -187,22 +195,28 @@ router.delete('/delete-room/:id', async (req, res) => {
         const userRole = decoded.role;
 
         // 1. เช็คสิทธิ์ (ต้องเป็นเจ้าของ หรือ Admin)
-        const checkOwner = await dbQuery('SELECT ROOM_LEADER_ID, ROOM_IMG FROM ROOMS WHERE ROOM_ID = ?', [roomId]);
+        const checkOwner = await dbQuery(`
+            SELECT 
+                ROOM_LEADER_ID, 
+                ROOM_IMG,
+                CASE WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 ELSE 0 END AS is_started
+            FROM ROOMS 
+            WHERE ROOM_ID = ?`, [roomId]);
 
-        if (checkOwner.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
-
-        const room = checkOwner[0];
-
-        if (room.ROOM_LEADER_ID != userId && userRole !== 'admin') {
+        if (checkOwner.length === 0)
+            return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
+        const roomInfo = checkOwner[0];
+        if (roomInfo.ROOM_LEADER_ID != userId && userRole !== 'admin') 
             return res.json({ success: false, message: 'คุณไม่มีสิทธิ์ลบห้องนี้' });
-        }
+        if (roomInfo.is_started === 1 && userRole !== 'admin')
+            return res.json({ success: false, message: 'ไม่สามารถลบกิจกรรมที่เริ่มไปแล้วได้' });
 
         // 2. ลบไฟล์รูปภาพออกจาก Server (ถ้าไม่ใช่รูป Default)
         // เช็คว่ามีรูป และ path ไม่ใช่รูปใน folder Resource (ที่เป็นรูป default)
-        if (room.ROOM_IMG && !room.ROOM_IMG.includes('/Resource/img/')) {
+        if (roomInfo.ROOM_IMG && !roomInfo.ROOM_IMG.includes('/Resource/img/')) {
             // แปลง path URL กลับเป็น path เครื่อง (/uploads/rooms/...)
             // หมายเหตุ: ต้องแน่ใจว่า path ใน DB เก็บแบบไหน (ในโค้ดเก่าเก็บเป็น /uploads/rooms/filename)
-            const fileName = path.basename(room.ROOM_IMG);
+            const fileName = path.basename(roomInfo.ROOM_IMG);
             const filePath = path.join(__dirname, '../public/uploads/rooms', fileName);
 
             if (fs.existsSync(filePath)) {
@@ -481,9 +495,8 @@ router.get('/rooms', async (req, res) => {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
             queryParams.push(`%${search}%`);
         }
-
-        // เอาออกก่อน เพื่อเทสให้มันเยอะๆ
-        // whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
+        // เงื่อนไขพื้นฐาน: ดึงเฉพาะห้องกิจกรรมที่ยังไม่จบ
+        whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
 
         // 2. เงื่อนไขตัวกรองวันที่/เวลา
         if (date) {

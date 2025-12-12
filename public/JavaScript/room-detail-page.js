@@ -91,8 +91,34 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                 // เจ้าของห้องหรือแอดมิน
                 // ด้านบน: โชว์ปุ่มแก้ไข
                 if (headerBlank) headerBlank.style.display = 'none'; // ซ่อนช่องว่าง
-                if (editBtn) editBtn.style.display = 'block'; // โชว์ปุ่ม
-                if (editBtn) editBtn.href = `/edit-room-page.html?id=${room.ROOM_ID}`;
+
+                // จัดการปุ่มแก้ไข (Edit)
+                if (editBtn) {
+                    // คำนวณว่าเริ่มหรือยัง (ใช้ SERVER_TIME เหมือนเดิม)
+                    const safeDate = (dateStr) => new Date(dateStr.replace(' ', 'T'));
+                    const eventDateStr = room.ROOM_EVENT_DATE.split('T')[0];
+                    const startTime = safeDate(`${eventDateStr}T${room.ROOM_EVENT_START_TIME}`);
+                    const now = room.SERVER_TIME ? safeDate(room.SERVER_TIME) : new Date();
+                    
+                    const isStarted = now.getTime() >= startTime.getTime();
+                    
+                    if (isStarted && currentUserRole !== 'admin') {
+                        // ถ้าเริ่มแล้ว -> ซ่อนปุ่มแก้ไข หรือเปลี่ยนเป็นสีเทา
+                        editBtn.style.display = 'block';
+                        editBtn.style.color = '#ccc';
+                        editBtn.style.cursor = 'not-allowed';
+                        editBtn.onclick = (e) => {
+                            e.preventDefault();
+                        };
+                    } else {
+                        // ถ้ายังไม่เริ่ม -> กดได้ปกติ
+                        editBtn.style.display = 'block';
+                        editBtn.style.color = '';
+                        editBtn.style.cursor = 'pointer';
+                        editBtn.onclick = null;
+                        editBtn.href = `/edit-room-page.html?id=${room.ROOM_ID}`;
+                    }
+                }
 
                 // ด้านล่าง: โชว์ปุ่มจัดการเช็คชื่อ
                 if (joinBtn) joinBtn.style.display = 'none'; // ซ่อนปุ่มเข้าร่วม
