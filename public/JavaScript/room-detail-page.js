@@ -126,15 +126,12 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                         }
                     }
 
-                    if (durationMinutes < 15) {
-                        disableButton(manageCheckInBtn, 'กิจกรรมสั้นเกินไป');
-                    } 
-                    else if (!isStarted) { // ยังไม่ถึงเวลาเริ่ม
+                    if (durationMinutes < 15)
+                        disableButton(manageCheckInBtn, 'ระยะเวลากิจกรรมสั้นเกินไป');
+                    else if (!isStarted)
                         disableButton(manageCheckInBtn, 'ยังไม่ถึงเวลาเริ่ม');
-                    } 
-                    else if (minutesUntilEnd <= 10) { // เหลือ <= 10 นาที หรือ ติดลบ (จบไปแล้ว)
+                    else if (minutesUntilEnd <= 10)
                         disableButton(manageCheckInBtn, 'หมดเวลาเปิดเช็คชื่อ');
-                    }
                 }
 
             } else if (isMember) {
