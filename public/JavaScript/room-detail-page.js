@@ -96,14 +96,46 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
 
                 // ด้านล่าง: โชว์ปุ่มจัดการเช็คชื่อ
                 if (joinBtn) joinBtn.style.display = 'none'; // ซ่อนปุ่มเข้าร่วม
-                if (manageCheckInBtn) manageCheckInBtn.style.display = 'flex'; // โชว์ปุ่มจัดการเช็คชื่อ
-                if (manageCheckInBtn) manageCheckInBtn.onclick = () => {
-                    if (room.ROOM_CHECKIN_CODE) {
-                        window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
-                    } else if (confirm('คุณต้องการสร้างรหัสเช็คชื่อ เพื่อเปิดการเช็คชื่อใช่หรือไม่?')) {
-                        window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
+
+                if (manageCheckInBtn) {
+                    manageCheckInBtn.style.display = 'flex'; // โชว์ปุ่มจัดการเช็คชื่อ
+                    const safeDate = (dateStr) => new Date(dateStr.replace(' ', 'T'));
+
+                    const eventDateStr = room.ROOM_EVENT_DATE.split('T')[0]; // YYYY-MM-DD
+                    const startTime = safeDate(`${eventDateStr}T${room.ROOM_EVENT_START_TIME}`);
+                    const endTime = safeDate(`${eventDateStr}T${room.ROOM_EVENT_END_TIME}`);
+
+                    const now = safeDate(room.SERVER_TIME);
+
+                    // คำนวณระยะห่าง (นาที)
+                    // (ใช้ getTime() เพื่อให้มั่นใจว่าเป็นตัวเลข timestamp เอามาลบกันได้)
+                    const durationMinutes = (endTime.getTime() - startTime.getTime()) / 60000;
+                    const minutesUntilEnd = (endTime.getTime() - now.getTime()) / 60000;
+                    const isStarted = now.getTime() >= startTime.getTime();
+
+                    // Reset State
+                    manageCheckInBtn.disabled = false;
+                    manageCheckInBtn.textContent = 'การเช็คชื่อ';
+                    manageCheckInBtn.style.backgroundColor = ''; 
+                    manageCheckInBtn.style.cursor = 'pointer';
+                    manageCheckInBtn.onclick = () => {
+                        if (room.ROOM_CHECKIN_CODE) {
+                            window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
+                        } else if (confirm('คุณต้องการสร้างรหัสเช็คชื่อ เพื่อเปิดการเช็คชื่อใช่หรือไม่?')) {
+                            window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
+                        }
+                    }
+                    if (durationMinutes < 15) {
+                        disableButton(manageCheckInBtn, 'กิจกรรมสั้นเกินไป');
+                    } 
+                    else if (!isStarted) { // ยังไม่ถึงเวลาเริ่ม
+                        disableButton(manageCheckInBtn, 'ยังไม่ถึงเวลาเริ่ม');
+                    } 
+                    else if (minutesUntilEnd <= 10) { // เหลือ <= 10 นาที หรือ ติดลบ (จบไปแล้ว)
+                        disableButton(manageCheckInBtn, 'หมดเวลาเปิดเช็คชื่อ');
                     }
                 }
+
             } else if (isMember) {
                 // --- สมาชิก (Member) ---
                 if (unownerControls) unownerControls.style.display = 'flex';

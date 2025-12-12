@@ -482,8 +482,9 @@ router.get('/rooms', async (req, res) => {
             queryParams.push(`%${search}%`);
         }
 
+        // เอาออกก่อน เพื่อเทสให้มันเยอะๆ
         // whereClauses.push("TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) > NOW()");
-        
+
         // 2. เงื่อนไขตัวกรองวันที่/เวลา
         if (date) {
             whereClauses.push("r.ROOM_EVENT_DATE >= ?");
