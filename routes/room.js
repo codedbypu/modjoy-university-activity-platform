@@ -755,6 +755,11 @@ router.get('/my-created-rooms', async (req, res) => {
                 r.ROOM_EVENT_DATE,
                 TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
                 TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                CASE 
+                    WHEN NOW() < TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME) THEN 0 -- pending
+                    WHEN NOW() > TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) THEN 2 -- completed
+                ELSE 1 -- inProgress
+                END AS ROOM_STATUS,
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
@@ -767,7 +772,7 @@ router.get('/my-created-rooms', async (req, res) => {
             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
             ${whereSql}
             GROUP BY r.ROOM_ID
-            ORDER BY r.ROOM_ID DESC
+            ORDER BY ROOM_STATUS ASC, r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC
         `;
 
         const rooms = await dbQuery(sql, queryParams);
