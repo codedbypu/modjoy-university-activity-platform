@@ -660,6 +660,7 @@ router.get('/my-joined-active-rooms', async (req, res) => {
             LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
             LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
             WHERE rm.USER_ID = ? 
+            AND r.ROOM_LEADER_ID != ?
             AND (
                 r.ROOM_EVENT_DATE > CURRENT_DATE() OR 
                 (r.ROOM_EVENT_DATE = CURRENT_DATE() AND r.ROOM_EVENT_END_TIME > CURRENT_TIME())
@@ -668,7 +669,7 @@ router.get('/my-joined-active-rooms', async (req, res) => {
             ORDER BY r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC
         `;
 
-        const rooms = await dbQuery(sql, [userId]);
+        const rooms = await dbQuery(sql, [userId, userId]);
         res.json({ success: true, rooms });
 
     } catch (err) {
