@@ -54,12 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // --- เติม Tag ที่มีอยู่เดิม ---
-                if (user.tags && Array.isArray(user.tags)) {
+                if (user.TAGS && Array.isArray(user.TAGS)) {
                     // เคลียร์ค่าเก่าก่อน
                     currentTags = [];
 
                     // เติม Tag จาก DB ลงไป
-                    user.tags.forEach(tag => {
+                    user.TAGS.forEach(tag => {
                         currentTags.push(tag);
                     });
 

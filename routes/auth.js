@@ -25,6 +25,7 @@ router.post('/register', async (req, res) => {
     const { email, fullname, lastname, password } = req.body;
     const sql = `INSERT INTO USERS (USER_EMAIL, USER_FNAME, USER_LNAME, USER_PASSWORD, USER_YEAR) VALUES (?, ?, ?, ?, 1)`;
     db.query(sql, [email, fullname, lastname, password], (err, result) => {
+        // ที่เหลือเป็นการเช็คอีเมลซ้ำด้วย ER_DUP_ENTRY ครับ เพราะมันเป็น PK อยู่แล้ว
         if (err) {
             console.error(err);
             if (err.code === 'ER_DUP_ENTRY') {
@@ -42,6 +43,7 @@ router.post('/login', (req, res) => {
     const { email, password, rememberMe } = req.body;
     const sql = 'SELECT * FROM USERS WHERE USER_EMAIL = ?';
     db.query(sql, [email], async (err, results) => {
+        // ที่เหลือเป็นการเช็ครหัสกับ EMAIL ครับ
         if (err) return res.status(500).json({ error: err });
 
         if (results.length === 0) return res.json({ success: false, message: 'ไม่พบบัญชีนี้ในระบบ' });
@@ -114,6 +116,7 @@ router.get('/me', (req, res) => {
             GROUP BY U.USER_ID
         `;
         db.query(sql, [decoded.id], (err, results) => {
+            // ที่เหลือเป็นการทำ json ส่งข้อมูลกลับไปให้หน้าบ้าน
             if (err || results.length === 0) return res.json({ loggedIn: false });
 
             if (results.length > 0) {

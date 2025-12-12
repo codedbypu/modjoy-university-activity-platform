@@ -45,8 +45,8 @@ function createRoomItem(room) {
     const month = date.toLocaleString('th-TH', { month: 'short' });
     
     // จัดการ Tags
-    const tagsHTML = room.tags 
-        ? room.tags.split(',').map(tag => `<li>${tag}</li>`).join('') 
+    const tagsHTML = room.TAGS 
+        ? room.TAGS.split(',').map(tag => `<li>${tag}</li>`).join('') 
         : '<li>-</li>';
         
     // รูปภาพ
@@ -68,7 +68,7 @@ function createRoomItem(room) {
                     <h2>${room.ROOM_TITLE}</h2>
                     <span class="people-activity">
                         <span class="material-symbols-outlined">person</span>
-                        ${room.member_count}/${room.ROOM_CAPACITY}
+                        ${room.MEMBER_COUNT}/${room.ROOM_CAPACITY}
                     </span>
                 </div>
 
@@ -88,7 +88,7 @@ function createRoomItem(room) {
                     <p class="time-activity">
                         <span class="material-symbols-outlined">pace</span>
                         <span>
-                            ${room.formatted_start_time} - ${room.formatted_end_time}
+                            ${room.FORMAT_START_TIME} - ${room.FORMAT_END_TIME}
                         </span>
                     </p>
                 </div>

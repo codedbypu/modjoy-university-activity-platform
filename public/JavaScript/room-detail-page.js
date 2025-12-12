@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // 1. ดึงข้อมูล User ปัจจุบันก่อน
+    // 1. นพึงข้อมูล User ปัจจุบันก่อน
     let currentUserId = null;
     let currentUserRole = null;
     try {
@@ -85,7 +85,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
             const isEventStarted = (status === 'inProgress' || status === 'completed');
             const isEventEnded = (status === 'completed');
 
-            let isCheckinExpired = (room.is_expired === 1) || false;
+            let isCheckinExpired = (room.IS_EXPIRED === 1) || false;
 
             if (isOwner || isAdmin) {
                 // เจ้าของห้องหรือแอดมิน

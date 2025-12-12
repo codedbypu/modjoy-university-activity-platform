@@ -58,8 +58,8 @@ async function loadGlobalUserData() {
             if (myAccountTagsContainer) {
                 myAccountTagsContainer.innerHTML = '';
 
-                if (data.user.tags && data.user.tags.length > 0) {
-                    data.user.tags.forEach(tag => {
+                if (data.user.TAGS && data.user.TAGS.length > 0) {
+                    data.user.TAGS.forEach(tag => {
                         const li = document.createElement('li');
                         li.textContent = tag;
                         myAccountTagsContainer.appendChild(li);
