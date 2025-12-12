@@ -260,7 +260,7 @@ async function handleCheckIn(roomId) {
         const result = await res.json();
 
         if (result.success) {
-            alert('เช็คชื่อเรียบร้อย! ได้รับเครดิต +10 💰');
+            alert('เช็คชื่อเรียบร้อย! ได้รับเครดิต +10');
             location.reload();
         } else {
             alert(result.message);
