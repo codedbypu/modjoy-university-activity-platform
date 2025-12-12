@@ -1,5 +1,3 @@
-// public/JavaScript/created-room-loader.js
-
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById('rooms-list') && window.location.pathname.includes('created-room')) {
         loadMyCreatedRooms();
