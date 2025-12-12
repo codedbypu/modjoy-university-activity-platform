@@ -125,6 +125,7 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
                             window.location.href = `/check-in-room-page.html?id=${room.ROOM_ID}`;
                         }
                     }
+
                     if (durationMinutes < 15) {
                         disableButton(manageCheckInBtn, 'กิจกรรมสั้นเกินไป');
                     } 
@@ -210,6 +211,15 @@ async function fetchAndRenderRoom(roomId, currentUserId, currentUserRole) {
         console.error('Error:', error);
     }
 };
+function disableButton(button, text) {
+    if (button) {
+        button.disabled = true;
+        button.textContent = text;
+        button.style.backgroundColor = '#ccc';
+        button.style.cursor = 'not-allowed';
+    }
+}
+
 // #endregion --- ดึงข้อมูลห้องกิจกรรมจาก API และแสดงผล ---
 
 // #region --- ฟังก์ชันส่งรหัสเช็คชื่อ ---
