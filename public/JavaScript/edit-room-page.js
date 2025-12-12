@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const result = await response.json();
                 if (result.success) {
                     alert('แก้ไขเรียบร้อย!');
-                    window.location.href = `/room-detail-page.html?id=${roomId}`;
+                    window.history.back();
                 } else {
                     alert('เกิดข้อผิดพลาด: ' + result.message);
                 }
