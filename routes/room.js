@@ -571,7 +571,8 @@ router.get('/rooms', async (req, res) => {
 
         // --- Logic Personalized Feed (JS Sort) ---
         const token = req.cookies.token;
-        if (token) {
+        // ถ้ามีการค้นหา (search มีค่า) จะข้าม Block นี้ไปเลย ทำให้ใช้ลำดับ Date/Time จาก SQL ปกติ
+        if (token && !search && !date && !start_time && !end_time && !locations && !tags) {
             try {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -588,10 +589,6 @@ router.get('/rooms', async (req, res) => {
                 const userTags = userTagResult.map(row => row.TAG_NAME);
 
                 if (userTags.length > 0) {
-                    // Priority 1: ตรงกับ Tag แรกของผู้ใช้
-                    // Priority 2: ตรงกับ Tag สอง
-                    // Priority 3: ตรงกับ Tag สาม
-                    // Priority 99: ไม่ตรงเลย (ไว้ล่างสุด)
                     rooms = rooms.map(room => {
                         let priority = 99;
                         // หา Main Tag ของห้อง (เอาตัวแรกสุด)
