@@ -206,7 +206,7 @@ router.delete('/delete-room/:id', async (req, res) => {
         if (checkOwner.length === 0)
             return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
         const roomInfo = checkOwner[0];
-        if (roomInfo.ROOM_LEADER_ID != userId && userRole !== 'admin') 
+        if (roomInfo.ROOM_LEADER_ID != userId && userRole !== 'admin')
             return res.json({ success: false, message: 'คุณไม่มีสิทธิ์ลบห้องนี้' });
         if (roomInfo.is_started === 1 && userRole !== 'admin')
             return res.json({ success: false, message: 'ไม่สามารถลบกิจกรรมที่เริ่มไปแล้วได้' });
@@ -698,6 +698,7 @@ router.get('/my-created-rooms', async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
+        const userRole = decoded.role;
 
         // รับค่า Query Params (search, date, tags, etc.) เหมือน API /rooms
         const { search, date, start_time, end_time, locations, tags } = req.query;
@@ -706,9 +707,10 @@ router.get('/my-created-rooms', async (req, res) => {
         let queryParams = [];
 
         // 1. เงื่อนไขสำคัญที่สุด: ต้องเป็นห้องของ User คนนี้เท่านั้น
-        whereClauses.push("r.ROOM_LEADER_ID = ?");
-        queryParams.push(userId);
-
+        if (userRole !== 'admin') {
+            whereClauses.push("r.ROOM_LEADER_ID = ?");
+            queryParams.push(userId);
+        }
         // 2. เงื่อนไขการค้นหาอื่นๆ (ก๊อปปี้ Logic มาจาก /rooms)
         if (search) {
             whereClauses.push("r.ROOM_TITLE LIKE ?");
