@@ -1,7 +1,6 @@
 // filter.js
 import { loadRooms } from './home-room-loader.js';
-import { loadMyCreatedRooms } from './created-room-loader.js';
-import { loadMyHistoryRooms } from './history-room-loader.js';
+import { loadMyActivities } from './my-activity-list.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. ประกาศตัวแปรหลัก
@@ -66,10 +65,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // เช็ค URL ว่าอยู่หน้าไหน
         if (window.location.pathname.includes('created-room')) {
-            loadMyCreatedRooms(params);
+            loadMyActivities({ ...params, filter: 'created' });
         } 
         else if (window.location.pathname.includes('history-page')) { // 2. เพิ่มเงื่อนไขนี้
-            loadMyHistoryRooms(params);
+            loadMyActivities({ ...params, filter: 'history' });
         } 
         else {
             loadRooms(params);

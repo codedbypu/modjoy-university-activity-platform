@@ -1,48 +1,55 @@
 let currentPage = 1;
 let isLoading = false;
 let hasMore = true;
-let currentFilters = {}; // เก็บค่า Filter ล่าสุดเอาไว้ใช้ตอนเลื่อนจอ
+let currentFilters = {};
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", function () {
     const listElement = document.getElementById('rooms-list');
 
-    if (listElement) {
-        loadRooms();
+    // ตรวจสอบ URL เพื่อกำหนดประเภทกิจกรรม (Created หรือ History)
+    const path = window.location.pathname;
+    let initialFilter = {};
 
-        // ✅ เพิ่ม Event Listener สำหรับ Infinite Scroll
+    if (path.includes('created-room'))
+        initialFilter = { type: 'created' };
+    else if (path.includes('history'))
+        initialFilter = { type: 'history' };
+
+    if (listElement && initialFilter.type) {
+        loadMyActivities(initialFilter);
+
         window.addEventListener('scroll', () => {
-            // เช็คว่าเลื่อนลงมาเกือบสุดจอหรือยัง (เหลือพื้นที่ 100px)
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-                // ถ้าไม่ได้กำลังโหลด และยังมีข้อมูลเหลือ -> โหลดต่อ
                 if (!isLoading && hasMore) {
-                    loadRooms(currentFilters, true); // true = โหมด Append (ต่อท้าย)
+                    loadMyActivities(currentFilters, true); // true = โหมด Append
                 }
             }
         });
     }
 });
 
-export async function loadRooms(filterParams = {}, isAppend = false) {
-    if (isLoading) return; // ป้องกันการเรียกซ้ำ
+export async function loadMyActivities(filterParams = {}, isAppend = false) {
+    if (isLoading) return;
     const list = document.getElementById('rooms-list');
     const message = document.getElementById('message');
-    const ITEMS_PER_PAGE = 20; // จำนวนห้องต่อหน้า
+    const ITEMS_PER_PAGE = 20;
 
-    // --- กรณี: โหลดใหม่ (กดค้นหา หรือ เข้าหน้าเว็บครั้งแรก) ---
+    // --- กรณี: โหลดใหม่ (Reset) ---
     if (!isAppend) {
-        currentFilters = filterParams; // จำค่า Filter นี้ไว้
+        currentFilters = filterParams; // จำค่า Filter ไว้
         currentPage = 1;
         hasMore = true;
         if (list) {
-            message.style.display = 'block';
-            message.innerText = 'กำลังค้นหากิจกรรม...';
+            list.innerHTML = ''; // เคลียร์รายการเก่า
+            if (message) {
+                message.style.display = 'block';
+                message.innerText = 'กำลังค้นหากิจกรรม...';
+            }
         }
-        if (message) message.innerText = '';
     }
-
     isLoading = true;
     try {
-        // สร้าง URL Query String (รวม Filter + Pagination)
+        // สร้าง Query String
         const queryObj = {
             ...currentFilters,
             page: currentPage,
@@ -50,33 +57,36 @@ export async function loadRooms(filterParams = {}, isAppend = false) {
         };
         const queryString = new URLSearchParams(queryObj).toString();
 
-        // ใช้ fetch เพื่อดึงข้อมูลพร้อม Query String
-        const res = await fetch(`/api/rooms?${queryString}`);
-        const data = await res.json();
+        const response = await fetch(`/api/my-activities?${queryString}`);
+        const data = await response.json();
 
-        // ล้าง "กำลังค้นหา..." ออกถ้าเป็นการโหลดใหม่
-        if (!isAppend && list) list.innerHTML = '';
-
+        // เช็ค Error
         if (!data.success) {
-            message.innerText = 'ไม่สามารถโหลดห้องกิจกรรมได้';
+            if (data.message === 'กรุณาเข้าสู่ระบบ') {
+                window.location.href = '/login-page.html';
+                return;
+            }
+            if (message) {
+                message.style.display = 'block';
+                message.innerText = 'ไม่สามารถโหลดห้องกิจกรรมได้';
+            }
             return;
         }
-
-        // กรณีไม่พบข้อมูลเลย
+        // --- กรณีไม่พบข้อมูลเลย ---
         if (data.rooms.length === 0) {
-            hasMore = false; // ไม่มีข้อมูลแล้ว
-            if (!isAppend) {
+            hasMore = false; // หมดข้อมูลแล้ว
+            if (!isAppend && message) {
                 message.style.display = 'block';
                 message.innerText = 'ไม่พบห้องกิจกรรมตามเงื่อนไขที่ระบุ';
             }
         } else {
-            // มีข้อมูล -> วาดลงจอ
+            // --- กรณีมีข้อมูล: วาดลงจอ ---
             message.innerText = '';
             message.style.display = 'none';
             data.rooms.forEach(room => {
                 list.appendChild(createRoomItem(room));
             });
-            // เช็คว่าหมดหรือยัง? (ถ้าสิ่งที่ได้มา น้อยกว่า Limit แสดงว่าหมดแล้ว)
+            // เช็คว่าหมดหน้าหรือยัง?
             if (data.rooms.length < ITEMS_PER_PAGE) {
                 hasMore = false;
             } else {
@@ -85,29 +95,37 @@ export async function loadRooms(filterParams = {}, isAppend = false) {
                 setTimeout(() => {
                     if (document.body.offsetHeight <= window.innerHeight && hasMore) {
                         console.log('จอใหญ่เกิน... กำลังโหลดเพิ่มอัตโนมัติ');
-                        loadRooms(currentFilters, true);
+                        loadMyActivities(currentFilters, true);
                     }
                 }, 1000);
             }
         }
-    } catch (err) {
-        console.error(err);
-        message.innerHTML = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
+    } catch (error) {
+        console.error('Error:', error);
+        message.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
     } finally {
-        isLoading = false; // ปลดล็อกสถานะการโหลดไม่ว่าจะสำเร็จหรือผิดพลาด
+        isLoading = false; // ปลดล็อกสถานะ
     }
 }
 
+// ฟังก์ชันหลักในการดึงข้อมูล
 function createRoomItem(room) {
     const li = document.createElement('li');
     li.className = 'room-item';
+
     const date = new Date(room.ROOM_EVENT_DATE);
     const day = date.getDate();
     const month = date.toLocaleString('th-TH', { month: 'short' });
+    const bgImage = room.ROOM_IMG ? room.ROOM_IMG : '/Resource/img/bangmod.png';
     const tagsHTML = room.TAGS ? room.TAGS.split(',').map(tag => `<li>${tag}</li>`).join('') : '<li>-</li>';
+
+    let btnClass = 'btn-room-item'; 
+    if (room.ROOM_STATUS === 2)
+        btnClass = 'btn-htsroom-item'; 
+
     li.innerHTML = `
         <article>
-            <div class="header-item" style="background-image: url('${room.ROOM_IMG}');">
+            <div class="header-item" style="background-image: url('${bgImage}');">
                 <div class="group-date-month">
                     <span class="date-activity">${day}</span>
                     <span class="month-activity">${month}</span>
@@ -117,9 +135,8 @@ function createRoomItem(room) {
             <hr class="separator-line">
 
             <div class="body-item">
-
                 <div class="first-row-item-body">
-                    <h2>${room.ROOM_TITLE}</h2>
+                    <h2 title="${room.ROOM_TITLE}">${room.ROOM_TITLE}</h2>
                     <span class="people-activity">
                         <span class="material-symbols-outlined">person</span>
                         ${room.MEMBER_COUNT}/${room.ROOM_CAPACITY}
@@ -136,7 +153,7 @@ function createRoomItem(room) {
                 <div class="third-row-item-body">
                     <p>สถานที่: 
                         <span class="address-activity">
-                            ${room.LOCATION_NAME || '-'}
+                            ${room.LOCATION_NAME || 'ไม่ระบุ'}
                         </span>
                     </p>
                     <p class="time-activity">
@@ -146,12 +163,10 @@ function createRoomItem(room) {
                         </span>
                     </p>
                 </div>
-
             </div>
 
-            <a class="btn-room-item a-btn"
-               href="./room-detail-page.html?id=${room.ROOM_ID}">
-               ดูรายละเอียด
+            <a class="${btnClass} a-btn" href="./room-detail-page.html?id=${room.ROOM_ID}">
+                ดูรายละเอียด
             </a>
         </article>
     `;
