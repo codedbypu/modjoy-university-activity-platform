@@ -328,7 +328,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // #region ======== โหลดข้อมูลห้องกิจกรรมเดิมมาแสดง และ บันทึกการแก้ไข ======== 
-    // 1. ฟังก์ชันดึงข้อมูลเดิมมาใส่ (Pre-fill)
     async function loadRoomData() {
         try {
             const res = await fetch(`/api/room/${roomId}`);

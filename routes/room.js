@@ -187,7 +187,6 @@ router.delete('/delete-room/:id', async (req, res) => {
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
     const roomId = req.params.id;
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -241,7 +240,6 @@ router.post('/room/:id/join', async (req, res) => {
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบก่อน' });
 
     const roomId = req.params.id;
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -249,7 +247,7 @@ router.post('/room/:id/join', async (req, res) => {
         // 1. เช็คว่าห้องเต็มหรือยัง? และเช็คว่าเคย join ไปหรือยัง?
         const roomCheck = await dbQuery(`
             SELECT 
-                r.ROOM_CAPACITY,d
+                r.ROOM_CAPACITY,
                 (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) as CURRENT_MEMBERS,
                 (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID AND USER_ID = ?) as IS_JOINED, 
                 CASE 
@@ -291,7 +289,6 @@ router.post('/room/:id/leave', async (req, res) => {
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
     const roomId = req.params.id;
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -302,12 +299,12 @@ router.post('/room/:id/leave', async (req, res) => {
                 CASE 
                     WHEN NOW() >= TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 
                     ELSE 0 
-                END AS is_started
+            END AS IS_STARTED
             FROM ROOMS WHERE ROOM_ID = ?`, [roomId]);
 
         if (room.length > 0 && room[0].ROOM_LEADER_ID == userId)
             return res.json({ success: false, message: 'เจ้าของห้องไม่สามารถกดออกได้ (ต้องลบห้องกิจกรรม)' });
-        if (room.is_started === 1)
+        if (room[0].IS_STARTED === 1)
             return res.json({ success: false, message: 'ไม่สามารถยกเลิกได้ เนื่องจากกิจกรรมเริ่มไปแล้ว' });
 
         // ลบออกจากตาราง
@@ -328,7 +325,6 @@ router.post('/room/:id/check-in', async (req, res) => {
 
     const roomId = req.params.id;
     const { code } = req.body; // รับรหัสจากหน้าบ้าน
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -338,16 +334,15 @@ router.post('/room/:id/check-in', async (req, res) => {
             SELECT 
                 R.ROOM_CHECKIN_CODE,
                 RM.ROOMMEMBER_STATUS,
-                -- เช็คว่ามีการตั้งรหัสหรือยัง (1 = มี, 0 = ไม่มี)
                 CASE 
                     WHEN R.ROOM_CHECKIN_CODE IS NOT NULL AND R.ROOM_CHECKIN_CODE != '' THEN 1 
                     ELSE 0 
-                END AS has_code,
-                -- สร้างตัวแปร is_expired (1 = หมดอายุ, 0 = ยังไม่หมด)
+                END AS HAS_CODE,
+
                 CASE 
                     WHEN R.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > R.ROOM_CHECKIN_EXPIRE THEN 1 
                     ELSE 0 
-                END AS is_expired
+                END AS IS_EXPIRED 
             FROM ROOMS R
             JOIN ROOMMEMBERS RM ON R.ROOM_ID = RM.ROOM_ID
             WHERE R.ROOM_ID = ? AND RM.USER_ID = ?
@@ -364,11 +359,11 @@ router.post('/room/:id/check-in', async (req, res) => {
             return res.json({ success: false, message: 'คุณเช็คชื่อเข้าร่วมกิจกรรมนี้ไปแล้ว' });
         }
 
-        if (roomData.has_code === 0) {
+        if (roomData.HAS_CODE === 0) {
             return res.json({ success: false, message: 'ห้องนี้ยังไม่ได้เปิดการเช็คชื่อ (ติดต่อหัวหน้าห้อง)' });
         }
 
-        if (roomData.is_expired === 1) {
+        if (roomData.IS_EXPIRED === 1) {
             return res.json({ success: false, message: 'รหัสเช็คชื่อหมดอายุแล้ว' });
         }
 
@@ -465,7 +460,7 @@ router.get('/rooms', async (req, res) => {
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
-                COUNT(DISTINCT rm.USER_ID) AS member_count,
+                COUNT(DISTINCT rm.USER_ID) AS MEMBER_COUNT,
                 GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID) AS TAGS
             FROM ROOMS r
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
@@ -491,10 +486,10 @@ router.get('/rooms', async (req, res) => {
                 // หลังจากที่ดึงห้องมาแล้ว ส่วนนี้ดึง User Tags ของผู้ใช้ เพื่อเอามาใช้เรียง Feed
                 const sqlUserTags = `
                     SELECT T.TAG_NAME 
-                    FROM USERTAGS UT
-                    JOIN TAGS T ON UT.TAG_ID = T.TAG_ID
-                    WHERE UT.USER_ID = ?
-                    ORDER BY UT.ID ASC
+                    FROM USERTAGS ut
+                    JOIN TAGS T ON ut.TAG_ID = T.TAG_ID
+                    WHERE ut.USER_ID = ?
+                    ORDER BY ut.ID ASC
                 `;
                 const userTagResult = await dbQuery(sqlUserTags, [decoded.id]);
 
@@ -504,7 +499,7 @@ router.get('/rooms', async (req, res) => {
                     rooms = rooms.map(room => {
                         let priority = 99;
                         // หา Main Tag ของห้อง (เอาตัวแรกสุด)
-                        const roomMainTag = room.tags ? room.tags.split(',')[0] : null;
+                        const roomMainTag = room.TAGS ? room.TAGS.split(',')[0] : null;
 
                         if (roomMainTag) {
                             // เช็คว่า Main Tag ของห้อง ตรงกับ User Tag อันดับที่เท่าไหร่?
@@ -614,8 +609,8 @@ router.get('/my-created-rooms', async (req, res) => {
                 r.ROOM_ID,
                 r.ROOM_TITLE,
                 r.ROOM_EVENT_DATE,
-                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS formatted_start_time,
-                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS formatted_end_time,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS FORMAT_END_TIME,
                 CASE 
                     WHEN NOW() < TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME) THEN 0 -- pending
                     WHEN NOW() > TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) THEN 2 -- completed
@@ -624,8 +619,8 @@ router.get('/my-created-rooms', async (req, res) => {
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
-                COUNT(DISTINCT rm.USER_ID) AS member_count,
-                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS tags
+                COUNT(DISTINCT rm.USER_ID) AS MEMBER_COUNT,
+                GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS TAGS
             FROM ROOMS r
             LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
             LEFT JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
@@ -709,12 +704,12 @@ router.get('/my-history', async (req, res) => {
                 r.ROOM_ID,
                 r.ROOM_TITLE,
                 r.ROOM_EVENT_DATE,
-                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME, format_start_time,
-                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_END_TIME, format_end_time,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS FORMAT_END_TIME,
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
-                COUNT(DISTINCT rm_all.USER_ID) AS MEMBER_COUNT, member_count
+                COUNT(DISTINCT rm_all.USER_ID) AS MEMBER_COUNT,
                 GROUP_CONCAT(DISTINCT t.TAG_NAME) AS TAGS
             FROM ROOMS r
             INNER JOIN ROOMMEMBERS rm_me ON r.ROOM_ID = rm_me.ROOM_ID AND rm_me.USER_ID = ? 
@@ -753,12 +748,12 @@ router.get('/my-joined-active-rooms', async (req, res) => {
                 r.ROOM_ID,
                 r.ROOM_TITLE,
                 r.ROOM_EVENT_DATE,
-                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS format_start_time,
-                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS format_end_time,
+                TIME_FORMAT(r.ROOM_EVENT_START_TIME, '%H:%i') AS FORMAT_START_TIME,
+                TIME_FORMAT(r.ROOM_EVENT_END_TIME, '%H:%i') AS FORMAT_END_TIME,
                 r.ROOM_CAPACITY,
                 r.ROOM_IMG,
                 l.LOCATION_NAME,
-                (SELECT COUNT(USER_ID) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) AS member_count,
+                (SELECT COUNT(USER_ID) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) AS MEMBER_COUNT,
                 GROUP_CONCAT(DISTINCT t.TAG_NAME ORDER BY rt.ID ASC) AS TAGS
             FROM ROOMS r
             JOIN ROOMMEMBERS rm ON r.ROOM_ID = rm.ROOM_ID
@@ -790,32 +785,32 @@ router.get('/room/:id', (req, res) => {
     // SQL ดึงข้อมูลห้อง + ชื่อคนสร้าง + ชื่อสถานที่ + จำนวนคน + Tags
     const sql = `
         SELECT 
-            R.*,
+            r.*,
             NOW() AS SERVER_TIME,
             CASE 
-                WHEN R.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > R.ROOM_CHECKIN_EXPIRE THEN 1 
+                WHEN r.ROOM_CHECKIN_EXPIRE IS NOT NULL AND NOW() > r.ROOM_CHECKIN_EXPIRE THEN 1 
                 ELSE 0 
             END AS IS_EXPIRED,
 
             CASE 
-                WHEN NOW() < TIMESTAMP(R.ROOM_EVENT_DATE, R.ROOM_EVENT_START_TIME) THEN 'pending'
-                WHEN NOW() > TIMESTAMP(R.ROOM_EVENT_DATE, R.ROOM_EVENT_END_TIME) THEN 'completed'
+                WHEN NOW() < TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_START_TIME) THEN 'pending'
+                WHEN NOW() > TIMESTAMP(r.ROOM_EVENT_DATE, r.ROOM_EVENT_END_TIME) THEN 'completed'
                 ELSE 'inProgress'
             END AS ROOM_STATUS, 
 
-            L.LOCATION_NAME,
-            CONCAT(U.USER_FNAME, ' ', U.USER_LNAME) AS LEADER_NAME,
-            U.USER_IMG AS LEADER_IMG,
-            U.USER_CREDIT_SCORE AS LEADER_CREDIT_SCORE,
-            (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = R.ROOM_ID) AS CURRENT_MEMBERS,
-            GROUP_CONCAT(T.TAG_NAME ORDER BY RT.ID ASC) AS TAGS
-        FROM ROOMS R
-        LEFT JOIN LOCATIONS L ON R.ROOM_EVENT_LOCATION = L.LOCATION_ID
-        LEFT JOIN USERS U ON R.ROOM_LEADER_ID = U.USER_ID
-        LEFT JOIN ROOMTAGS RT ON R.ROOM_ID = RT.ROOM_ID
-        LEFT JOIN TAGS T ON RT.TAG_ID = T.TAG_ID
-        WHERE R.ROOM_ID = ?
-        GROUP BY R.ROOM_ID
+            l.LOCATION_NAME,
+            CONCAT(u.USER_FNAME, ' ', u.USER_LNAME) AS LEADER_NAME,
+            u.USER_IMG AS LEADER_IMG,
+            u.USER_CREDIT_SCORE AS LEADER_CREDIT_SCORE,
+            (SELECT COUNT(*) FROM ROOMMEMBERS WHERE ROOM_ID = r.ROOM_ID) AS CURRENT_MEMBERS,
+            GROUP_CONCAT(t.TAG_NAME ORDER BY rt.ID ASC) AS TAGS
+        FROM ROOMS r
+        LEFT JOIN LOCATIONS l ON r.ROOM_EVENT_LOCATION = l.LOCATION_ID
+        LEFT JOIN USERS u ON r.ROOM_LEADER_ID = u.USER_ID
+        LEFT JOIN ROOMTAGS rt ON r.ROOM_ID = rt.ROOM_ID
+        LEFT JOIN TAGS t ON rt.TAG_ID = t.TAG_ID
+        WHERE r.ROOM_ID = ?
+        GROUP BY r.ROOM_ID
     `;
     db.query(sql, [roomId], (err, results) => {
         if (err) {
@@ -839,10 +834,10 @@ router.get('/room/:id/members', (req, res) => {
     // Join ตาราง ROOMMEMBERS กับ USERS เพื่อเอารูปและชื่อ
     const sql = `
         SELECT 
-            U.USER_ID, U.USER_FNAME, U.USER_LNAME, U.USER_IMG, U.USER_CREDIT_SCORE , RM.ROOMMEMBER_STATUS, RM.ROOMMEMBER_CHECKIN_TIME
-        FROM ROOMMEMBERS RM
-        JOIN USERS U ON RM.USER_ID = U.USER_ID
-        WHERE RM.ROOM_ID = ?
+            u.USER_ID, u.USER_FNAME, u.USER_LNAME, u.USER_IMG, u.USER_CREDIT_SCORE , rm.ROOMMEMBER_STATUS, rm.ROOMMEMBER_CHECKIN_TIME
+        FROM ROOMMEMBERS rm
+        JOIN USERS u ON rm.USER_ID = u.USER_ID
+        WHERE rm.ROOM_ID = ?
     `;
 
     db.query(sql, [roomId], (err, results) => {
@@ -861,7 +856,6 @@ router.post('/room/:id/generate-code', async (req, res) => {
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
     const roomId = req.params.id;
-
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
@@ -873,11 +867,11 @@ router.post('/room/:id/generate-code', async (req, res) => {
                 ROOM_EVENT_START_TIME,
                 ROOM_EVENT_END_TIME,
                 CASE 
-                    WHEN NOW() < TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1 
+                    WHEN NOW() < TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME) THEN 1
                     ELSE 0 
-                END AS is_not_started,
-                TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS minutes_until_end,
-                TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS duration_minutes
+                END AS IS_NOT_STARTED,
+                TIMESTAMPDIFF(MINUTE, NOW(), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS MINUTES_UNTIL_END,
+                TIMESTAMPDIFF(MINUTE, TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME), TIMESTAMP(ROOM_EVENT_DATE, ROOM_EVENT_END_TIME)) AS DURATION_MINUTE
             FROM ROOMS 
             WHERE ROOM_ID = ?
             `;
@@ -887,11 +881,11 @@ router.post('/room/:id/generate-code', async (req, res) => {
 
         const room = roomCheck[0];
 
-        if (room.duration_minutes < 15)
+        if (room.DURATION_MINUTE < 15)
             return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
-        if (room.is_not_started === 1)
+        if (room.IS_NOT_STARTED === 1)
             return res.json({ success: false, message: 'ยังไม่ถึงเวลาเริ่มกิจกรรม (กรุณารอให้ถึงเวลาก่อน)' });
-        if (room.minutes_until_end <= 10)
+        if (room.MINUTES_UNTIL_END <= 10)
             return res.json({ success: false, message: 'ไม่สามารถเปิดระบบเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
 
         // 2. สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
