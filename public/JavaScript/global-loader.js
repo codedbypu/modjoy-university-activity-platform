@@ -19,7 +19,7 @@ async function loadGlobalUserData() {
         const myAccountEmail = document.getElementById('user-email');
         const myAccountEducation = document.getElementById('user-education'); // คณะ/ปี
         const myAccountAbout = document.getElementById('user-about-detail'); // เกี่ยวกับฉัน
-        const myAccountCredit = document.querySelectorAll('#user-credit'); // เครดิต (มี 2 ที่ในหน้า mobile/desktop)
+        const myAccountCredit = document.querySelectorAll('#user-credit'); // เครดิต
 
         const myAccountTagsContainer = document.getElementById('user-tags-list');
 

@@ -1,5 +1,3 @@
-// public/JavaScript/history-room-loader.js
-
 document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById('rooms-list') && window.location.pathname.includes('history-page')) {
         loadMyHistoryRooms();
