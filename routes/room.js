@@ -22,7 +22,9 @@ function dbQuery(sql, params) {
 
 // #region --- API ดึงรายชื่อสถานที่ --- 
 router.get('/locations', (req, res) => {
+    // ดึงรายชื่อสถานที่หมด
     db.query('SELECT * FROM LOCATIONS', (err, results) => {
+    // ส่วนที่เหลือเป็นการแจ้งเตือนกรณี error
         if (err) {
             console.error(err);
             return res.status(500).json({ error: 'Database error' });
@@ -33,6 +35,7 @@ router.get('/locations', (req, res) => {
 // #endregion
 
 // #region --- Config Multer สำหรับอัปโหลดรูปปกห้อง --- 
+// สำหรับอัปโหลดรูปปกห้อง
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         const uploadPath = path.join(__dirname, '../public/uploads/rooms');
@@ -41,7 +44,7 @@ const storage = multer.diskStorage({
         cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
-        // ตัวอย่างชื่อไฟล์: room-1632345678901-123456789.png มาจากการผสม timestamp กับ random number
+        // ชื่อไฟล์มาจากการผสม timestamp กับ random number
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, 'room-' + uniqueSuffix + path.extname(file.originalname));
     }
@@ -49,7 +52,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 // #endregion
 
-// #region --- API สร้างห้องกิจกรรมใหม่ (create-room) --- 
+// #region --- API สร้างห้องกิจกรรมใหม่ (add-room) --- 
 router.post('/create-room', upload.single('room_image'), async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบก่อน' });
@@ -72,7 +75,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
         const roomResult = await dbQuery(sql, params);
         const newRoomId = roomResult.insertId;
-        // เอาคนสร้าง จับยัดเป็นสมาชิกคนแรก (Leader) ใน ROOMMEMBERS
+        // ให้คนสร้างเป็นสมาชิกคนแรก ใน ROOMMEMBERS
         await dbQuery(`
             INSERT INTO ROOMMEMBERS (ROOM_ID, USER_ID, ROOMMEMBER_STATUS) 
             VALUES (?, ?, 'present')`, [newRoomId, leaderId]);
@@ -90,10 +93,10 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
                     const newTag = await dbQuery('INSERT INTO TAGS (TAG_NAME) VALUES (?)', [tagName]);
                     tagId = newTag.insertId;
                 }
-                // จับคู่ Room-Tag
                 await dbQuery('INSERT INTO ROOMTAGS (ROOM_ID, TAG_ID) VALUES (?, ?)', [newRoomId, tagId]);
             }
         }
+        // ส่วนที่เหลือเป็นการแจ้งเตือนสถานะการสร้างห้อง
         res.json({ success: true, message: 'สร้างห้องกิจกรรมสำเร็จ!', roomId: newRoomId });
     } catch (err) {
         console.error(err);
@@ -244,7 +247,7 @@ router.post('/room/:id/join', async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
 
-        // 1. เช็คว่าห้องเต็มหรือยัง? และเช็คว่าเคย join ไปหรือยัง?
+        // เช็คว่าห้องเต็มหรือยัง และเช็คว่าเคย join ไปหรือยัง
         const roomCheck = await dbQuery(`
             SELECT 
                 r.ROOM_CAPACITY,
@@ -259,21 +262,17 @@ router.post('/room/:id/join', async (req, res) => {
         `, [userId, roomId]);
 
         if (roomCheck.length === 0) return res.json({ success: false, message: 'ไม่พบห้องกิจกรรม' });
-
         const room = roomCheck[0];
-
         if (room.IS_ENDED === 1) return res.json({ success: false, message: 'กิจกรรมนี้จบไปแล้ว ไม่สามารถเข้าร่วมได้' });
-
         if (room.IS_JOINED > 0) return res.json({ success: false, message: 'คุณเข้าร่วมกิจกรรมนี้ไปแล้ว' });
+        if (room.current_members >= room.ROOM_CAPACITY) return res.json({ success: false, message: 'ห้องนี้ผู้เข้าร่วมเต็มแล้ว' });
 
-        if (room.current_members >= room.ROOM_CAPACITY) return res.json({ success: false, message: 'ห้องเต็มแล้วครับ T_T' });
-
-        // 2. บันทึกลงตาราง ROOMMEMBERS
+        // บันทึกลงตาราง ROOMMEMBERS
         await dbQuery(`
             INSERT INTO ROOMMEMBERS (ROOM_ID, USER_ID, ROOMMEMBER_STATUS)
             VALUES (?, ?, 'pending')
         `, [roomId, userId]);
-
+        // ส่วนที่เหลือเป็นการแจ้งเตือนการเข้าร่วม
         res.json({ success: true, message: 'เข้าร่วมสำเร็จ!' });
 
     } catch (err) {
@@ -673,6 +672,7 @@ router.get('/my-joined-active-rooms', async (req, res) => {
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบ' });
 
     try {
+        // กิจกรรมที่กำลังเข้าร่วมและไม่ได้เป็นคนสร้าง
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
         const sql = `
@@ -702,6 +702,7 @@ router.get('/my-joined-active-rooms', async (req, res) => {
             ORDER BY r.ROOM_EVENT_DATE ASC, r.ROOM_EVENT_START_TIME ASC
         `;
         const rooms = await dbQuery(sql, [userId, userId]);
+        // ส่วนที่เหลือเป็นการแจ้งเตือนกรณี error
         res.json({ success: true, rooms });
     } catch (err) {
         console.error(err);
@@ -744,6 +745,7 @@ router.get('/room/:id', (req, res) => {
         WHERE r.ROOM_ID = ?
         GROUP BY r.ROOM_ID
     `;
+    // ส่วนที่เหลือเป็นการแจ้งเตือนเมื่อไม่พบห้อง
     db.query(sql, [roomId], (err, results) => {
         if (err) {
             console.error(err);
@@ -791,7 +793,7 @@ router.post('/room/:id/generate-code', async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const userId = decoded.id;
-
+        // เช็คสถานะเวลาของกิจกรรม
         const sqlCheck = `
             SELECT 
                 ROOM_LEADER_ID, 
@@ -812,7 +814,7 @@ router.post('/room/:id/generate-code', async (req, res) => {
         if (roomCheck[0].ROOM_LEADER_ID != userId) return res.json({ success: false, message: 'ไม่มีสิทธิ์ดำเนินการ' });
 
         const room = roomCheck[0];
-
+        
         if (room.DURATION_MINUTE < 15)
             return res.json({ success: false, message: 'กิจกรรมนี้มีระยะเวลาน้อยกว่า 15 นาที ไม่สามารถเปิดระบบเช็คชื่อได้' });
         if (room.IS_NOT_STARTED === 1)
@@ -820,7 +822,7 @@ router.post('/room/:id/generate-code', async (req, res) => {
         if (room.MINUTES_UNTIL_END <= 10)
             return res.json({ success: false, message: 'ไม่สามารถเปิดระบบเช็คชื่อได้ เนื่องจากเหลือเวลาทำกิจกรรมน้อยกว่า 10 นาที หรือกิจกรรมจบไปแล้ว' });
 
-        // 2. สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
+        // สุ่มรหัส 6 หลัก (ตัวอักษรใหญ่ + ตัวเลข)
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let code = '';
         for (let i = 0; i < 6; i++) {
