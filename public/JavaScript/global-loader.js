@@ -35,7 +35,7 @@ async function loadGlobalUserData() {
                 ? `<span class="material-symbols-outlined" style="color: #FFD700; margin-left: 5px; vertical-align: middle; font-size: 1.1em;" title="ผู้ดูแลระบบ">crown</span>` : '';
 
             // 1. อัปเดต Sidebar & Header
-            if (sidebarUserName) sidebarUserName.textContent = firstName + adminBadge;
+            if (sidebarUserName) sidebarUserName.innerHTML = firstName + adminBadge;
             if (sidebarUserEmail) sidebarUserEmail.textContent = u.email;
             if (sidebarUserCredit) sidebarUserCredit.textContent = u.credit;
             sidebarImgs.forEach(img => img.src = imgSrc);
