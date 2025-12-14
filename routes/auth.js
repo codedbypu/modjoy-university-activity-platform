@@ -23,7 +23,9 @@ function dbQuery(sql, params) {
 // #region --- API register --- 
 router.post('/register', async (req, res) => {
     const { email, fullname, lastname, password } = req.body;
-    const sql = `INSERT INTO USERS (USER_EMAIL, USER_FNAME, USER_LNAME, USER_PASSWORD, USER_YEAR) VALUES (?, ?, ?, ?, 1)`;
+    const sql = `INSERT INTO 
+                    USERS (USER_EMAIL, USER_FNAME, USER_LNAME, USER_PASSWORD, USER_YEAR)
+                    VALUES (?, ?, ?, ?, 1)`;
     db.query(sql, [email, fullname, lastname, password], (err, result) => {
         // ที่เหลือเป็นการเช็คอีเมลซ้ำด้วย ER_DUP_ENTRY ครับ เพราะมันเป็น PK อยู่แล้ว
         if (err) {
