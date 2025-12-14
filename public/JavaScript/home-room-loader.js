@@ -1,7 +1,7 @@
 let currentPage = 1;
 let isLoading = false;
 let hasMore = true;
-let currentFilters = {}; // เก็บค่า Filter ล่าสุดเอาไว้ใช้ตอนเลื่อนจอ
+let currentFilters = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     const listElement = document.getElementById('rooms-list');
@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (listElement) {
         loadRooms();
 
-        // ✅ เพิ่ม Event Listener สำหรับ Infinite Scroll
         window.addEventListener('scroll', () => {
             // เช็คว่าเลื่อนลงมาเกือบสุดจอหรือยัง (เหลือพื้นที่ 100px)
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {

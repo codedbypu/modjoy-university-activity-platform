@@ -1,6 +1,5 @@
-// filter.js
 import { loadRooms } from './home-room-loader.js';
-import { loadMyActivities } from './my-activity-list.js';
+import { loadMyActivities } from './my-activity-loader.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     // 1. ประกาศตัวแปรหลัก
