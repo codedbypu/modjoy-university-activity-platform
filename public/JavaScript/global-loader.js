@@ -10,7 +10,7 @@ async function loadGlobalUserData() {
         const sidebarImgs = document.querySelectorAll('.sidebar-profile-img img');
 
         // Header Dropdown
-        const dropdownNames = document.querySelectorAll('.user-name'); // ใช้ class เพราะมีหลายที่
+        const dropdownNames = document.querySelectorAll('.user-name');
         const dropdownEmails = document.querySelectorAll('.user-email');
         const dropdownImgs = document.querySelectorAll('.my-profile-image, .profile-large-image');
 
