@@ -52,7 +52,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 // #endregion
 
-// #region --- API สร้างห้องกิจกรรมใหม่ (create-room) --- 
+// #region --- API สร้างห้องกิจกรรมใหม่ (create-room) --- -
 router.post('/create-room', upload.single('room_image'), async (req, res) => {
     const token = req.cookies.token;
     if (!token) return res.json({ success: false, message: 'กรุณาเข้าสู่ระบบก่อน' });
@@ -80,7 +80,7 @@ router.post('/create-room', upload.single('room_image'), async (req, res) => {
             VALUES (?, ?, 'present')`, [newRoomId, leaderId]);
         // Tags
         if (typeof tags !== 'undefined') {
-            const tagList = tags.split(',');
+            const tagList = tags.split(',').map(t => t.trim()).filter(t => t !== '');
             for (const tagName of tagList) {
                 let tagId;
                 const existingTags = await dbQuery('SELECT TAG_ID FROM TAGS WHERE TAG_NAME = ?', [tagName]);
