@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 // ให้ Server เช็คทุกๆ 5 นาที
-cron.schedule('* * * * *', () => { 
+cron.schedule('*/5 * * * *', () => { 
     console.log('[Cron] เริ่มตรวจสอบคนที่ยังไม่เช็คชื่อ...');
 
     const sql = `

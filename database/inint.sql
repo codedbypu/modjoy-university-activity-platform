@@ -1,5 +1,4 @@
-DROP DATABASE IF EXISTS modjoy_db;
-CREATE DATABASE modjoy_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE SCHEMA modjoy_db;
 USE modjoy_db;
 
 -- 1. ตารางคณะ
@@ -20,7 +19,7 @@ CREATE TABLE TAGS (
     TAG_NAME VARCHAR(50) NOT NULL UNIQUE
 );
 
--- 4. ตารางผู้ใช้งาน (อิงตาม Diagram ของคุณ)
+-- 4. ตารางผู้ใช้งาน
 CREATE TABLE USERS (
     USER_ID INT AUTO_INCREMENT PRIMARY KEY,
     USER_EMAIL VARCHAR(50) NOT NULL UNIQUE,
@@ -91,21 +90,19 @@ CREATE TABLE USERTAGS (
 );
 
 -- --- สร้างดัชนี (Indexes) ---
--- เวลา User เข้าเว็บ มันจะ Sort ตาม วันที่ -> เวลาเริ่ม
+-- เวลา User เข้าเว็บ มันจะ Sort ตาม วันที่,เวลาเริ่ม
 CREATE INDEX idx_rooms_event_sort ON ROOMS(ROOM_EVENT_DATE, ROOM_EVENT_START_TIME);
 -- API /my-created-rooms ใช้ WHERE ROOM_LEADER_ID = ?
 CREATE INDEX idx_rooms_leader ON ROOMS(ROOM_LEADER_ID);
--- สำหรับการกรองสถานที่ (Filter Location)
+-- สำหรับการกรองสถานที่
 CREATE INDEX idx_rooms_location ON ROOMS(ROOM_EVENT_LOCATION);
--- สำหรับการค้นหาด้วยชื่อ (Search Title) *หมายเหตุด้านล่าง
+-- สำหรับการค้นหาด้วยชื่อ
 CREATE INDEX idx_rooms_title ON ROOMS(ROOM_TITLE);
 
 -- เราต้องค้นหาว่า User คนนี้ (USER_ID) ไป Join ห้องไหนบ้าง
 CREATE INDEX idx_roommembers_user ON ROOMMEMBERS(USER_ID);
--- สำหรับการจอยตาราง (เช่น ดูว่า User คนนี้อยู่คณะอะไร)
-CREATE INDEX idx_users_faculty ON USERS(USER_FACULTY);
 
--- สำหรับการค้นหาว่า "Tag นี้มีห้องไหนบ้าง" (Filter by Tags)
+-- สำหรับการค้นหาว่า "Tag นี้มีห้องไหนบ้าง" ใช้ใน Filter
 CREATE INDEX idx_roomtags_tag ON ROOMTAGS(TAG_ID);
 -- สำหรับการค้นหาว่า "Tag นี้มี User คนไหนสนใจบ้าง"
 CREATE INDEX idx_usertags_tag ON USERTAGS(TAG_ID);
