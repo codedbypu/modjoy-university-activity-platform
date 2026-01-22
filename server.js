@@ -47,6 +47,7 @@ cron.schedule('* * * * *', () => {
             AND r.ROOM_CHECKIN_CODE IS NOT NULL 
             AND r.ROOM_CHECKIN_CODE != '';
     `;
+
     db.query(sql, (err, result) => {
         // ที่เหลือเป็นเช็ค error เฉยๆ
         if (err) {
