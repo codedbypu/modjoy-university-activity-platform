@@ -108,7 +108,7 @@ modjoy-university-activity-platform/
 **1. Clone the repository**
 
 ```
-git clone <repo-url>
+git clone https://github.com/codedbypu/modjoy-university-activity-platform.git
 cd <project-folder>
 ```
 
