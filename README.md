@@ -10,7 +10,7 @@
 ---
 
 ## 📸 Screenshots & UI Design
-> โปรเจคนี้มีการออกแบบ UI/UX ก่อนเริ่มพัฒนาจริง สามารถดูฉบับเต็มได้ที่ [Figma Design - MODJOY](https://www.figma.com/design/OkOTUVMhBBe3eK2Mvau3f9/Final2_Modjoy?node-id=0-1&t=tiqzBLbXq18vPWma-1)
+> โปรเจคนี้มีการออกแบบ UI/UX ก่อนเริ่มพัฒนาจริง สามารถดูฉบับเต็มได้ที่ [Figma Design - MODJOY](https://www.figma.com/design/OkOTUVMhBBe3eK2Mvau3f9/Final2_Modjoy?m=auto&t=w32mcOZ7ZBu1D2LF-1)
 
 <div align="center">
   <img src="/resource/homepage.png" alt="MODJOY Home Feed" width="800">
